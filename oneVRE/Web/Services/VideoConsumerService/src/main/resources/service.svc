@@ -1,0 +1,16 @@
+[ServiceDescription]
+name = VideoConsumerService
+description = Vic-based video service to receive multicast video
+capabilities = Capability1
+executable = VideoConsumerService.jar
+platform = neutral
+version = 3.01
+vendor = PAG
+jars =
+native =
+class = com.googlecode.onevre.web.videoConsumerService.VideoConsumerService
+args =
+
+[Capability1]
+role = consumer
+type = video

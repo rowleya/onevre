@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<project>
+    <parent>
+        <artifactId>WebApps</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>WebAppSakai</artifactId>
+    <packaging>war</packaging>
+    <name>Sakai specific build of PAG/OneVRE</name>
+
+    <build>
+        <finalName>pag</finalName>
+		<plugins>
+	       <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-war-plugin</artifactId>
+	        <version>2.0</version>
+	        <configuration>
+	          <webappDirectory>pag</webappDirectory>
+	        </configuration>
+ 	      </plugin>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/outSakai
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+	    <dependency>
+	      <groupId>com.googlecode.onevre</groupId>
+	      <artifactId>WebAppCommon</artifactId>
+	      <version>${project.version}</version>
+	      <type>war</type>
+	    </dependency>
+<!--
+	    <dependency>
+	      <groupId>com.googlecode.onevre</groupId>
+	      <artifactId>Version</artifactId>
+	      <version>${project.version}</version>
+	    </dependency>
+	-->
+
+    </dependencies>
+</project>

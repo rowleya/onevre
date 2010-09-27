@@ -1,0 +1,91 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>Web</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>VenueClientController</artifactId>
+	<packaging>jar</packaging>
+	<name>VenueClientController</name>
+    <build>
+    <finalName>VenueClientController</finalName>
+    <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<version>1.4</version>
+			<executions>
+				<execution>
+            		<id>generateCert</id>
+            		<phase>generate-resources</phase>
+            		<configuration>
+            			<tasks>
+						  <exec executable="keytool" output="cert" searchpath="true">
+							  <arg value="-exportcert"/>
+							  <arg value="-keystore"/>
+							  <arg value="${keystore.location}"/>
+							  <arg value="-alias"/>
+							  <arg value="${keystore.alias}"/>
+							  <arg value="-storepass"/>
+							  <arg value="${keystore.password}"/>
+						  </exec>
+            			</tasks>
+            		</configuration>
+            		<goals>
+						<goal>run</goal>
+					</goals>
+	            </execution>
+     		</executions>
+    	</plugin>
+     </plugins>
+	<resources>
+	<resource>
+		<directory></directory>
+		<includes>
+		<include>cert</include>
+		<include>log4j.properties</include>
+		</includes>
+	</resource>
+	</resources>
+    </build>
+    <dependencies>
+		<dependency>
+		    <groupId>netscape.javascript</groupId>
+		    <artifactId>JSObject</artifactId>
+		    <version>1.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridServerTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonUtils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>PlatformUtils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+		    <groupId>org.apache.xmlrpc</groupId>
+		    <artifactId>xmlrpc-client</artifactId>
+		    <version>3.1.3</version>
+		</dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>ServerProtocolsXMLRPC</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

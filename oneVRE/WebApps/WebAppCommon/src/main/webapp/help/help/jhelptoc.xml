@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="1.0">
+    <tocitem target="PAG" text="Introduction">
+	    <tocitem target="clientProfile" text="Client Profile"/>
+	    <tocitem target="configureServices" text="Configuring Services"/>
+	    <tocitem target="multicast" text="Multicast / Unicast Configuration"/>
+<!--	    <tocitem target="newService" text="New Service"/> -->
+    </tocitem>
+	<tocitem target="agClient" text="The Access Grid Client">
+	    <tocitem target="agConfig" text="Access Grid Configuration">
+			<tocitem target="conf_Services" text="Configure Node Services" />
+			<tocitem target="conf_Profile" text="Setting the Client Profile"/>
+			<tocitem target="conf_multicast" text="Multicast / Unicast Configuration"/>
+			<tocitem target="conf_encryption" text="Configure Encryption" />
+			<tocitem target="conf_myVenues" text="Setting personal Venues" />
+	    </tocitem>
+	    <tocitem target="venueMonitor" text="Venue Monitoring"/>
+	    <tocitem target="jabberClient" text="Jabber Client"/>
+	</tocitem>  
+</toc>

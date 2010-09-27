@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project>
+    <parent>
+        <artifactId>WebApps</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>WebAppLifeRay</artifactId>
+    <packaging>war</packaging>
+    <name>LifeRay specific build of PAG/OneVRE</name>
+
+    <build>
+        <finalName>${project.application.warname}</finalName>
+        <filters>
+            <filter>../${project.filter.location}</filter>
+        </filters>
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/outLifeRay
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <webResource>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <includes>
+                                <include>web.xml</include>
+								<include>liferay-display.xml</include>
+								<include>liferay-plugin-package.properties</include>
+								<include>liferay-plugin-package.xml</include>
+								<include>liferay-portlet.xml</include>
+                            </includes>
+                            <targetPath>WEB-INF</targetPath>
+                            <filtering>true</filtering>
+                        </webResource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+	    <dependency>
+	      <groupId>com.googlecode.onevre</groupId>
+	      <artifactId>WebAppCommon</artifactId>
+	      <version>${project.version}</version>
+	      <type>war</type>
+	    </dependency>
+<!--
+	    <dependency>
+	      <groupId>com.googlecode.onevre</groupId>
+	      <artifactId>Version</artifactId>
+	      <version>${project.version}</version>
+	    </dependency>
+	-->
+
+    </dependencies>
+</project>

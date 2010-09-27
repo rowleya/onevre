@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <parent>
+        <artifactId>GWT</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>OneVREGWT</artifactId>
+    <packaging>war</packaging>
+    <name>GWT Interface for OneVRE</name>
+
+    <build>
+        <finalName>OneVREGWT</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <runTarget>https://localhost:8443/web/guest/onevre</runTarget>
+                    <noServer>true</noServer>
+                    <module>com.googlecode.onevre.gwt.Application</module>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1-beta-1</version>
+                    <configuration>
+                        <webappDirectory>${project.build.directory}/${project.build.finalName}/com.googlecode.onevre.gwt.Application</webappDirectory>
+                    </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonGWT</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.allen_sauer.gwt</groupId>
+            <artifactId>dnd</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+    </dependencies>
+</project>

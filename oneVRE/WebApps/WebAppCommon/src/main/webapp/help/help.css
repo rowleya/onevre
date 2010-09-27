@@ -1,0 +1,212 @@
+body  {
+    background: #ffffff;
+    color: #000000;
+    font-family:Arial, Helvetica;
+    font-size:12.0pt;
+    font-weight:normal;
+    overflow: hidden;
+}
+
+tr.header {
+    background-color: #dcdada;
+}
+
+h1 {
+    font-family:Arial, Helvetica;
+    font-size:20.0pt;
+    font-weight:bold;
+    text-align:center;
+}
+
+h2 {
+    font-family:Arial, Helvetica;
+    font-size:16.0pt;
+    font-weight:bold;
+}
+
+h3 {
+    font-family:Arial, Helvetica;
+    font-size:12.0pt;
+    font-weight:bold;
+}
+
+h4 {
+    font-family:Arial, Helvetica;
+    font-size:10.0pt;
+    font-weight:bold;
+}
+
+dt {
+    font-weight:bold;
+}
+
+img.button {
+	padding:3px;
+	border-width: 2px;
+    border-style: solid;
+    border-color: #f9f8f3 #828177 #828177 #f9f8f3;
+    background-color: #ece9d8;
+    text-align: center; 
+    overflow: hidden;
+}
+
+div.left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 30%;
+    height: 100%;
+    border-right: 1px;
+    border-right-color: activeborder;
+    border-right-style: solid;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+div.right {
+    -moz-box-sizing: border-box;
+    position: absolute;
+    top: 0px;
+    left: 30%;
+    width: 70%;
+    height: 100%;
+    border-left: 0px;
+    vertical-align: top;
+    overflow: auto;
+    margin: 10px;
+    padding-left: 8px;
+    padding-right: 10px;
+}
+
+div.verticalseparator {
+    position: absolute;
+    top: 0px;
+    left: 30%;
+    width: 3px;
+    height: 100%;
+    background-color: activeborder;
+    cursor: e-resize;
+    overflow: hidden;
+}
+
+div.menu {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    background-color: white;
+    overflow: hidden;
+}
+
+table.menu {
+    border-width: 10px 10px 0px 10px;
+    border-color: #cccccc;
+    border-style: solid;
+    width: 100%;
+    height: 100%;
+}
+
+table.menu tr {
+    background-color: white;
+}
+
+table.menu tr td.selected a, table.menu tr td.deselected a {
+    text-decoration:none;
+    color: black;
+}
+
+table.menu tr td.selected, table.menu tr td.deselected {
+    text-align: center;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+    border-width: 1px 1px 0px 1px;
+}
+
+table.menu tr td.selected {
+    background-color: white;
+    border-style: inset;
+}
+
+table.menu tr td.deselected {
+    background-color: #e5e5e5;
+    border-style: outset;
+    cursor: pointer;
+}
+
+div.navigator {
+    position: absolute;
+    left: 0px;
+    top: 40px;
+    width: 100%;
+    height: auto;
+    background-color: white;
+    overflow: auto;
+}
+
+div.toolbar {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 95%;
+    height: 40px;
+    border-width: 0px 0px 3px 0px;
+    border-color: activeborder;
+    border-style: inset;
+    padding-left: 3px;
+	padding:20px;
+}
+
+div.buttons {
+    position: absolute;
+    left: 5px;
+    top: 0px;
+}
+
+div.buttons img {
+    cursor: pointer;
+    border-width: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+div.close {
+    position: absolute;
+    right: 35px;
+    top: 0px;
+}
+
+div.close p {
+    text-decoration: none;
+    color: white;
+    background-color: #594fbf;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+
+div.content {
+    position: absolute;
+    top: 40px;
+    left: 0px;
+    width:95%;
+    overflow: auto;
+	margin-left:1%;
+}
+
+div.rightmost {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    right: 0px;
+    bottom: 0px;
+    visibility: hidden;
+}
+
+.tocitem {
+    text-decoration: none;
+    color: black;
+}

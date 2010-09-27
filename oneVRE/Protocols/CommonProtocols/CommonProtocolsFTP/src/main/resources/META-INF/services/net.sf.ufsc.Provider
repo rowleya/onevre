@@ -1,0 +1,5 @@
+net.sf.ufsc.ftp.FtpProvider
+net.sf.ufsc.ftp.FtpsProvider
+net.sf.ufsc.http.HttpProvider
+net.sf.ufsc.http.HttpsProvider
+net.sf.ufsc.local.LocalProvider

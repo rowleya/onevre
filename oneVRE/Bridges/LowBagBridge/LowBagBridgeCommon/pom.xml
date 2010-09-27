@@ -1,0 +1,37 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>LowBagBridge</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>LowBagBridgeCommon</artifactId>
+	<packaging>jar</packaging>
+	<name>LowBagBridgeCommon</name>
+     <build>
+        <finalName>LowBagBridgeCommon</finalName>
+    </build>
+    <dependencies>
+ 		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonProtocolsRTP</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+ 		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+ 		<dependency>
+            <groupId>com.googlecode.vicovre</groupId>
+            <artifactId>ViCoRepositories</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+ 		<dependency>
+            <groupId>com.googlecode.vicovre</groupId>
+            <artifactId>ViCoMedia</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>

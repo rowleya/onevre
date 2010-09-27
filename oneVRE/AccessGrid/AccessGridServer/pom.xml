@@ -1,0 +1,47 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>AccessGrid</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>AccessGridServer</artifactId>
+	<packaging>jar</packaging>
+	<name>AccessGridServer</name>
+     <build>
+        <finalName>AccessGridServer</finalName>
+    </build>
+    <dependencies>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridSecurity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridCommon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridClient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridServerTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+		    <groupId>org.apache.ftpserver</groupId>
+		    <artifactId>ftplet-api</artifactId>
+		    <version>1.0.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.ftpserver</groupId>
+		    <artifactId>ftpserver-core</artifactId>
+		    <version>1.0.4</version>
+		</dependency>
+    </dependencies>
+
+</project>

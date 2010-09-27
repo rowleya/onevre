@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rtptypes>
+    <rtptype id="31" mediaType="video" encoding="h261/rtp" clockrate="90000"/>
+    <rtptype id="77" mediaType="video" encoding="h261as/rtp" clockrate="90000"/>
+</rtptypes>

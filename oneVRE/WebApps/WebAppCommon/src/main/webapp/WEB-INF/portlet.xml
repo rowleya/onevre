@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+     version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+                     http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+     <portlet>
+        <description xml:lang="en">${application.description}</description>
+        <portlet-name>${application.portlet.name}</portlet-name>
+        <display-name xml:lang="en">${application.name}</display-name>
+        <portlet-class>${application.portlet.class}</portlet-class>
+        <init-param>
+            <description>The location of the view JSP page</description>
+            <name>viewURL</name>
+            <value>${viewjsp}</value>
+        </init-param>
+        <init-param>
+            <description>The location of the edit JSP page</description>
+            <name>editURL</name>
+            <value>/jsp/edit.jsp</value>
+        </init-param>
+        <init-param>
+            <description>The location of the help JSP page</description>
+            <name>helpURL</name>
+            <value>/jsp/help.jsp</value>
+        </init-param>
+        <init-param>
+            <description>The location of the about JSP page</description>
+            <name>aboutURL</name>
+            <value>/jsp/about.jsp</value>
+        </init-param>
+        <init-param>
+            <description>The location of the minimized JSP page</description>
+            <name>minimizedURL</name>
+            <value>/jsp/minimized.jsp</value>
+        </init-param>
+        <expiration-cache>0</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+        </supports>
+        <supported-locale>en</supported-locale>
+        <portlet-info>
+            <title>${application.title}</title>
+            <short-title>${application.shorttitle}</short-title>
+            <keywords>
+                portlet, access grid, video, audio, collaboration
+            </keywords>
+        </portlet-info>
+        <portlet-preferences>
+            <preference>
+                <name>heightPixels</name>
+                <value>700</value>
+            </preference>
+            <preference>
+                <name>venueListWidthPercent</name>
+                <value>30</value>
+            </preference>
+            <preference>
+                <name>textchatHeightPixels</name>
+                <value>130</value>
+            </preference>
+            <preference>
+                <name>profileType</name>
+                <value>user</value>
+            </preference>
+            <preference>
+                <name>name</name>
+            </preference>
+            <preference>
+                <name>email</name>
+            </preference>
+            <preference>
+                <name>phoneNumber</name>
+            </preference>
+            <preference>
+                <name>publicId</name>
+            </preference>
+            <preference>
+                <name>location</name>
+            </preference>
+            <preference>
+                <name>homeVenue</name>
+                <value>${homeVenue}</value>
+            </preference>
+            <preference>
+                <name>distinguishedName</name>
+            </preference>
+            <preference>
+                <name>myVenues</name>
+            </preference>
+            <preference>
+                <name>pointOfReference</name>
+                <value>http://memetic.ag.manchester.ac.uk/por</value>
+            </preference>
+            <preference>
+                <name>pagLogFile</name>
+                <value>logs/pag-usage.log</value>
+            </preference>
+            <preference>
+            	<name>trustedServerFile</name>
+            	<value>trustedServers.xml</value>
+            </preference>
+            <preferences-validator>com.googlecode.onevre.web.common.PagPreferenceValidator</preferences-validator>
+      </portlet-preferences>
+    </portlet>
+    <user-attribute>
+        <description>User First Name</description>
+        <name>user.name.given</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User Last Name</description>
+        <name>user.name.family</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User Full Name</description>
+        <name>user.name.full</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User E-mail</description>
+        <name>user.home-info.online.email</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User E-mail</description>
+        <name>user.email</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User Organisation</description>
+        <name>user.organization</name>
+    </user-attribute>
+    <user-attribute>
+        <description>User Organization</description>
+        <name>user.business-info.postal.organization</name>
+    </user-attribute>
+</portlet-app>

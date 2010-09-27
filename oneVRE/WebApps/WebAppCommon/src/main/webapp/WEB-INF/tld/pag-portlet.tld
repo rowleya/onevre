@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+    PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+    "http://java.sun.com/dtd/web-jsptaglibrary_2_0.dtd">
+<!--
+  - Author: Andrew G D Rowley
+  - Date: 20 April 2007
+  -
+  - Copyright Notice:
+  - Copyright (c) 2005-2006, University of Manchester All rights reserved.
+  - Redistribution and use in source and binary forms, with or without
+  - modification, are permitted provided that the following conditions are met:
+  -
+  - Redistributions of source code must retain the above copyright notice, this
+  - list of conditions and the following disclaimer. Redistributions in binary
+  - form must reproduce the above copyright notice, this list of conditions and
+  - the following disclaimer in the documentation and/or other materials
+  - provided with the distribution. Neither the name of the University of
+  - Manchester nor the names of its contributors may be used to endorse or
+  - promote products derived from this software without specific prior written
+  - permission.
+  -
+  - THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  - AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  - ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  - LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  - CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  - SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  - INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  - CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  - ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  - POSSIBILITY OF SUCH DAMAGE.
+  -
+  - Description: Tags for accessing PAG functions
+  -->
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>pag</short-name>
+    <uri>/WEB-INF/tld/pag-portlet.tld</uri>
+    <display-name>PAG Tags</display-name>
+    <description>
+        Provides tags for PAG functions from the portlet side
+    </description>
+
+    <tag>
+        <name>pag_imagebutton</name>
+        <display-name>pag_imagebutton</display-name>
+        <description>Displays a button on the PAG toolbar</description>
+        <example>
+            Used to display a PAG toolbar button
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.PagImageButtonTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>url</name>
+            <description>
+                The url of the image
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>text</name>
+            <description>
+                The text for the button - only used if url not specified
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>width</name>
+            <description>The width of the button</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>height</name>
+            <description>The height of the button</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>left</name>
+            <description>The position of the button from the left</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>top</name>
+            <description>The position of the button from the top</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>right</name>
+            <description>The position of the button from the right</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>bottom</name>
+            <description>
+                The position of the button from the bottom
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>id</name>
+            <description>The id of the button</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <description>The tooltip text of the button</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>action</name>
+            <description>
+                The javascript method to call when clicked
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getpreference</name>
+        <display-name>pag_getpreference</display-name>
+        <description>Gets a preference</description>
+        <example>
+            Used to get a portlet preference
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.PagGetPreferenceTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>name</name>
+            <description>
+                The name of the preference to get
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to return the value in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>def</name>
+            <description>
+                The default value
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>loadDefault</name>
+            <description>
+                The load the default value value whatever is set
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_participantlist</name>
+        <display-name>pag_participantlist</display-name>
+        <description>Lists Paticipants in a tree</description>
+        <example>
+            Used to display the list of paricipants in a tree
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.ParticipantListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>rootParentId</name>
+            <description>
+                The id to give to the parent of the root nodes
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parentVar</name>
+            <description>
+                The variable to assign to the parent id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>idVar</name>
+            <description>
+                The variable to assign to the id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to assign to the name of the participant
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>typeVar</name>
+            <description>
+                The variable to assign to the type of the participant
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_datalist</name>
+        <display-name>pag_datalist</display-name>
+        <description>Lists Data in a tree</description>
+        <example>
+            Used to display the list of data in a tree
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.DataListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>rootParentId</name>
+            <description>
+                The id to give to the parent of the root nodes
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parentVar</name>
+            <description>
+                The variable to assign to the parent id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>idVar</name>
+            <description>
+                The variable to assign to the id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to assign to the name of the data item
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_servicelist</name>
+        <display-name>pag_servicelist</display-name>
+        <description>Lists Services in a tree</description>
+        <example>
+            Used to display the list of Services in a tree
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.ServiceListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>rootParentId</name>
+            <description>
+                The id to give to the parent of the root nodes
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parentVar</name>
+            <description>
+                The variable to assign to the parent id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>idVar</name>
+            <description>
+                The variable to assign to the id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to assign to the name of the Service
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_applicationlist</name>
+        <display-name>pag_applicationlist</display-name>
+        <description>Lists Applicationds in a tree</description>
+        <example>
+            Used to display the list of Applications in a tree
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.ApplicationListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>rootParentId</name>
+            <description>
+                The id to give to the parent of the root nodes
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parentVar</name>
+            <description>
+                The variable to assign to the parent id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>idVar</name>
+            <description>
+                The variable to assign to the id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to assign to the name of the Application
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_venuelist</name>
+        <display-name>pag_venuelist</display-name>
+        <description>Lists venues in a tree</description>
+        <example>
+            Used to display the list of venues in a tree
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.VenueListTag</tag-class>
+        <body-content>scriptless</body-content>
+
+        <attribute>
+            <name>rootParentId</name>
+            <description>
+                The id to give to the parent of the root nodes
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>expandedVar</name>
+            <description>
+                The variable to assign to true if the node is expanded
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>selectedVar</name>
+            <description>
+                The variable to assign to true if the node is selected
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>idVar</name>
+            <description>
+                The variable to assign to the id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>parentVar</name>
+            <description>
+                The variable to assign to the parent id of the current node
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to assign to the name of the current venue
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>uriVar</name>
+            <description>
+                The variable to assign to the uri of the current venue
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_namespace</name>
+        <display-name>pag_namespace</display-name>
+        <description>Gets the namespace into a varaiable</description>
+        <example>
+            Used to store the namespace variable in a jsp variable
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetNamespaceTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the namespace in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_sessionid</name>
+        <display-name>pag_sessionid</display-name>
+        <description>Gets the sessionid into a varaiable</description>
+        <example>
+            Used to store the sessionid variable in a jsp variable
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetSessionIdTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the sessionid in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getClientProfile</name>
+        <display-name>pag_getClientProfile</display-name>
+        <description>Gets the current client profile</description>
+        <example>
+            Used to get the current client profile
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetClientProfileTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the profile in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_storePreferencesUrl</name>
+        <display-name>pag_storePreferencesUrl</display-name>
+        <description>Gets the action url for storing preferences</description>
+        <example>
+            Used to make an ajax call to store the preferences permanently
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.PagStorePreferencesUrlTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the url in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_isPreviousVenue</name>
+        <display-name>pag_isPreviousVenue</display-name>
+        <description>Checks if there is a previous venue</description>
+        <example>
+            Used to determine if the back button does anything
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.IsPreviousVenueTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the result in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getVenueClientUI</name>
+        <display-name>pag_getVenueClientUI</display-name>
+        <description>Gets the venue client ui</description>
+        <example>
+            Used to get the portlet ui storage
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetVenueClientUITag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The name of the variable to store the ui in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getVenueListScroll</name>
+        <display-name>pag_getVenueListScroll</display-name>
+        <description>Gets the scroll positions of the venue list</description>
+        <example>
+            Used to get the stored scroll positions after a refresh
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetVenueListScrollTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>verticalScrollVar</name>
+            <description>
+                The name of the variable to store vertical scroll pos in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>horizontalScrollVar</name>
+            <description>
+                The name of the variable to store horizontal scroll pos in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_modeList</name>
+        <display-name>pag_modeList</display-name>
+        <description>Lists the venue list modes</description>
+        <example>
+            Used to list the venue list modes
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.ModeListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The name of the variable to store the mode name in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>indexVar</name>
+            <description>
+                The name of the variable to store the mode index in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>isSelectedVar</name>
+            <description>
+                The name of the variable to store if the mode is selected in
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_jabberUpdate</name>
+        <display-name>pag_jabberUpdate</display-name>
+        <description>Receives jabber Text</description>
+        <example>
+            Used to output a jabber Message
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.JabberUpdateTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>messageVar</name>
+            <description>
+                The Variable to receive the message
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_currentBridgeId</name>
+        <display-name>pag_currentBridgeId</display-name>
+        <description>Gets the id of the current bridge</description>
+        <example>
+            Used to display the selected bridge in the bridge list
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.CurrentBridgeIdTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the id
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getStreams</name>
+        <display-name>pag_getStreams</display-name>
+        <description>Gets the streams in the current venue</description>
+        <example>
+            Used to update the streams when the page is refreshed
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetStreamsTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive streams xml
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_myVenueList</name>
+        <display-name>pag_myVenueList</display-name>
+        <description>Lists the myVenues</description>
+        <example>
+            Used to list the myVenues when the page is refreshed
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.MyVenueListTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to receive the name
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>urlVar</name>
+            <description>
+                The variable to receive the url
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getServices</name>
+        <display-name>pag_getServices</display-name>
+        <description>Gets the current services</description>
+        <example>
+            Used to get the current services
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetServicesTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the services
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getApplications</name>
+        <display-name>pag_getApplications</display-name>
+        <description>Gets the current shared applications</description>
+        <example>
+            Used to get the current shared applications
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetApplicationsTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the shared applications
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getBridges</name>
+        <display-name>pag_getBridges</display-name>
+        <description>Gets the current bridges</description>
+        <example>
+            Used to get the current bridges
+        </example>
+        <tag-class>com.googlecode.onevre.web.portlet.tags.GetBridgesTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the response
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+</taglib>

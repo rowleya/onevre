@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<registration>
+	<tool id="pag.PagPortlet"
+		title="PAG - Portal Access Grid"
+		description="Access Grid client for Sakai">
+
+		<configuration name="sakai:portlet-pre-render" value="true" />
+
+		<category name="course" />
+		<category name="project" />
+		<category name="portfolio" />
+
+		<!-- Allow this to be set -->
+		<configuration name="functions.require" />
+	</tool>
+</registration>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codecs>
+    <codec>
+        <class>com.googlecode.vicovre.codecs.vic.NativeEncoder</class>
+    </codec>
+    <codec>
+        <class>com.googlecode.vicovre.codecs.vic.NativeDecoder</class>
+    </codec>
+    <codec>
+        <class>com.googlecode.vicovre.codecs.ffmpeg.SWScaleCodec</class>
+    </codec>
+</codecs>

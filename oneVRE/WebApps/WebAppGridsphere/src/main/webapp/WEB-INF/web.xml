@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+        version="2.4">
+    <display-name>Portal Access Grid</display-name>
+    <description>A portal version of the Access Grid Toolkit</description>
+    <servlet>
+        <servlet-name>PortletServlet</servlet-name>
+        <servlet-class>
+            org.gridsphere.provider.portlet.jsr.PortletServlet
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PAG</servlet-name>
+        <display-name>PAG Wrapper</display-name>
+        <description>Automated generated Portlet Wrapper</description>
+        <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+        <init-param>
+            <param-name>portlet-class</param-name>
+            <param-value>pag.PagPortlet</param-value>
+        </init-param>
+        <init-param>
+            <param-name>portlet-guid</param-name>
+            <param-value>pag.PAG</param-value>
+        </init-param>
+        <init-param>
+            <param-name>portlet-name</param-name>
+            <param-value>PAG</param-value>
+        </init-param>
+    </servlet>
+	<servlet>
+		<servlet-name>VenueClient_jsp</servlet-name>
+		<jsp-file>/jsp/startVenueClient.jsp</jsp-file>
+	</servlet>
+	<servlet>
+		<servlet-name>AvailableAGServices</servlet-name>
+		<servlet-class>pag.ServicesList</servlet-class>
+	</servlet>
+    <servlet-mapping>
+        <servlet-name>PAG</servlet-name>
+        <url-pattern>/PlutoInvoker/PAG</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PortletServlet</servlet-name>
+        <url-pattern>/jsr/pag</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PAG</servlet-name>
+        <url-pattern>/PAG/*</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>VenueClient_jsp</servlet-name>
+		<url-pattern>/jsp/startVenue.jsp</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AvailableAGServices</servlet-name>
+		<url-pattern>/getAGServices</url-pattern>
+	</servlet-mapping>
+    <security-role>
+        <description>A user</description>
+        <role-name>user</role-name>
+    </security-role>
+    <filter>
+        <filter-name>blankLineFilter</filter-name>
+        <filter-class>pag.BlankLineFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>blankLineFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+</web-app>
