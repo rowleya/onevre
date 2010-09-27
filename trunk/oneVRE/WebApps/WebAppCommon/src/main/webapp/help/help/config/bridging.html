@@ -1,0 +1,45 @@
+<html>
+    <body>
+        <h1>Multicast / Unicast Configuration</h1>
+        <hr width="100%" color="black"/>
+		<p>When you want to configure the Networking options using the 
+		Multicast&nbsp;/&nbsp;Unicast configuration button&nbsp;(<img class="button" 
+		src="/pag/images/network.png" alt="Multicast / Unicast configuration" />),
+		the PAG user interface will be disabled until the configuration is finished.
+		To show this a semi-transparent "curtain" is drawn.</p>
+		<img src="images/pag-bridge_small.png" alt="PAG multicast configuration" />
+		<p>The Network configuration is usually set up to automatically configure 
+		the bridging.</p> 
+		<img src="images/pag-bridge_content.png" alt="PAG multicast options" />
+		<p>To change the configuration you can select:</p>
+		<dl>
+		<dt>Automatic Configuration</dt>
+		<dd>In this setting PAG determines your networking capabilities by 
+		contacting the Point of Reference Server (a server that reliably 
+		responds to network requests, i.e. ping). It first tries to use 
+		multicasting to send packages to the other AG clients. If the built in 
+		Point of Reference Client does not get a response (in time) it changes 
+		to unicast and tries to find a suitable bridge in the Bridge registry.
+		It successively checks trough the list and switches to a "good" bridge.
+		</dd>
+		<dt>Multicast</dt>
+		<dd>This setting disables the automatic Bridge switching and sets PAG 
+		to use Multicasting. Only use this if you know that your network has 
+		Multicasting relieably enabled.</dd>
+		<dt>Unicast</dt>
+		<dd>This setting disables the automatic Bridge switching and sets PAG 
+		to use a unicast bridge of your choice to be selected from the given 
+		Bridge registries. Use this if you know a reliable 
+		bridge at (or near) your site and assume multicast not to work.</dd>
+		</dl>
+		<h3>Point of Reference</h3>
+		The Point of Reference is a server that reliably responds to network
+		requests, i.e. ping. Each PAG server comes by default with its own Point
+		of Reference server that you should be able to contact. This server 
+		should be set up by the local administrator of the PAG server.
+		<h3>Bridge Registries</h3> 
+		The Bridge Registry provides a list of Bridges available to be used by
+		Access Grid sessions. The default should be set by the local 
+		administrator of the PAG server.
+    </body>
+</html>

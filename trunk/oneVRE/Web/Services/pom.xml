@@ -1,0 +1,26 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>Web</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>Services</artifactId>
+	<packaging>pom</packaging>
+	<name>Services</name>
+	<modules>
+		<module>AudioService</module>
+		<module>IoComService</module>
+		<module>nonJavaService</module>
+		<module>VideoConsumerService</module>
+		<module>VideoProducerService</module>
+	</modules>
+    <dependencies>
+ 		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridServerTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

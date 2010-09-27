@@ -1,0 +1,53 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>OneVRE</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>WebApps</artifactId>
+	<packaging>pom</packaging>
+	<name>Web</name>
+    <profiles>
+        <profile>
+            <id>OneVRE</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <project.filter.location>src/main/filters/onevre.properties</project.filter.location>
+                <project.application.type>OneVRE</project.application.type>
+				<project.application.warname>OneVRE</project.application.warname>
+
+            </properties>
+        </profile>
+        <profile>
+            <id>PAG</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <project.filter.location>src/main/filters/pag.properties</project.filter.location>
+                <project.application.type>PAG</project.application.type>
+				<project.application.warname>pag</project.application.warname>
+            </properties>
+        </profile>
+    </profiles>
+	<modules>
+		<module>Applets</module>
+		<module>Applications</module>
+		<module>BridgesWebApp</module>
+		<module>SharedApplicationsWebApp</module>
+
+		<module>WebAppCommon</module>
+		<module>WebAppLifeRay</module>
+<!--
+		<module>WebAppSakai</module>
+		<module>WebAppGridsphere</module>
+-->
+		<module>AGVenueServer</module>
+	</modules>
+    <dependencies>
+    </dependencies>
+
+</project>

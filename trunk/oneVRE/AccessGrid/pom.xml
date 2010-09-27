@@ -1,0 +1,25 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>OneVRE</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>AccessGrid</artifactId>
+	<packaging>pom</packaging>
+	<name>AccessGrid</name>
+    <modules>
+    	<module>AccessGridTypes</module>
+    	<module>AccessGridServerTypes</module>
+        <module>AccessGridCommon</module>
+        <module>AccessGridClient</module>
+        <module>AccessGridClientBridge</module>
+        <module>AccessGridBridge</module>
+		<module>AccessGridSecurity</module>
+        <module>AccessGridServer</module>
+        <module>AccessGridSharedApplication</module>
+    </modules>
+    <dependencies>
+    </dependencies>
+
+</project>

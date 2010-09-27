@@ -1,0 +1,21 @@
+[ServiceDescription]
+executable = AudioService.jar
+name = AudioService
+capabilities = Capability1 Capability2
+platform = neutral
+version = 4.4
+description = Rat-based audio service
+vendor = PAG
+jars =
+native =
+class = com.googlecode.onevre.web.audioService.AudioService
+args =
+
+[Capability2]
+role = consumer
+type = audio
+
+[Capability1]
+role = producer
+type = audio
+

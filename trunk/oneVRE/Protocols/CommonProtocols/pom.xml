@@ -1,0 +1,32 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>Protocols</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>CommonProtocols</artifactId>
+	<packaging>pom</packaging>
+	<name>CommonProtocols</name>
+    <modules>
+        <module>CommonProtocolsSOAP</module>
+        <module>CommonTypesSOAP</module>
+        <module>CommonProtocolsXMLRPC</module>
+        <module>CommonProtocolsRTCP</module>
+        <module>CommonProtocolsRTP</module>
+        <module>CommonProtocolsFTP</module>
+    </modules>
+    <dependencies>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonUtils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+		    <groupId>xerces</groupId>
+		    <artifactId>xerces</artifactId>
+		    <version>2.4.0</version>
+		</dependency>
+    </dependencies>
+
+</project>

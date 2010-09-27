@@ -1,0 +1,37 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>AccessGrid</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>AccessGridClient</artifactId>
+	<packaging>jar</packaging>
+	<name>AccessGridClient</name>
+     <build>
+        <finalName>AccessGridClient</finalName>
+    </build>
+    <dependencies>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridCommon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+   		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridServerTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+		    <groupId>jivesoftware</groupId>
+		    <artifactId>smack</artifactId>
+		    <version>2.2.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>jivesoftware</groupId>
+		    <artifactId>smackx</artifactId>
+		    <version>2.2.1</version>
+		</dependency>
+    </dependencies>
+
+</project>

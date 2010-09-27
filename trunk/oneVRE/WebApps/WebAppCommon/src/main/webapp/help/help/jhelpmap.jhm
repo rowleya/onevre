@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN" "http://java.sun.com/products/javahelp/map_1_0.dtd">
+<map version="2.0">
+    <mapID target="PAG" url="index.html" />
+    <mapID target="clientProfile" url="clientProfile.html" />
+    <mapID target="multicast" url="multicast.html" />
+    <mapID target="agClient" url="agClient.html" />
+    <mapID target="agConfig" url="agConfig.html" />
+    <mapID target="conf_Services" url="config/nodeServices.html" />
+    <mapID target="conf_Profile" url="config/clientProfile.html" />
+    <mapID target="conf_multicast" url="config/bridging.html" />
+    <mapID target="conf_encryption" url="config/encryption.html" />
+    <mapID target="conf_myVenues" url="config/myVenues.html" />
+    <mapID target="jabberClient" url="jabberClient.html" />
+    <mapID target="venueMonitor" url="venueMonitor.html" />
+    <mapID target="configureServices" url="configureServices.html" />
+    <mapID target="newService" url="newService.html" />
+</map>

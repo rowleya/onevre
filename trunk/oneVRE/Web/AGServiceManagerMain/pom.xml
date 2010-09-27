@@ -1,0 +1,32 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+        <artifactId>Web</artifactId>
+        <groupId>com.googlecode.onevre</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>AGServiceManagerMain</artifactId>
+	<packaging>jar</packaging>
+	<name>AGServiceManagerMain</name>
+     <build>
+        <finalName>AGServiceManagerMain</finalName>
+    </build>
+    <dependencies>
+   		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridServerTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+ 		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>ServerProtocolsSOAP</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridClientBridge</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

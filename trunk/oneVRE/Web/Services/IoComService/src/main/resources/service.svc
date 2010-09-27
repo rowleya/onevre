@@ -1,0 +1,28 @@
+[ServiceDescription]
+executable = IoComService.jar
+name = IoComService
+capabilities = Capability1 Capability2 Capability3 Capability4
+platform = windows
+version = 1.0
+description = IoCom Launcher
+vendor = PAG
+jars =
+native =
+class = com.googlecode.onevre.web.IoComService.IoComService
+args =
+
+[Capability2]
+role = consumer
+type = audio
+
+[Capability1]
+role = producer
+type = audio
+
+[Capability3]
+role = consumer
+type = video
+
+[Capability4]
+role = producer
+type = video

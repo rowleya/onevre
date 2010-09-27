@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+    PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+    "http://java.sun.com/dtd/web-jsptaglibrary_2_0.dtd">
+<!--
+  - Author: Andrew G D Rowley
+  - Date: 20 April 2007
+  -
+  - Copyright Notice:
+  - Copyright (c) 2005-2006, University of Manchester All rights reserved.
+  - Redistribution and use in source and binary forms, with or without
+  - modification, are permitted provided that the following conditions are met:
+  -
+  - Redistributions of source code must retain the above copyright notice, this
+  - list of conditions and the following disclaimer. Redistributions in binary
+  - form must reproduce the above copyright notice, this list of conditions and
+  - the following disclaimer in the documentation and/or other materials
+  - provided with the distribution. Neither the name of the University of
+  - Manchester nor the names of its contributors may be used to endorse or
+  - promote products derived from this software without specific prior written
+  - permission.
+  -
+  - THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  - AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  - ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  - LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  - CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  - SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  - INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  - CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  - ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  - POSSIBILITY OF SUCH DAMAGE.
+  -
+  - Description: Tags for accessing PAG functions
+  -->
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>pag</short-name>
+    <uri>/WEB-INF/tld/pag-servlet.tld</uri>
+    <display-name>PAG Tags</display-name>
+    <description>
+        Provides tags for PAG functions
+    </description>
+
+    <tag>
+        <name>pag_setpreference</name>
+        <display-name>pag_setpreference</display-name>
+        <description>Sets a preference</description>
+        <example>
+            Used to set a portlet preference
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.PagSetPreferenceTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <description>
+                The name of the preference to get
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <description>
+                The value to set
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getClientProfile</name>
+        <display-name>pag_getClientProfile</display-name>
+        <description>Receives client profile</description>
+        <example>
+            used to transfer the client profile
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.GetClientProfileTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the xml client profile
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_uploadService</name>
+        <display-name>pag_uploadService</display-name>
+        <description>Upload a new service</description>
+        <example>
+            Used to upload services
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.UploadServiceTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
+    <tag>
+        <name>pag_uploadBridge</name>
+        <display-name>pag_uploadBridge</display-name>
+        <description>Upload a new bridge</description>
+        <example>
+            Used to upload bridges
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.UploadBridgeTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
+    <tag>
+        <name>pag_upload</name>
+        <display-name>pag_upload</display-name>
+        <description>Upload a Data file</description>
+        <example>
+            Used to upload data files
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.UploadTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+            <name>venue</name>
+            <description>
+                The Venue to to download the data from
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_download</name>
+        <display-name>pag_download</display-name>
+        <description>Download a Data file</description>
+        <example>
+            Used to download data files
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.DownloadTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>file</name>
+            <description>
+                The Variable to receive the file identifier
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>selection</name>
+            <description>
+                The Variable to receive the file definition type (filename/dataId)
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+            <name>venue</name>
+            <description>
+                The Venue to to download the data from
+            </description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getAvailableBridges</name>
+        <display-name>pag_getAvailableBridges</display-name>
+        <description>Gets the bridges from a set of registries</description>
+        <example>
+            Used to load any new bridges when the client is started
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.GetAvailableBridgesTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>registryUrls</name>
+            <description>
+                The urls of the registries to query
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>xmlVar</name>
+            <description>
+                The name of the variable to receive the bridge xml
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_xmlRpcExecute</name>
+        <display-name>pag_xmlRpcExecute</display-name>
+        <description>Executes an XMLRPC request</description>
+        <example>
+            Used to execute an XMLRPC call
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.XmlRpcExecuteTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>message</name>
+            <description>
+                The message to decode
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>pag_xmlRpcExecuteSync</name>
+        <display-name>pag_xmlRpcExecuteSync</display-name>
+        <description>Executes an Syncronous XMLRPC request</description>
+        <example>
+            Used to execute an XMLRPC call
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.XmlRpcExecuteSyncTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>message</name>
+            <description>
+                The message to decode
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the response
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_xmlRpcGetResponse</name>
+        <display-name>pag_xmlRpcGetResponse</display-name>
+        <description>Gets the next XMLRPC response</description>
+        <example>
+            Used to get a response to an XMLRPC call
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.XmlRpcGetResponseTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the response
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>namespace</name>
+            <description>
+                The portlet namespace
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getServiceDescription</name>
+        <display-name>pag_getServiceDescription</display-name>
+        <description>Gets the description of a service</description>
+        <example>
+            Used to execute a service via web start
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.GetServiceDescriptionTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>service</name>
+            <description>
+                The name of the service
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to receive the name
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>descriptionVar</name>
+            <description>
+                The variable to receive the description
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>classVar</name>
+            <description>
+                The variable to receive the class
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>jarVar</name>
+            <description>
+                The variable to receive the jars
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nativeVar</name>
+            <description>
+                The variable to receive the native jars
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>argsVar</name>
+            <description>
+                The variable to receive the arguments
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>vendorVar</name>
+            <description>
+                The variable to receive the vendor
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_getApplicationDescription</name>
+        <display-name>pag_getApplicationDescription</display-name>
+        <description>Gets the description of a shared application</description>
+        <example>
+            Used to execute a shared application via web start
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.GetApplicationDescriptionTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>application</name>
+            <description>
+                The name of the shared application
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nameVar</name>
+            <description>
+                The variable to receive the name
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>descriptionVar</name>
+            <description>
+                The variable to receive the description
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>classVar</name>
+            <description>
+                The variable to receive the class
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>jarVar</name>
+            <description>
+                The variable to receive the jars
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nativeVar</name>
+            <description>
+                The variable to receive the native jars
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>argsVar</name>
+            <description>
+                The variable to receive the arguments
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>vendorVar</name>
+            <description>
+                The variable to receive the vendor
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pag_findJarContainingResource</name>
+        <display-name>pag_findJarContainingResource</display-name>
+        <description>Finds a jar containing a resource</description>
+        <example>
+            Used to find a jar containing a specified resource
+        </example>
+        <tag-class>com.googlecode.onevre.web.servlet.tags.FindJarContainingResourceTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>var</name>
+            <description>
+                The variable to receive the url of the jar
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>resourceName</name>
+            <description>
+                The name of the resource to find
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rootDirectory</name>
+            <description>
+                The root directory to search for the resource
+                (relative to the context path of the web application)
+            </description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

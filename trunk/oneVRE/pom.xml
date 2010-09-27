@@ -1,0 +1,92 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.googlecode.onevre</groupId>
+	<artifactId>OneVRE</artifactId>
+	<packaging>pom</packaging>
+	<name>OneVRE</name>
+	<version>0.1-SNAPSHOT</version>
+	<properties>
+		<keystore.location>/home/ts23/oneVRE/src/keystore</keystore.location>
+		<keystore.password>dresden</keystore.password>
+		<keystore.keypass></keystore.keypass>
+		<keystore.alias>onevre</keystore.alias>
+	</properties>
+	<modules>
+		<module>AccessGrid</module>
+		<module>Bridges</module>
+		<module>GWT</module>
+		<module>Protocols</module>
+		<module>Security</module>
+		<module>Utils</module>
+		<module>Web</module>
+		<module>WebApps</module>
+		<module>POR</module>
+	</modules>
+
+	<!-- common build elements -->
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                      <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- repositories -->
+    <repositories>
+        <repository>
+            <id>manchester.repo</id>
+            <url>http://memetic.ag.manchester.ac.uk:8081/nexus/content/repositories/manchester.repo/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>vicovre</id>
+            <url>https://vicovre.googlecode.com/svn/maven-snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+    </repositories>
+
+    <!-- common dependencies -->
+    <dependencies>
+    </dependencies>
+
+    <!-- developers -->
+    <developers>
+        <developer>
+            <name>Tobias M Schiebeck</name>
+            <email>Tobias.Schiebeck@manchester.ac.uk</email>
+            <organization>RCS (University of Manchester)</organization>
+            <organizationUrl>http://www.rcs.manchester.ac.uk</organizationUrl>
+        </developer>
+         <developer>
+            <name>Andrew Rowley</name>
+            <email>Andrew.Rowley@manchester.ac.uk</email>
+            <organization>RCS (University of Manchester)</organization>
+            <organizationUrl>http://www.rcs.manchester.ac.uk</organizationUrl>
+        </developer>
+    </developers>
+
+</project>
