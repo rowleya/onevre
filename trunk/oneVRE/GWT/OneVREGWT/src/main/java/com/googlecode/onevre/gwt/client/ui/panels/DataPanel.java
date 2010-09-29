@@ -16,6 +16,7 @@ import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.DataDescription;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.ui.Icons;
+import com.googlecode.onevre.gwt.client.xmlrpc.UpdateData;
 import com.googlecode.onevre.gwt.common.client.MessageResponse;
 import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 
@@ -28,6 +29,8 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 	HashMap<DataDescription, Widget> dataEntrys =  new HashMap<DataDescription, Widget>();
 
 	public void addValue(int i, DataDescription data){
+
+		GWT.log("addValue " + i + " : " + data.toString());
 		String lm = data.getLastModified();
 		if (!lm.equals("")){
 			this.setWidget(2*i,0,new Image(Icons.fileIcon));
@@ -42,16 +45,20 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 				GWT.log("LastModified: " + data.getLastModified() + " not parsable as date");
 			}
 			this.setText(2*i, 2, dateString);
+			dateString = "";
 			if ((expiry != null) && (!expiry.equals(""))) {
+				this.setText(0, 2, "Expires");
 				try {
 					date = DateTimeFormat.getFormat("EEE, MMM d, yyyy, HH:mm:ss").parse(expiry);
 					dateString = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(date);
-					this.setText(2*i, 3, dateString);
+
 				} catch (IllegalArgumentException e) {
 					GWT.log("Expiry:" +expiry + " not parsable as date");
 				}
 			}
+			this.setText(2*i, 3, dateString);
 			this.setText(2*i+1,1,data.getDescription());
+			this.setText(2*i+1,2,"");
 			this.getFlexCellFormatter().setColSpan(2*i+1, 1, 3);
 			Image propIcon = new Image(Icons.filePropertiesIcon);
 			propIcon.setHeight("32px");
@@ -69,7 +76,6 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 		this.setText(0,0, "Name");
 		this.getFlexCellFormatter().setColSpan(0, 0, 2);
 		this.setText(0, 1, "Last Modified" );
-		this.setText(0, 2, "Expires");
 		int i = 1;
 		for (DataDescription dataDescription : dataDescriptions){
 			addValue(i, dataDescription);
@@ -92,8 +98,9 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 	}
 
 	public void updateData(DataDescription data) {
-		// TODO Auto-generated method stub
-
+		int i = dataDescriptions.indexOf(data);
+		dataDescriptions.setElementAt(data, i);
+		addValue(i+1, data);
 	}
 
 	public void addDirectory(DataDescription data) {
@@ -119,7 +126,6 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 				baseurl=baseurl.substring(0,baseurl.length()-1);
 			}
 			String url = baseurl + Application.getParam("pag_dataDownloadUrl");
-
 			String postRequest = url + "?namespace=" + Application.getParam("pag_namespace");
 		    postRequest += "&file=" + data.getId() + "&venue=" + venueState.getUri();
 		    postRequest += "&selection=dataid";
@@ -137,6 +143,8 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 	public void handleResponse(MessageResponse response) {
 		if (response.getResponseCode() == MessageResponse.OK){
 			DataDescription dataDescription = ((EditDataDescriptionPanel)response.getSource()).getDataDescription();
+			GWT.log("DATA: " + dataDescription.toString());
+			UpdateData.updateData(venueState.getUri(), dataDescription);
 			Application.getDataManager().updateData(venueState, dataDescription);
 		}
 	}
