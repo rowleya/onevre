@@ -363,6 +363,7 @@ public class Venue extends SoapServable {
     }
 
     public void addData(DataDescription dataDescription){
+        venueState.setData(dataDescription);
         sendEvent(Event.ADD_DATA, dataDescription);
     }
 
@@ -899,7 +900,8 @@ public class Venue extends SoapServable {
         )
     public DataDescription updateData(
             @SoapParameter("dataDesc") DataDescription dataDesc){
-        venueState.updateData(dataDesc);
+        String oldfilename = venueState.updateData(dataDesc);
+        dataStore.storeDescription(venueState.getUniqueId(), oldfilename, dataDesc);
         sendEvent(Event.UPDATE_DATA, dataDesc);
         return dataDesc;
     }
@@ -912,6 +914,7 @@ public class Venue extends SoapServable {
         DataDescription dataItem = dataDesc;
         try {
             dataItem = dataStore.removeData(venueState.getUniqueId(),dataDesc);
+            venueState.removeData(dataDesc);
         } catch (IOException e) {
             e.printStackTrace();
         }

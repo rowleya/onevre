@@ -1,8 +1,11 @@
 package com.googlecode.onevre.ag.agserver;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,15 +13,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.ftpserver.ftplet.FtpException;
 
 import com.googlecode.onevre.ag.types.DataDescription;
 import com.googlecode.onevre.ag.types.VenueState;
 import com.googlecode.onevre.utils.Utils;
-import com.sun.media.Log;
 
 
 public class DataStore {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     public static String STATUS_INVALID = "invalid";
     public static String STATUS_REFERENCE = "reference";
@@ -76,7 +83,7 @@ public class DataStore {
 				d = (new SimpleDateFormat(EXPIRY_FORMAT)).parse(buffer);
 				dataItem.setExpires(df.format(d));
 			} catch (ParseException e) {
-				Log.error("Expiry date in wrong date format - will not be set");
+				log.error("Expiry date in wrong date format - will not be set");
 			}
         }
         String dateStr = df.format(new Date(file.lastModified()));
@@ -113,6 +120,7 @@ public class DataStore {
             if (dataUri != null){
                 venueState.removeData(dataDesc);
                 String fileName = dataUri.replaceFirst(getDataLocation(venueId),"");
+                storeDescription(venueId, fileName, null);
                 ftpsServer.removeFile(venueId, fileName);
                 return dataItem;
             }
@@ -176,6 +184,54 @@ public class DataStore {
         } catch (FtpException e) {
             e.printStackTrace();
         }
+    }
+
+    public void storeDescription(String venueId, String oldfilename , DataDescription data){
+    	if (!oldfilename.equals(data.getName())){
+    		File f = ftpsServer.getFile(venueId, oldfilename);
+    		if (!f.renameTo(ftpsServer.getFile(venueId, data.getName()))){
+    			log.error("can't rename file");
+    			return;
+    		}
+    	}
+    	File descFile = ftpsServer.getFile(venueId,DESC_FILE_NAME);
+    	StringBuffer buffer = new StringBuffer();
+    	String line = null;
+    	boolean found = false;
+    	BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(descFile));
+			while ((line = reader.readLine())!=null){
+				if (line.startsWith(oldfilename)){
+					if (data!=null){
+						line = data.getName()+";" +data.getDescription() + ";" +data.getExpires()+"\n";
+						buffer.append(line);
+					}
+					found = true;
+				} else {
+					buffer.append(line+"\n");
+				}
+			}
+			reader.close();
+		} catch (FileNotFoundException e) {
+			// do nothing
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (!found) {
+			line = data.getName()+";" +data.getDescription() + ";" +data.getExpires()+"\n";
+			buffer.append(line);
+		}
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(descFile));
+            writer.write(buffer.toString());
+            writer.close();
+        } catch (Exception e){
+        	log.error(e.getMessage());
+        }
+
     }
 
     public void addVenue(String venueId, Venue venue) {

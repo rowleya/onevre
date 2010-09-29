@@ -130,6 +130,11 @@ public class FtpsServer {
         userManager.delete(name, password);
     }
 
+    public File getFile(String venueId, String filename){
+    	File f = new File(serverDir + "/" + venueId + "/" +  filename);
+    	return f;
+    }
+
     public File[] getFileList (String venueId) {
         File dir = new File(serverDir + "/" + venueId);
         if (!dir.exists()){
@@ -156,4 +161,5 @@ public class FtpsServer {
         }
         return file;
     }
+
 }

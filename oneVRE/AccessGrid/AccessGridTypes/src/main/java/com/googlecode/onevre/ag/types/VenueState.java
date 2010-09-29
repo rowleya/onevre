@@ -366,8 +366,11 @@ public class VenueState implements SoapSerializable {
      * Updates some data
      * @param datum The data to update
      */
-    public void updateData(DataDescription datum) {
-        data.set(data.indexOf(datum),datum);
+    public String updateData(DataDescription datum) {
+        int index = data.indexOf(datum);
+    	String filename = data.get(index).getName();
+    	data.set(index,datum);
+    	return filename;
     }
 
     /**

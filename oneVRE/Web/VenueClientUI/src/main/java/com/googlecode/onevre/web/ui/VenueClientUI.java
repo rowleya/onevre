@@ -644,6 +644,38 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 		return true;
     }
 
+    public boolean uploadData(String uri, DataDescription data){
+    	Venue venue = venues.get(uri);
+    	try {
+			venue.updateData(data);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+    }
+
+    public boolean updateData(String uri, String dataID, String name, String description, String expires){
+    	Venue venue = venues.get(uri);
+    	DataDescription dataItem = new DataDescription();
+    	dataItem.setId(dataID);
+    	Vector<DataDescription> items = venueStates.get(uri).getData();
+    	DataDescription data = items.get(items.indexOf(dataItem));
+    	data.changeName(name);
+    	data.setDescription(description);
+    	data.setExpires(expires);
+    	try {
+			venue.updateData(data);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+    }
+
+
     /**
      * Starts the application queued for the applications in the Venue. This is part
      * of the Application Monitor built in to the venueclient.

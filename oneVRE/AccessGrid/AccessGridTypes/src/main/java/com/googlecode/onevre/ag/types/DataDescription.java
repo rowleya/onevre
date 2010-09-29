@@ -31,8 +31,11 @@
 
 package com.googlecode.onevre.ag.types;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
+
 
 /**
  * The AG3 Data Description
@@ -40,6 +43,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @version 1.0
  */
 public class DataDescription implements SoapSerializable {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     private static final String[] SOAP_FIELDS =
         new String[]{"id",
@@ -286,6 +291,15 @@ public class DataDescription implements SoapSerializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void changeName(String newname){
+    	String oldname = name;
+    	this.name = newname;
+    	log.info(uri);
+    	String newuri = uri.substring(0, uri.indexOf(oldname)) + newname;
+    	log.info(newuri);
+    	uri = newuri;
     }
 
     /**

@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
@@ -32,11 +33,14 @@ public class EditDataDescriptionPanel extends ModalPopup<DockPanel> implements C
 	TextBox homeInput = new TextBox();
 	ListBox profileInput = new ListBox();
 	PushButton cancel = new PushButton("Cancel",this);
-	PushButton ok = new PushButton("Set Profile Values",this);
+	PushButton clear = new PushButton("Clear",this);
+	PushButton ok = new PushButton("Set Data Description",this);
+	FlexTable profilepanel = new FlexTable();
 
 	DataDescription dataDescription = null;
 
 	MessageResponseHandler handler = null;
+
 
 	boolean changed = false;
 
@@ -47,13 +51,26 @@ public class EditDataDescriptionPanel extends ModalPopup<DockPanel> implements C
 		changed = false;
 		nameInput.setText(dataDescription.getName());
 		descriptionInput.setText(dataDescription.getDescription());
-		Date date = new Date();
-		try {
-			date =	DateTimeFormat.getFormat(DATE_FORMAT).parse(dataDescription.getExpires());
-		} catch (IllegalArgumentException e) {
-			GWT.log("Expiry:" + dataDescription.getExpires() + " not parsable as date");
+		String expiry = dataDescription.getExpires();
+		if (expiry != null){
+			Image timeout = new Image(Icons.timeoutIcon);
+			timeout.setHeight("22px");
+			profilepanel.setWidget(2,0, timeout);
+			profilepanel.setText(2,1, "expires:");
+			profilepanel.setWidget(2, 2, dateInput);
+			profilepanel.setWidget(2,3,clear);
+			dateInput.setValue(null);
+			Date date = new Date();
+			try {
+				date =	DateTimeFormat.getFormat(DATE_FORMAT).parse(dataDescription.getExpires());
+				dateInput.setValue(date);
+			} catch (IllegalArgumentException e) {
+				GWT.log("Expiry:" + dataDescription.getExpires() + " not parsable as date");
+			}
+			dateInput.setVisible(true);
+		} else {
+			dateInput.setVisible(false);
 		}
-		dateInput.setValue(date);
 	}
 
 	public boolean hasChanged(){
@@ -72,21 +89,18 @@ public class EditDataDescriptionPanel extends ModalPopup<DockPanel> implements C
 		img.setHeight("64px");
 		panel.add(img,DockPanel.WEST);
 		panel.setCellVerticalAlignment(img, DockPanel.ALIGN_MIDDLE);
-		Grid profilepanel = new Grid (3,3);
+//		Grid profilepanel = new Grid (3,3);
 		profilepanel.setWidget(0,0, new Image(Icons.fileIcon));
 		profilepanel.setText(0,1, "Name: *");
 		profilepanel.setWidget(0, 2, nameInput);
+		profilepanel.getFlexCellFormatter().setColSpan(0,2,2);
 		Image docInfo = new Image(Icons.docInfoIcon);
 		docInfo.setHeight("22px");
 		profilepanel.setWidget(1,0, docInfo);
 		profilepanel.setText(1,1, "Descritpion: *");
 		descriptionInput.setVisibleLines(3);
 		profilepanel.setWidget(1, 2, descriptionInput);
-		Image timeout = new Image(Icons.timeoutIcon);
-		timeout.setHeight("22px");
-		profilepanel.setWidget(2,0, timeout);
-		profilepanel.setText(2,1, "expires:");
-		profilepanel.setWidget(2, 2, dateInput);
+		profilepanel.getFlexCellFormatter().setColSpan(1,2,2);
 		panel.add(profilepanel,DockPanel.CENTER);
 
 		DockPanel buttons  = new DockPanel();
@@ -97,12 +111,22 @@ public class EditDataDescriptionPanel extends ModalPopup<DockPanel> implements C
 	}
 
 	public void onClick(ClickEvent event) {
+		if (event.getSource().equals(clear)){
+			dateInput.setValue(null);
+			return;
+		}
 		if (event.getSource().equals(ok)){
 			dataDescription.setName(nameInput.getText());
 			dataDescription.setDescription(descriptionInput.getText());
-			Date date = dateInput.getValue();
-			String expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
-			dataDescription.setExpires(expString);
+			GWT.log("has DateInput :" + dateInput.isVisible());
+			if (dateInput.isVisible()){
+				String expString = "";
+				Date date = dateInput.getValue();
+				if (date!=null){
+					expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
+				}
+				dataDescription.setExpires(expString);
+			}
 			changed=true;
 			handler.handleResponse(new MessageResponse(MessageResponse.OK,this));
 		} else {

@@ -300,4 +300,24 @@ public class DataDescription {
         this.parentId = parentId;
     }
 
+    public String toString(){
+	    String out = "Id: " +id +"\n";
+	    	out += "Name: "+ name +"\n";
+	    	out += "Description: "+ description +"\n";
+	    	out += "Size: " + size +"\n";
+	    	out += "lastModified: " + lastModified +"\n";
+	    	out += "expires: " + expires +"\n";
+		return out;
+    }
+
+    public boolean equals(Object other){
+    	if (other.getClass()!=DataDescription.class){
+    		return false;
+    	}
+    	if (id.equals(((DataDescription)other).id)){
+    		return true;
+    	}
+    	return false;
+    }
+
 }

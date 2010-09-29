@@ -343,6 +343,32 @@ public class Venue extends SoapServable {
         }
         throw new SoapException("Return type not correct");
     }
+    /**
+     * Removes data from a venue
+     * @param dataDescription The data being removed
+     * @return The removed data
+     * @throws IOException
+     * @throws SoapException
+     */
+    @SoapReturn(
+            name = "dataDesc"
+        )
+    public DataDescription updateData(
+            @SoapParameter("dataDesc") DataDescription dataDescription
+        ) throws IOException, SoapException {
+           dataDescription.setType(null);
+        HashMap<String, Object> result = soapRequest.call(VENUE_NS, "UpdateData",
+                "UpdateDataRequest", new String[]{"dataDesc"},
+                new Object[]{dataDescription}, new Object[]{null},
+                new SoapResponseHash(
+                        new String[]{VENUE_NS + "/dataDesc"},
+                         new Class[]{DataDescription.class}));
+        Object dataDesc = result.get("dataDesc");
+        if ((dataDesc != null) && (dataDesc instanceof DataDescription)) {
+            return (DataDescription) dataDesc;
+        }
+        throw new SoapException("Return type not correct");
+    }
 
     /**
      * Get the upload descriptor from the Venue's datastore.
