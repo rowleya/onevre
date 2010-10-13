@@ -31,6 +31,11 @@
 
 package com.googlecode.onevre.ag.types.application;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
@@ -41,6 +46,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Tobias M Schiebeck
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AGSharedApplicationDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -76,6 +83,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * Returns the mimeType
      * @return the mimeType
      */
+    @XmlElement
     public String getMimeType() {
         return mimeType;
     }
@@ -84,6 +92,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -92,6 +101,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * Returns the descripton
      * @return the descripton
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -100,6 +110,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }
@@ -148,6 +159,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * Gets the package name
      * @return The package name
      */
+    @XmlElement
     public String getPackageName() {
         return packageName;
     }

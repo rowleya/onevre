@@ -31,6 +31,11 @@
 
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 import com.googlecode.onevre.web.common.Defaults;
 
@@ -40,6 +45,8 @@ import com.googlecode.onevre.web.common.Defaults;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class ClientProfile implements SoapSerializable {
 
     /**
@@ -150,6 +157,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the audio value
      * @return 1 if audio or 0 otherwise
      */
+    @XmlElement
     public int getAudio() {
         return audio;
     }
@@ -174,6 +182,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the beacon value
      * @return 1 if beacon, 0 otherwise
      */
+    @XmlElement
     public int getBeacon() {
         return beacon;
     }
@@ -196,6 +205,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the connection id
      * @return the connection id
      */
+    @XmlElement
     public String getConnectionId() {
         return connectionId;
     }
@@ -212,6 +222,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the display
      * @return 1 if display, 0 otherwise
      */
+    @XmlElement
     public int getDisplay() {
         return display;
     }
@@ -233,6 +244,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the dn
      * @return the dn
      */
+    @XmlElement
     public String getDistinguishedName() {
         return distinguishedName;
     }
@@ -249,6 +261,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the email
      * @return the email
      */
+    @XmlElement
     public String getEmail() {
         return email;
     }
@@ -267,6 +280,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the gmt offset
      * @return the offset
      */
+    @XmlElement
     public int getGmtoffset() {
         return gmtoffset;
     }
@@ -289,6 +303,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the home venue
      * @return the home venue
      */
+    @XmlElement
     public String getHomeVenue() {
         return homeVenue;
     }
@@ -307,6 +322,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the latitude
      * @return the lat
      */
+    @XmlElement
     public float getLat() {
         return lat;
     }
@@ -329,6 +345,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the location
      * @return the location
      */
+    @XmlElement
     public String getLocation() {
         return location;
     }
@@ -347,6 +364,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the longitude
      * @return the long
      */
+    @XmlElement
     public float getLong() {
         return longg;
     }
@@ -369,6 +387,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -387,6 +406,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the phone number
      * @return the number
      */
+    @XmlElement
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -405,6 +425,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the private id
      * @return the id
      */
+    @XmlElement
     public String getPrivateId() {
         return privateId;
     }
@@ -421,6 +442,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the profile type
      * @return the type
      */
+    @XmlElement
     public String getProfileType() {
         return profileType;
     }
@@ -439,6 +461,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the public id
      * @return the id
      */
+    @XmlElement
     public String getPublicId() {
         return publicId;
     }
@@ -455,6 +478,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the tech support info
      * @return the info
      */
+    @XmlElement
     public String getTechSupportInfo() {
         return techSupportInfo;
     }
@@ -471,6 +495,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the venue client url
      * @return the url
      */
+    @XmlElement
     public String getVenueClientURL() {
         return venueClientURL;
     }
@@ -487,6 +512,7 @@ public class ClientProfile implements SoapSerializable {
      * Gets the video
      * @return 1 if video or 0 otherwise
      */
+    @XmlElement
     public int getVideo() {
         return video;
     }

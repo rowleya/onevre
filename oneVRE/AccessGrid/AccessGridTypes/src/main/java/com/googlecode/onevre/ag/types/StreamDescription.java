@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types;
 
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 import com.googlecode.onevre.ag.types.network.MulticastNetworkLocation;
 import com.googlecode.onevre.ag.types.network.NetworkLocation;
@@ -45,6 +50,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class StreamDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -101,6 +108,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the static addressability of the stream
      * @return true if the stream is statically addressed
      */
+    @XmlElement
     public boolean getStatic() {
         return sstatic;
     }
@@ -109,6 +117,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the capabilities of the stream (name must be singular for soap)
      * @return A vector of capabilities
      */
+    @XmlElement
     public Vector<Capability> getCapability() {
         return capability;
     }
@@ -117,6 +126,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -125,6 +135,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the encryption flag
      * @return 1 if encrypted or 0 otherwise
      */
+    @XmlElement
     public int getEncryptionFlag() {
         return encryptionFlag;
     }
@@ -133,6 +144,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the encryption key
      * @return the encryption key
      */
+    @XmlElement
     public String getEncryptionKey() {
         return encryptionKey;
     }
@@ -141,6 +153,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -149,6 +162,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the network location of the stream
      * @return a NetworkLocation object
      */
+    @XmlElement
     public NetworkLocation getLocation() {
         return location;
     }
@@ -157,6 +171,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -165,6 +180,7 @@ public class StreamDescription implements SoapSerializable {
      * Returns all the network locations of the stream
      * @return Returns the network locations
      */
+    @XmlElement
     public Vector<NetworkLocation> getNetworkLocations() {
         return networkLocations;
     }

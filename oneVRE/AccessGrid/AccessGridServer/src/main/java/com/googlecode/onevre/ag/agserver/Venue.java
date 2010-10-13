@@ -362,8 +362,9 @@ public class Venue extends SoapServable {
         return connectionId;
     }
 
-    public void addData(DataDescription dataDescription){
+    public void addData( @SoapParameter("dataDescription") DataDescription dataDescription){
         venueState.setData(dataDescription);
+        dataStore.storeDescription(venueState.getUniqueId(), dataDescription.getName(), dataDescription);
         sendEvent(Event.ADD_DATA, dataDescription);
     }
 

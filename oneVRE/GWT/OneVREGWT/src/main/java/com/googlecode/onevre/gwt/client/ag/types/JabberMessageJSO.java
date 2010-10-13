@@ -8,15 +8,15 @@ public class JabberMessageJSO extends JavaScriptObject {
 	}
 
 	public native final String getFrom() /*-{
-		return this.getFrom();
+		return this.from;
 	}-*/;
 
 	public native final String getMessage() /*-{
-		return this.getMessageWithLinks();
+		return this.messageWithLinks;
 	}-*/;
 
 	public native final String getDate() /*-{
-		return this.getDate();
+		return this.date;
 	}-*/;
 
 

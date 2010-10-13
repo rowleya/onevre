@@ -20,6 +20,16 @@ public class ClientProfile {
 		profileType = jso.getProfileType();
 	};
 
+	public ClientProfile (ClientProfileEJSO jso) {
+		name = jso.getName();
+		email = jso.getEmail();
+		phoneNumber = jso.getPhoneNumber();
+		location = jso.getLocation();
+		publicId = jso.getPublicId();
+		homeVenue = jso.getHomeVenue();
+		profileType = jso.getProfileType();
+	};
+
 	public void setPhoneNumber(String phone) {
 		this.phoneNumber = phone;
 	}

@@ -32,6 +32,8 @@
 package com.googlecode.onevre.ag.agclient;
 
 
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,7 +49,8 @@ import com.googlecode.onevre.ag.types.StreamDescription;
 import com.googlecode.onevre.ag.types.VenueState;
 import com.googlecode.onevre.ag.types.application.ApplicationCmdDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
-import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
+import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 
 
 
@@ -67,7 +70,7 @@ public class VenueClientEventListener implements EventListener {
     private String venueId = null;
 //    private String connectionId=null;
     private VenueState venueState=null;
-    private PagXmlRpcServer xmlRpcServer=null;
+    private AgEventServer agEventServer=null;
     private ApplicationListener venueClientUI=null;
 
     /**
@@ -77,12 +80,12 @@ public class VenueClientEventListener implements EventListener {
      * @param venueClientUI
      * @param xmlRpcServer
      */
-    public VenueClientEventListener(VenueState venueState, String eventLocation, ApplicationListener venueClientUI, PagXmlRpcServer xmlRpcServer) {
+    public VenueClientEventListener(VenueState venueState, String eventLocation, ApplicationListener venueClientUI, AgEventServer agEventServer) {
         this.eventLocation=eventLocation;
         this.venueState=venueState;
         this.venueId = venueState.getUri();
         this.venueClientUI=venueClientUI;
-        this.xmlRpcServer=xmlRpcServer;
+        this.agEventServer=agEventServer;
     }
 
     /**
@@ -162,59 +165,59 @@ public class VenueClientEventListener implements EventListener {
         if (eventType.equals(Event.ENTER)){
             client = (ClientProfile)event.getData();
             venueState.setClients(client);
-            xmlRpcServer.addRequest("eventEnterVenue", new Object[]{getListenerUri(),client});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventEnterVenue", client));
        } else
         if (eventType.equals(Event.EXIT)){
             client = (ClientProfile)event.getData();
             venueState.removeClient(client);
-            xmlRpcServer.addRequest("eventExitVenue", new Object[]{getListenerUri(),client});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventExitVenue", client));
         }else
         if (eventType.equals(Event.MODIFY_USER)){
             client = (ClientProfile)event.getData();
             venueState.updateClient(client);
-            xmlRpcServer.addRequest("eventModifyUser", new Object[]{getListenerUri(),client});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyUser", client));
         }else
         // data events
         if (eventType.equals(Event.ADD_DATA)){
             data = (DataDescription)event.getData();
             venueState.setData(data);
-            xmlRpcServer.addRequest("eventAddData", new Object[]{getListenerUri(),data});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddData", data));
         } else
         if (eventType.equals(Event.REMOVE_DATA)){
             data = (DataDescription)event.getData();
             venueState.removeData(data);
-            xmlRpcServer.addRequest("eventRemoveData", new Object[]{getListenerUri(),data});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveData", data));
         }else
         if (eventType.equals(Event.UPDATE_DATA)){
             data = (DataDescription)event.getData();
             venueState.updateData(data);
-            xmlRpcServer.addRequest("eventUpdateData", new Object[]{getListenerUri(),data});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateData", data));
         }else
         if (eventType.equals(Event.ADD_DIR)){
             data = (DataDescription)event.getData();
-//            venueState.updateData(data);
-//            xmlRpcServer.addRequest("eventAddDirectory", new Object[]{getListenerUri(),data});
+            venueState.updateData(data);
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddDirectory", data));
         }else
         if (eventType.equals(Event.REMOVE_DIR)){
             data = (DataDescription)event.getData();
-//          venueState.updateData(data);
-//          xmlRpcServer.addRequest("eventRemoveDirectory", new Object[]{getListenerUri(),data});
+            venueState.updateData(data);
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveDirectory", data));
         }else
         // service events
         if (eventType.equals(Event.ADD_SERVICE)){
             service = (ServiceDescription)event.getData();
             venueState.setServices(service);
-            xmlRpcServer.addRequest("eventAddService", new Object[]{getListenerUri(),service});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddService", service));
         } else
         if (eventType.equals(Event.REMOVE_SERVICE)){
             service = (ServiceDescription)event.getData();
             venueState.removeService(service);
-            xmlRpcServer.addRequest("eventRemoveService", new Object[]{getListenerUri(),service});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveService", service));
         }else
         if (eventType.equals(Event.UPDATE_SERVICE)){
             service = (ServiceDescription)event.getData();
             venueState.updateService(service);
-            xmlRpcServer.addRequest("eventUpdateService", new Object[]{getListenerUri(),service});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateService", service));
         }else
         // application events
         if (eventType.equals(Event.ADD_APPLICATION)){
@@ -222,46 +225,49 @@ public class VenueClientEventListener implements EventListener {
             System.out.println("Add application: " + application.getName());
             venueState.setApplications(application);
             venueClientUI.addApplication(application);
-            xmlRpcServer.addRequest("eventAddApplication", new Object[]{getListenerUri(),application});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddApplication", application));
         } else
         if (eventType.equals(Event.REMOVE_APPLICATION)){
             application = (ApplicationDescription)event.getData();
             venueState.removeApplication(application);
             venueClientUI.removeApplication(application);
-            xmlRpcServer.addRequest("eventRemoveApplication", new Object[]{getListenerUri(),application});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveApplication", application));
         }else
         if (eventType.equals(Event.UPDATE_APPLICATION)){
             application = (ApplicationDescription)event.getData();
             venueState.updateApplication(application);
-            xmlRpcServer.addRequest("eventUpdateApplication", new Object[]{getListenerUri(),application});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateApplication", application));
         }else
         // connection events
         if (eventType.equals(Event.ADD_CONNECTION)){
             connection = (ConnectionDescription)event.getData();
             venueState.setConnections(connection);
-            xmlRpcServer.addRequest("eventAddConnection", new Object[]{getListenerUri(),connection});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddConnection", connection));
         } else
         if (eventType.equals(Event.REMOVE_CONNECTION)){
             connection = (ConnectionDescription)event.getData();
             venueState.removeConnection(connection);
-            xmlRpcServer.addRequest("eventRemoveConnection", new Object[]{getListenerUri(),connection});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveConnection", connection));
         }else
         if (eventType.equals(Event.ADD_STREAM)){
             stream = (StreamDescription)event.getData();
-            xmlRpcServer.addRequest("eventAddStream", new Object[]{getListenerUri(),stream});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddStream", stream));
         }else
         if (eventType.equals(Event.MODIFY_STREAM)){
             stream = (StreamDescription)event.getData();
-            xmlRpcServer.addRequest("eventModifyStream", new Object[]{getListenerUri(),stream});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyStream", stream));
         }else
         if (eventType.equals(Event.REMOVE_STREAM)){
             stream = (StreamDescription)event.getData();
-            xmlRpcServer.addRequest("eventRemoveStream", new Object[]{getListenerUri(),stream});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveStream", stream));
         }else
         if (eventType.equals(Event.OPEN_APP)){
             appCmd = (ApplicationCmdDescription)event.getData();
             System.out.println("Start application: cmd=" + appCmd.getCmd() +" verb="+ appCmd.getVerb() );
-            xmlRpcServer.addRequest("eventRemoteStartApplication", new Object[]{getListenerUri(),appCmd.getAppDesc(),appCmd.getProfile()});
+            Vector<Object> ov = new Vector<Object>();
+            ov.add(appCmd.getAppDesc());
+            ov.add(appCmd.getProfile());
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoteStartApplication", ov));
         }else
         {
             System.out.println("Event Client: ");

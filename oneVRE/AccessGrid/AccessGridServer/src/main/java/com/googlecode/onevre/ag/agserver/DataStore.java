@@ -118,9 +118,9 @@ public class DataStore {
             DataDescription dataItem = dataDescriptions.get(dataDescriptions.indexOf(dataDesc));
             String dataUri = dataItem.getUri();
             if (dataUri != null){
-                venueState.removeData(dataDesc);
+                venueState.removeData(dataItem);
                 String fileName = dataUri.replaceFirst(getDataLocation(venueId),"");
-                storeDescription(venueId, fileName, null);
+                storeDescription(venueId, dataItem.getName(), null);
                 ftpsServer.removeFile(venueId, fileName);
                 return dataItem;
             }
@@ -180,14 +180,13 @@ public class DataStore {
         try {
             File file = ftpsServer.getLocalFile(fName);
             DataDescription dataDescription = createDataDescription(venueId,file, new HashMap<String, String>());
-            venues.get(venueId).addData(dataDescription);
         } catch (FtpException e) {
             e.printStackTrace();
         }
     }
 
     public void storeDescription(String venueId, String oldfilename , DataDescription data){
-    	if (!oldfilename.equals(data.getName())){
+    	if ((data!=null)&&(!oldfilename.equals(data.getName()))){
     		File f = ftpsServer.getFile(venueId, oldfilename);
     		if (!f.renameTo(ftpsServer.getFile(venueId, data.getName()))){
     			log.error("can't rename file");
@@ -220,7 +219,7 @@ public class DataStore {
 			e.printStackTrace();
 		}
 
-		if (!found) {
+		if ((data!=null)&&(!found)) {
 			line = data.getName()+";" +data.getDescription() + ";" +data.getExpires()+"\n";
 			buffer.append(line);
 		}

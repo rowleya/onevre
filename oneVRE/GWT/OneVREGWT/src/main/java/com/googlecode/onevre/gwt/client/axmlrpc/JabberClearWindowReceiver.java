@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.onevre.gwt.client.Application;
+import com.googlecode.onevre.gwt.client.ag.types.AgEventJSO;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class JabberClearWindowReceiver implements RequestReceiver {
@@ -17,6 +18,12 @@ public class JabberClearWindowReceiver implements RequestReceiver {
 
 	public void init(String source) {
 		state = Application.getServerManager().getVenuefromSource(source);
+	}
+
+	@Override
+	public void execute(AgEventJSO eventJSO) {
+		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+		Application.getJabberManager().clear(state);
 	}
 
 }

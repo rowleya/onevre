@@ -47,6 +47,8 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.web.ui.VenueClientUI;
 
@@ -58,7 +60,8 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public class UploadTag extends PortletTag {
 
-    // The size of the buffer
+	Log log = LogFactory.getLog(this.getClass());
+  // The size of the buffer
     private static final int BUFFER_SIZE = 8196;
 
     private String venue = null;
@@ -68,16 +71,21 @@ public class UploadTag extends PortletTag {
     }
 
 
+
     /**
      * @see javax.servlet.jsp.tagext.SimpleTag#doTag()
      */
     @SuppressWarnings("unchecked")
 	public void doTag() {
-    	System.out.println("in UPLOADTAG.JAVA" );
+    	String parentId = "";
+    	String venueUri = "";
+    	String description = "";
+    	String expiry = "";
+     	log.info("in UPLOADTAG.JAVA" );
         HttpServletRequest request = getRequest();
-        System.out.println("Content Type:" + request.getContentType());
-        System.out.println("Content Length = " + request.getContentLength());
-        System.out.println("parameters:" + request.getParameterMap().toString());
+        log.info("Content Type:" + request.getContentType());
+        log.info("Content Length = " + request.getContentLength());
+        log.info("parameters:" + request.getParameterMap().toString());
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (isMultipart) {
             // Create a factory for disk-based file items
@@ -96,33 +104,49 @@ public class UploadTag extends PortletTag {
             while (iter.hasNext()) {
                 FileItem item = iter.next();
                 if (item.isFormField()) {
-                    String name = item.getFieldName();
+                	String name = item.getFieldName();
                     String value = item.getString();
+                    log.info("name: " + name + " value: " + value);
                     if (name.equals("namespace")) {
                         setNamespace(value);
                     }
+                    if (name.equals("parentId")){
+                    	parentId = value;
+                    }
+                    if (name.equals("venueUri")){
+                    	venueUri = value;
+                    }
+                    if (name.equals("description")){
+                    	description = value;
+                    }
+                    if (name.equals("expiry")){
+                    	expiry = value;
+                    }
                 }
             }
+
             VenueClientUI ui = getVenueClientUI();
             iter = items.iterator();
-            if ((ui != null) && ui.isInVenue()) {
+            if ((ui != null)) {
                 // Process the uploaded items
                 while (iter.hasNext()) {
                     FileItem item = iter.next();
                     if (!item.isFormField()) {
                         String fileName = item.getName().replaceAll(" ", "%20");
-                        System.out.println("Receiving file : "+ fileName);
+                        log.info("Receiving file : "+ fileName);
 
                         long size = item.getSize();
                         ui.showUploadStatus();
                         ui.setUploadStatus(fileName, size, 0L);
                         String error = null;
+                        URI uri = null;
                         try {
                             BufferedInputStream input =
                                 new BufferedInputStream(item.getInputStream());
-                            URI uri = ui.uploadDataItem(fileName, venue);
-                            System.out.println("Upload to URL: " + uri);
-                            System.out.println("scheme: " + uri.getScheme());
+                            uri = ui.uploadDataItem(venueUri, fileName);
+                            //, parentId, description, expiry);
+                            log.info("Upload to URL: " + uri);
+                            log.info("scheme: " + uri.getScheme());
                             URL datafile = new URL((URL) null, uri.toString(),
                                 SessionFactory.getURLStreamHandlerFactory().
                                     createURLStreamHandler(uri.getScheme()));
@@ -134,7 +158,7 @@ public class UploadTag extends PortletTag {
                             while ((bytesRead = input.read(buffer)) != -1) {
                                 output.write(buffer, 0, bytesRead);
                                 totalBytes += bytesRead;
-                                ui.setUploadStatus(fileName, size, totalBytes);
+              //                  ui.setUploadStatus(fileName, size, totalBytes);
                             }
                             output.close();
                             input.close();
@@ -142,13 +166,14 @@ public class UploadTag extends PortletTag {
                             e.printStackTrace();
                             error = e.getMessage();
                         }
-                        ui.setUploadStatus(fileName, size, size);
-                        if (error != null) {
+          //              ui.setUploadStatus(fileName, size, size);
+          /*              if (error != null) {
                             ui.displayMessage("Error uploading file: " + error);
                         } else {
                             ui.displayMessage("File uploaded successfully");
                         }
-                        ui.hideUploadStatus();
+             */           //ui.hideUploadStatus();
+                        ui.updateData(venueUri, uri.toString(), fileName, parentId, description, expiry, size);
                         ui.closeDataConnection(venue);
                     }
                 }

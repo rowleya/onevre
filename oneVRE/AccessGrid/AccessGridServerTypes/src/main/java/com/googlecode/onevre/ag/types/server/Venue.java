@@ -330,7 +330,7 @@ public class Venue extends SoapServable {
     public DataDescription removeData(
             @SoapParameter("dataDesc") DataDescription dataDescription
         ) throws IOException, SoapException {
-           dataDescription.setType(null);
+        dataDescription.setType(null);
         HashMap<String, Object> result = soapRequest.call(VENUE_NS, "RemoveData",
                 "RemoveDataRequest", new String[]{"dataDesc"},
                 new Object[]{dataDescription}, new Object[]{null},

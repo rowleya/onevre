@@ -141,22 +141,6 @@
         </example>
         <tag-class>com.googlecode.onevre.web.servlet.tags.UploadTag</tag-class>
         <body-content>empty</body-content>
-        <attribute>
-            <name>namespace</name>
-            <description>
-                The portlet namespace
-            </description>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-            <name>venue</name>
-            <description>
-                The Venue to to download the data from
-            </description>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
     </tag>
 
     <tag>

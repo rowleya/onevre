@@ -1,5 +1,10 @@
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
@@ -8,6 +13,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class EventDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -34,6 +41,7 @@ public class EventDescription implements SoapSerializable {
      * Gets the channel id
      * @return the channel id
      */
+    @XmlElement
     public String getChannelId() {
         return channelId;
     }
@@ -50,6 +58,7 @@ public class EventDescription implements SoapSerializable {
      * Gets the data
      * @return the data
      */
+    @XmlElement
     public Object getData() {
         return data;
     }
@@ -98,6 +107,7 @@ public class EventDescription implements SoapSerializable {
      * Gets the event type
      * @return the event type
      */
+    @XmlElement
     public String getEventType() {
         return eventType;
     }
@@ -114,6 +124,7 @@ public class EventDescription implements SoapSerializable {
      * Gets the sender id
      * @return the sender id
      */
+    @XmlElement
     public String getSenderId() {
         return senderId;
     }

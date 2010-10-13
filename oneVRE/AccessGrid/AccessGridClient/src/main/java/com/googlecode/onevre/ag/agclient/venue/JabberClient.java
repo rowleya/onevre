@@ -55,6 +55,8 @@ import org.jivesoftware.smackx.packet.DelayInformation;
 import org.jivesoftware.smackx.packet.DiscoverInfo;
 import org.jivesoftware.smackx.packet.DiscoverItems;
 
+import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 
 /**
@@ -86,7 +88,7 @@ public class JabberClient implements PacketListener {
 
     private Vector<JabberMessage> history = new Vector<JabberMessage>();
 
-    private PagXmlRpcServer xmlRpcServer = null;
+    private AgEventServer agEventServer = null;
 
     // Adds a message to the queue
     private void addMessage(Date date, String from, String message) {
@@ -97,8 +99,7 @@ public class JabberClient implements PacketListener {
         JabberMessage jabberMessage = new JabberMessage(
                 from, message, dateFormat.format(date));
         history.add(jabberMessage);
-        xmlRpcServer.addRequest("jabberAddMessage",
-                new Object[]{clientUri, jabberMessage});
+        agEventServer.addEvent(new AgEvent(clientUri,"jabberAddMessage", jabberMessage));
     }
 
     private void addRoster(String name) {
@@ -121,10 +122,10 @@ public class JabberClient implements PacketListener {
      */
     @SuppressWarnings("unchecked")
 	public JabberClient(String server, int port, boolean secure, String venueUri,
-            String roomname, String nickname, PagXmlRpcServer xmlRpcServer)
+            String roomname, String nickname, AgEventServer agEventServer)
             throws XMPPException {
     	this.clientUri = venueUri;
-        this.xmlRpcServer = xmlRpcServer;
+        this.agEventServer = agEventServer;
         if (!secure) {
             connection = new XMPPConnection(server, port);
         } else {
@@ -171,7 +172,7 @@ public class JabberClient implements PacketListener {
                 nickname += "_";
             }
         }
-        xmlRpcServer.addRequest("jabberClearWindow", new Object[]{clientUri});
+        agEventServer.addEvent(new AgEvent(clientUri,"jabberClearWindow", clientUri));
 
         Thread keepalive = new Thread() {
             public void run() {

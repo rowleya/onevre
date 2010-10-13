@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 import com.googlecode.onevre.web.portlet.PagPortlet;
 import com.googlecode.onevre.web.ui.VenueClientUI;
@@ -102,4 +103,12 @@ public abstract class PortletTag extends SimpleTagSupport {
                 namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);
     }
+
+    protected AgEventServer getAgEventServer() {
+    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE);
+        return (AgEventServer) getJspContext().getAttribute(
+                namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE,
+                PageContext.SESSION_SCOPE);
+    }
+
 }

@@ -31,8 +31,11 @@
 
 package com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver;
 
+import java.io.StringWriter;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 
@@ -120,7 +123,19 @@ public class PagXmlRpcServer {
         xml += "</methodCall>";
         queue.addResponse(xml);
     }
-
+/*
+    public void addEvent(AgEvent event) {
+    	try {
+			JSONJAXBContext context = new JSONJAXBContext(JSONConfiguration.natural().build(),AgEvent.class);
+			JSONMarshaller marshaller = context.createJSONMarshaller();
+            StringWriter writer = new StringWriter();
+            marshaller.marshallToJSON(event, writer);
+	        queue.addResponse(writer.toString());
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+    }
+*/
     /**
      * Sets the time out listener
      * @param listener The listener to set

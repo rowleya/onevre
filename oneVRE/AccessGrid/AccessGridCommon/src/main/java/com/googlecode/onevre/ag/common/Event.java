@@ -50,4 +50,8 @@ public class Event {
 
     public static String OPEN_APP = "Start application";
 
+    public static String NONE = "none";
+
+    public static String DONE = "done";
+
 }

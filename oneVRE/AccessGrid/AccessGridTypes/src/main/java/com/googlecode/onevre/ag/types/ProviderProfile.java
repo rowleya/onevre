@@ -31,6 +31,11 @@
 
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -38,6 +43,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class ProviderProfile implements SoapSerializable {
 
     /**
@@ -63,6 +70,7 @@ public class ProviderProfile implements SoapSerializable {
      * Returns the location of the provider
      * @return the location
      */
+    @XmlElement
     public String getLocation() {
         return location;
     }
@@ -71,6 +79,7 @@ public class ProviderProfile implements SoapSerializable {
      * Returns the name of the provider
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }

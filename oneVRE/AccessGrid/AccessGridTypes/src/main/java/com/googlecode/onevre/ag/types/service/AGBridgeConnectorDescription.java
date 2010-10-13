@@ -1,7 +1,14 @@
 package com.googlecode.onevre.ag.types.service;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AGBridgeConnectorDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -90,6 +97,7 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
      * Gets the name of the service
      * @return The name of the service
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -115,6 +123,7 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -123,6 +132,7 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
      * Returns the launchUrl
      * @return the launchUrl
      */
+    @XmlElement
     public String getLaunchUrl() {
         return launchUrl;
     }
@@ -139,6 +149,7 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
      * Returns the serverType
      * @return the serverType
      */
+    @XmlElement
     public String getServerType() {
         return serverType;
     }
@@ -161,6 +172,7 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
 	/**
 	 * @return the serviceClass
 	 */
+    @XmlElement
 	public String getBridgeClass() {
 		return bridgeClass;
 	}

@@ -33,12 +33,16 @@ package com.googlecode.onevre.ag.agclient;
 
 
 
+import java.util.Vector;
+
 import com.googlecode.onevre.ag.common.interfaces.EventListener;
 import com.googlecode.onevre.ag.types.EventDescription;
 import com.googlecode.onevre.ag.types.application.AppDataDescription;
 import com.googlecode.onevre.ag.types.application.AppParticipantDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationCmdDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
+import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 
@@ -57,17 +61,17 @@ public class ApplicationEventListener implements EventListener {
 
     private ApplicationDescription application = null;
 
-    private PagXmlRpcServer xmlRpcServer=null;
+    private AgEventServer agEventServer=null;
 
     /**
      * @param application The application description of the application the EventListener is responding to
      * @param appLocation The uri of the SharedApplication (including the public id)
      * @param xmlRpcServer The XML-RPC server that responds to the Application Event
      */
-    public ApplicationEventListener(ApplicationDescription application, String appLocation, PagXmlRpcServer xmlRpcServer) {
+    public ApplicationEventListener(ApplicationDescription application, String appLocation, AgEventServer agEventServer) {
         this.appLocation=appLocation;
         this.application=application;
-        this.xmlRpcServer=xmlRpcServer;
+        this.agEventServer=agEventServer;
         SoapDeserializer.mapType(AppParticipantDescription.class);
         SoapDeserializer.mapType(AppDataDescription.class);
         SoapDeserializer.mapType(ApplicationDescription.class);
@@ -110,8 +114,11 @@ public class ApplicationEventListener implements EventListener {
      */
     public void processEvent(EventDescription event, String SOAPmessage) {
    //     System.err.println("Received application event " + event.getEventType());
-        xmlRpcServer.addRequest("ApplicationEvent", new Object[]{application,
-                event});
+
+    	Vector<Object> ov = new Vector<Object>();
+    	ov.add(application);
+    	ov.add(event);
+    	agEventServer.addEvent(new AgEvent(getListenerUri(),"ApplicationEvent", ov));
     }
 
 

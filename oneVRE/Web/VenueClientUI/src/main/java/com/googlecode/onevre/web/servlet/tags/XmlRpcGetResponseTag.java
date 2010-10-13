@@ -59,9 +59,9 @@ public class XmlRpcGetResponseTag extends PortletTag {
      */
     public void doTag() {
         log.info("XmlRpcGetResponseTag -- NameSpace = " + getNamespace());
-        if (getXmlRpcServer()!=null){
+        if (getAgEventServer()!=null){
             getJspContext().setAttribute(var,
-                    getXmlRpcServer().getNextResponse());
+                    getAgEventServer().getNextResponse());
         } else {
             String xml = "<?xml version=\"1.0\"?>";
             xml += "<done></done>";

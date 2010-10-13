@@ -31,6 +31,11 @@
 
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -38,6 +43,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class ConnectionDescription implements SoapSerializable, Comparable<ConnectionDescription> {
 
     private static final String[] SOAP_FIELDS =
@@ -70,6 +77,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -78,6 +86,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -86,6 +95,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -94,6 +104,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }
