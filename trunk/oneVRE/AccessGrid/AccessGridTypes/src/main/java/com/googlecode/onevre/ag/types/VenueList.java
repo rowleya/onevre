@@ -36,6 +36,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
 
 /**
@@ -44,6 +49,8 @@ import com.googlecode.onevre.types.soap.exceptions.SoapException;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class VenueList {
 
     /**
@@ -121,6 +128,7 @@ public class VenueList {
      * @param id The id of the item to get
      * @return A VenueTreeItem with the given id, or null if none
      */
+    @XmlElement
     public VenueTreeItem getVenue(String id) {
     	return venues.get(id);
     }
@@ -164,6 +172,7 @@ public class VenueList {
      * Gets the name of the current venue
      * @return The name
      */
+    @XmlElement
     public String getCurrentVenueName() {
         return currentVenueName;
     }
@@ -180,6 +189,7 @@ public class VenueList {
      * Gets the url of the current venue
      * @return The url
      */
+    @XmlElement
     public String getCurrentVenueUrl() {
         return currentVenueUrl;
     }
@@ -196,6 +206,7 @@ public class VenueList {
      * Gets the currently selected venue
      * @return The currently selected venue
      */
+    @XmlElement
     public String getSelectedVenueId() {
         return selectedVenueId;
     }
@@ -212,6 +223,7 @@ public class VenueList {
      * Gets the venues
      * @return The venues
      */
+    @XmlElement
     public HashMap<String, VenueTreeItem> getVenues() {
         return venues;
     }
@@ -231,6 +243,7 @@ public class VenueList {
         }
     }
 
+    @XmlElement
 	public int getMode(){
 		return mode;
 	}
@@ -248,6 +261,7 @@ public class VenueList {
      * Gets the root venue items
      * @return The root venue items
      */
+    @XmlElement
     public Vector<VenueTreeItem> getRoots() {
         return roots;
     }
@@ -289,6 +303,7 @@ public class VenueList {
      * Gets the current vertical scroll position
      * @return The position
      */
+    @XmlElement
     public int getVerticalScrollPosition() {
         return verticalScrollPosition;
     }
@@ -297,6 +312,7 @@ public class VenueList {
      * Gets the current horizontal scroll position
      * @return The position
      */
+    @XmlElement
     public int getHorizontalScrollPosition() {
         return horizontalScrollPosition;
     }

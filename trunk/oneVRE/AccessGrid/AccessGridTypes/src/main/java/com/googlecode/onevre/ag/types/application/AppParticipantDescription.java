@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types.application;
 
 
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.ag.types.ClientProfile;
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
@@ -53,6 +58,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 </xs:complexType>
 */
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AppParticipantDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -78,6 +85,7 @@ public class AppParticipantDescription implements SoapSerializable {
      * Returns the application id
      * @return the application id
      */
+    @XmlElement
     public String getAppId() {
         return appId;
     }
@@ -86,6 +94,7 @@ public class AppParticipantDescription implements SoapSerializable {
      * Returns the client profile of the participant
      * @return the client profile of the participant
      */
+    @XmlElement
     public ClientProfile getClientProfile() {
         return clientProfile;
     }
@@ -94,6 +103,7 @@ public class AppParticipantDescription implements SoapSerializable {
      * Returns the participants status (connected / master)
      * @return the participants status
      */
+    @XmlElement
     public String getStatus() {
         return status;
     }

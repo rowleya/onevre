@@ -37,8 +37,8 @@ public class DataManager {
 	public void deleteData(VenueState state, DataDescription data) {
 		Vector<DataDescription> dataItems = dataTree.get(state);
 		if (dataItems != null){
-			dataItems.remove(data);
 			ui.removeData(state, data);
+			dataItems.remove(data);
 		}
 	}
 
@@ -46,9 +46,14 @@ public class DataManager {
 		Vector<DataDescription> dataItems = dataTree.get(state);
 		if (dataItems != null){
 			int idx = dataItems.indexOf(data);
-			dataItems.remove(data);
-			dataItems.insertElementAt(data, idx);
-			ui.updateData(state,data);
+			if (idx!=-1){
+				dataItems.remove(data);
+				dataItems.insertElementAt(data, idx);
+				ui.updateData(state,data);
+			} else {
+				dataItems.add(data);
+				ui.addData(state, data);
+			}
 		}
 	}
 

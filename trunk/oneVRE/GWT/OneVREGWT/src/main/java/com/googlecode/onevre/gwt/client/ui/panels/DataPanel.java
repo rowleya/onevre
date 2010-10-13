@@ -10,17 +10,23 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.DataDescription;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.ui.Icons;
+import com.googlecode.onevre.gwt.client.ui.buttons.AddDataButton;
+import com.googlecode.onevre.gwt.client.ui.buttons.CreateFolderButton;
+import com.googlecode.onevre.gwt.client.ui.buttons.DataPropertiesButton;
+import com.googlecode.onevre.gwt.client.ui.buttons.DeleteDataButton;
 import com.googlecode.onevre.gwt.client.xmlrpc.UpdateData;
 import com.googlecode.onevre.gwt.common.client.MessageResponse;
 import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 
-public class DataPanel extends FlexTable implements ClickHandler, MessageResponseHandler{
+public class DataPanel extends FlexTable implements ClickHandler{
 
 	Vector<DataDescription> dataDescriptions = new Vector<DataDescription>();
 
@@ -33,7 +39,9 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 		GWT.log("addValue " + i + " : " + data.toString());
 		String lm = data.getLastModified();
 		if (!lm.equals("")){
-			this.setWidget(2*i,0,new Image(Icons.fileIcon));
+			Image file = new Image(Icons.fileIcon);
+			this.setWidget(2*i,0,file);
+			file.setTitle(data.getName());
 			this.setText(2*i, 1, data.getName());
 			String expiry = data.getExpires();
 			String dateString = "";
@@ -60,9 +68,20 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 			this.setText(2*i+1,1,data.getDescription());
 			this.setText(2*i+1,2,"");
 			this.getFlexCellFormatter().setColSpan(2*i+1, 1, 3);
+			HorizontalPanel iconPanel = new HorizontalPanel();
+			/*
 			Image propIcon = new Image(Icons.filePropertiesIcon);
 			propIcon.setHeight("32px");
-			this.setWidget(2*i,4,propIcon);
+			propIcon.setTitle("Change Properties for " + data.getName());
+			iconPanel.add(propIcon);
+
+			Image delIcon = new Image(Icons.closeIcon);
+			delIcon.setTitle("Delete " + data.getName());
+			delIcon.setHeight("32px");
+			*/
+			iconPanel.add(new DataPropertiesButton(venueState, data).getButton());
+			iconPanel.add(new DeleteDataButton(venueState, data).getButton());
+			this.setWidget(2*i,4,iconPanel);
 			this.getFlexCellFormatter().setRowSpan(2*i, 4, 2);
 		}
 	}
@@ -73,9 +92,15 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 		this.dataDescriptions = venueState.getData();
 		this.setWidth("100%");
 		this.setHeight("100%");
+		this.getRowFormatter().setStyleName(0,"gwt-PushButton gwt-PushButton-up");
 		this.setText(0,0, "Name");
 		this.getFlexCellFormatter().setColSpan(0, 0, 2);
 		this.setText(0, 1, "Last Modified" );
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		buttonPanel.add(new AddDataButton(venueState,null).getButton());
+		buttonPanel.add(new CreateFolderButton(venueState).getButton());
+		this.setWidget(0,3,buttonPanel);
+		this.getCellFormatter().setHorizontalAlignment(0, 3, HorizontalPanel.ALIGN_RIGHT);
 		int i = 1;
 		for (DataDescription dataDescription : dataDescriptions){
 			addValue(i, dataDescription);
@@ -91,16 +116,23 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 	}
 
 	public void removeData(DataDescription data) {
-		int i = dataDescriptions.indexOf(data)+1;
-		this.removeRow(2*i);
-		this.removeRow(2*i+1);
-		dataDescriptions.remove(i);
+		GWT.log("DataId :"  + data.getId() + " name: " + data.getName());
+		GWT.log("dataDescriptions: " + dataDescriptions.toString());
+		int i = dataDescriptions.indexOf(data);
+		if (i !=-1 ){
+			GWT.log("dataentry:" + i);
+			this.removeRow(2*i + 2);
+			this.removeRow(2*i + 2);
+			dataDescriptions.remove(i);
+		}
 	}
 
 	public void updateData(DataDescription data) {
 		int i = dataDescriptions.indexOf(data);
-		dataDescriptions.setElementAt(data, i);
-		addValue(i+1, data);
+		if (i!=-1){
+			dataDescriptions.setElementAt(data, i);
+			addValue(i+1, data);
+		}
 	}
 
 	public void addDirectory(DataDescription data) {
@@ -116,6 +148,7 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 
 	public void onClick(ClickEvent event) {
 		Cell cell = getCellForEvent(event);
+		GWT.log("Cell clicked: (" + cell.getCellIndex() + ", " +cell.getRowIndex() +")");
 		int row = (cell.getRowIndex()-2) / 2;
 		if (row ==-1) return;
 		DataDescription data = dataDescriptions.get(row);
@@ -131,10 +164,6 @@ public class DataPanel extends FlexTable implements ClickHandler, MessageRespons
 		    postRequest += "&selection=dataid";
 		    GWT.log("download " + postRequest );
 		    Window.open(postRequest, "download", "");
-		 } else {
-			 EditDataDescriptionPanel eddp = new EditDataDescriptionPanel(this);
-			 eddp.setDataDescription(data);
-			 eddp.show();
 		 }
 
 	}

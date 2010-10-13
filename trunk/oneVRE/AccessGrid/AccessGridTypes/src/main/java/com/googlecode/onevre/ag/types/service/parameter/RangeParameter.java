@@ -40,6 +40,10 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * An AG3 RangeParameter
@@ -47,6 +51,8 @@ import javax.swing.event.ChangeListener;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class RangeParameter extends AGParameter implements ChangeListener {
 
     private static final int TEXT_HEIGHT = 20;
@@ -116,6 +122,7 @@ public class RangeParameter extends AGParameter implements ChangeListener {
      * Gets the value
      * @return The value
      */
+    @XmlElement
     public Object getValue() {
         return new Integer(value);
     }
@@ -124,6 +131,7 @@ public class RangeParameter extends AGParameter implements ChangeListener {
      * Gets the minimum value
      * @return The minimum value
      */
+    @XmlElement
     public int getLow() {
         return low;
     }
@@ -132,6 +140,7 @@ public class RangeParameter extends AGParameter implements ChangeListener {
      * Gets the maximum value
      * @return The maximum value
      */
+    @XmlElement
     public int getHigh() {
         return high;
     }
@@ -183,6 +192,7 @@ public class RangeParameter extends AGParameter implements ChangeListener {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.types.agservice.AGParameter#getVisualComponent()}</dd></dl>
      * @return The component, or null if not modifiable
      */
+    @XmlElement
     public JComponent getVisualComponent() {
         slider.setValue(value);
         return component;

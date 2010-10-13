@@ -32,11 +32,15 @@
 package com.googlecode.onevre.ag.agclient;
 
 
+import java.util.Vector;
+
 import com.googlecode.onevre.ag.common.interfaces.EventListener;
 import com.googlecode.onevre.ag.types.EventDescription;
 import com.googlecode.onevre.ag.types.application.AppDataDescription;
 import com.googlecode.onevre.ag.types.application.AppParticipantDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
+import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 
 
@@ -54,17 +58,17 @@ public class ApplicationMonitorEventListener implements EventListener {
 	private ApplicationDescription application = null;
    // private String connectionId=null;
 
-    private PagXmlRpcServer xmlRpcServer=null;
+    private AgEventServer agEventServer=null;
 
    /**
      * @param application The application description of the application the EventListener is responding to
      * @param appLocation The uri of the SharedApplication (including the public id)
      * @param xmlRpcServer The XML-RPC server that responds to the Application Event
      */
-    public ApplicationMonitorEventListener(ApplicationDescription application, String appLocation, PagXmlRpcServer xmlRpcServer) {
+    public ApplicationMonitorEventListener(ApplicationDescription application, String appLocation, AgEventServer agEventServer) {
         this.appLocation=appLocation;
         this.application=application;
-        this.xmlRpcServer=xmlRpcServer;
+        this.agEventServer=agEventServer;
     }
 
     /**
@@ -118,23 +122,35 @@ public class ApplicationMonitorEventListener implements EventListener {
         if (eventType.equals("Join application")){
             participant = (AppParticipantDescription)event.getData();
             System.out.println("Participant: "+ participant.getClientProfile().getName()+" joined application");
-            xmlRpcServer.addRequest("eventJoinApplication", new Object[]{application,participant});
+            Vector<Object> ov= new Vector<Object>();
+            ov.add(application);
+            ov.add(participant);
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventJoinApplication", ov));
         } else
         if (eventType.equals("Leave application")){
             participant = (AppParticipantDescription)event.getData();
             System.out.println("Participant: "+ participant.getClientProfile().getName()+" left application");
-            xmlRpcServer.addRequest("eventLeaveApplication", new Object[]{application,participant});
+            Vector<Object> ov= new Vector<Object>();
+            ov.add(application);
+            ov.add(participant);
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventLeaveApplication", ov));
         } else
         if (eventType.equals("Update application participant status")){
             participant = (AppParticipantDescription)event.getData();
-            xmlRpcServer.addRequest("eventModifyApplicationUser", new Object[]{application,participant});
+            Vector<Object> ov= new Vector<Object>();
+            ov.add(application);
+            ov.add(participant);
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyApplicationUser",ov));
         } else
         // data events
         if (eventType.equals("Set application data")){
             appdata = (AppDataDescription)event.getData();
             System.out.println("Key: "+ appdata.getKey()+" Value: "+ appdata.getValue());
+            Vector<Object> ov= new Vector<Object>();
+            ov.add(application);
+            ov.add(appdata);
   //        venueState.setData(data);
-            xmlRpcServer.addRequest("eventSetApplicationData", new Object[]{application,appdata});
+            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventSetApplicationData", ov));
   //        addMessage("<concerns>data</concerns><eventType>" + eventType + "</eventType>"  + XMLSerializer.serialize(data));
         }
     }

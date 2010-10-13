@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types.application;
 
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -55,6 +60,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 </xs:complexType>
 */
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class SharedAppState implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -96,6 +103,7 @@ public class SharedAppState implements SoapSerializable {
      * Returns the applications
      * @return A list of application descriptions
      */
+    @XmlElement
     public Vector<AppDataDescription> getData() {
         return data;
     }
@@ -104,6 +112,7 @@ public class SharedAppState implements SoapSerializable {
      * Returns the data store location
      * @return the data location
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -112,6 +121,7 @@ public class SharedAppState implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -121,6 +131,7 @@ public class SharedAppState implements SoapSerializable {
      * @return the description
      */
 
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -129,6 +140,7 @@ public class SharedAppState implements SoapSerializable {
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }
@@ -137,6 +149,7 @@ public class SharedAppState implements SoapSerializable {
      * Returns the mimeType
      * @return the mimeType
      */
+    @XmlElement
     public String getMimeType(){
         return mimeType;
     }

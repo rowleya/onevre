@@ -1,7 +1,14 @@
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class VenueServerType implements SoapSerializable {
     private static final long serialVersionUID = 1L;
 
@@ -53,6 +60,7 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the name
 	 */
+	@XmlElement
 	public String getName() {
 		return name;
 	}
@@ -67,6 +75,7 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the protocol
 	 */
+	@XmlElement
 	public String getProtocol() {
 		return protocol;
 	}
@@ -81,6 +90,7 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the url
 	 */
+	@XmlElement
 	public String getUrl() {
 		return url;
 	}
@@ -95,6 +105,7 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the portNumber
 	 */
+	@XmlElement
 	public int getPortNumber() {
 		return portNumber;
 	}
@@ -113,10 +124,12 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the defaultVenue
 	 */
+	@XmlElement
 	public String getDefaultVenue() {
 		return defaultVenue;
 	}
 
+	@XmlElement
 	public String getDefaultVenueId() {
 		return defaultVenueId;
 	}
@@ -131,10 +144,12 @@ public class VenueServerType implements SoapSerializable {
 	/**
 	 * @return the version
 	 */
+	@XmlElement
 	public String getVersion() {
 		return version;
 	}
 
+	@XmlElement
 	public String getDefaultVenueUrl() {
 		String out = protocol + "://" + url + ":" + portNumber + defaultVenue;
 		return out;

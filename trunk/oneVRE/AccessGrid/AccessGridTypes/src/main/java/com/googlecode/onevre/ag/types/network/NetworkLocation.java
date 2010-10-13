@@ -34,6 +34,11 @@ package com.googlecode.onevre.ag.types.network;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 import com.googlecode.onevre.ag.types.ProviderProfile;
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
@@ -44,6 +49,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class NetworkLocation implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -85,6 +92,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the host
      * @return the host
      */
+    @XmlElement
     public String getHost() {
         return host;
     }
@@ -93,6 +101,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -101,6 +110,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the port
      * @return the port
      */
+    @XmlElement
     public int getPort() {
         return port;
     }
@@ -109,6 +119,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the private id
      * @return the privateId
      */
+    @XmlElement
     public String getPrivateId() {
         return privateId;
     }
@@ -117,6 +128,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the profile of the provider
      * @return the profile
      */
+    @XmlElement
     public ProviderProfile getProfile() {
         return profile;
     }
@@ -125,6 +137,7 @@ public class NetworkLocation implements SoapSerializable {
      * Returns the type of the connection
      * @return the type
      */
+    @XmlElement
     public String getType() {
         return type;
     }

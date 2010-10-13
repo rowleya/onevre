@@ -32,6 +32,11 @@
 package com.googlecode.onevre.ag.types.application;
 
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -50,6 +55,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 </xs:complexType>
 */
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AppDataDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -75,6 +82,7 @@ public class AppDataDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getAppId() {
         return appId;
     }
@@ -83,6 +91,7 @@ public class AppDataDescription implements SoapSerializable {
      * Returns the data key
      * @return the key
      */
+    @XmlElement
     public String getKey() {
         return key;
     }
@@ -91,6 +100,7 @@ public class AppDataDescription implements SoapSerializable {
      * Returns the data value
      * @return the data value
      */
+    @XmlElement
     public String getValue() {
         return value;
     }

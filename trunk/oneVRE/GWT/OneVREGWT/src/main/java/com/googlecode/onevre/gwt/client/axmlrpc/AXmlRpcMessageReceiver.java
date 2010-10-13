@@ -20,6 +20,7 @@ import com.google.gwt.xml.client.impl.DOMParseException;
 
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.VenueClientController;
+import com.googlecode.onevre.gwt.client.ag.types.AgEventJSO;
 
 
 public class AXmlRpcMessageReceiver implements RequestCallback {
@@ -93,58 +94,24 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 	}
 
 	public void onResponseReceived(Request request, Response response) {
-        GWT.log("AXmlRpcMessageReceiver.onResponseReceived: "+ response.getText());
-		Document doc = null;
-        try {
-            doc = XMLParser.parse(response.getText());
-        } catch (DOMParseException e) {
-        	return;
-        }
-        Element methodCall = doc.getDocumentElement();
-        if (methodCall.getNodeName().equals("empty")){
+		boolean JSONparse = false;
+		GWT.log("AXmlRpcMessageReceiver.onResponseReceived: "+ response.getText());
+        AgEventJSO event = AgEventJSO.parse(response.getText());
+        GWT.log("EVENT: " + event.getEventName());
+        if (event.getEventName().equals("none")){
         	getUpdate();
         	return;
         }
-        if (methodCall.getNodeName().equals("done")){
+        if (event.getEventName().equals("done")){
         	return;
         }
-        if (!methodCall.getNodeName().equals("methodCall")){
-        	GWT.log("The document element must be named \"methodCall\" "+
-                    "(this is "+methodCall.getNodeName()+")");
-            return;
-        }
-        String methodName = methodCall.getElementsByTagName("methodName").item(0).getFirstChild().toString();
-        GWT.log(methodName);
-        RequestReceiver receiver = RequestMappings.get(methodName);
+        RequestReceiver receiver = RequestMappings.get(event.getEventName());
         if (receiver == null){
-        	GWT.log("Unknown Request Method :" + methodName );
+        	GWT.log("Unknown Event Method :" + event.getEventName());
         	return;
         }
-        count = 0;
-        NodeList paramsL = methodCall.getElementsByTagName("params");
-        NodeList paramList = paramsL.item(0).getChildNodes();
-        Vector<JavaScriptObject> parameters = new Vector<JavaScriptObject>();
-        String source = null;
-        for (int i = 0 ; i<paramList.getLength() ;i++ ){
-        	Node param= paramList.item(i).getFirstChild();
-        	String pString = param.getFirstChild().toString();
-        	pString = pString.replaceAll("&semi;", ";");
-        	GWT.log("parsing: " + pString);
-        	if (source==null) {
-        		source = VenueClientController.getStringDec(pString);
-        		GWT.log("Event Source =" + source);
-        	} else {
-        		JavaScriptObject obj = VenueClientController.getObjectDec(pString);
-	        	//GWT.log(obj.toString());
-	        	parameters.add(obj);
-        	}
-        }
-        GWT.log("Event Source =" + source);
-        receiver.init(source);
-        receiver.execute(source, parameters);
- 		if (!done) {
-			getUpdate();
-		}
+        receiver.execute(event);
+        getUpdate();
 	}
 
 

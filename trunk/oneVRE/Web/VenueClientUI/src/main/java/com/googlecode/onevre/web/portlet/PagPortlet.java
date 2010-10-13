@@ -55,6 +55,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 import com.googlecode.onevre.ag.types.ClientProfile;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 import com.googlecode.onevre.web.common.Defaults;
 import com.googlecode.onevre.web.ui.VenueClientUI;
@@ -87,6 +88,10 @@ public class PagPortlet implements Portlet {
      * The portlet session attribute of the XMLRPC server.
      */
     public static final String XMLRPC_SERVER_ATTRIBUTE = "xmlRpcServer";
+    /**
+     * The portlet session attribute of the XMLRPC server.
+     */
+    public static final String AGEVENT_SERVER_ATTRIBUTE = "agEventServer";
 
     /** The timeout of the session. */
     private static final int SESSION_TIMEOUT = 60 * 60 * 24 * 365;
@@ -376,8 +381,8 @@ public class PagPortlet implements Portlet {
     @SuppressWarnings("unchecked")
 	public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
-        System.err.println("Namespace = " + response.getNamespace());
-        System.err.println("Portlet-Session = " + request.getPortletSession().getId() + " is new = " + request.getPortletSession().isNew());
+        log.info("Namespace = " + response.getNamespace());
+        log.info("Portlet-Session = " + request.getPortletSession().getId() + " is new = " + request.getPortletSession().isNew());
         WindowState state = request.getWindowState();
 
 /*        // Set the url of the bridge loader
@@ -389,6 +394,9 @@ public class PagPortlet implements Portlet {
         // Check for the existence of the venue client UI
         PortletSession portletSession = request.getPortletSession();
         String namespace = response.getNamespace();
+        AgEventServer agEventServer = (AgEventServer)
+            portletSession.getAttribute(namespace + AGEVENT_SERVER_ATTRIBUTE,
+                PortletSession.APPLICATION_SCOPE);
         PagXmlRpcServer xmlRpcServer = (PagXmlRpcServer)
             portletSession.getAttribute(namespace + XMLRPC_SERVER_ATTRIBUTE,
                 PortletSession.APPLICATION_SCOPE);
@@ -398,14 +406,20 @@ public class PagPortlet implements Portlet {
         portletSession.setMaxInactiveInterval(SESSION_TIMEOUT);
 
         // If the XmlRpc client doesn't exist, create it now
+        if (agEventServer == null) {
+            agEventServer = new AgEventServer();
+            portletSession.setAttribute(namespace + AGEVENT_SERVER_ATTRIBUTE,
+                    agEventServer, PortletSession.APPLICATION_SCOPE);
+
+            log.info("setting AG Event Server: " + namespace + AGEVENT_SERVER_ATTRIBUTE);
+
+        }
+
         if (xmlRpcServer == null) {
             xmlRpcServer = new PagXmlRpcServer();
             portletSession.setAttribute(namespace + XMLRPC_SERVER_ATTRIBUTE,
                     xmlRpcServer, PortletSession.APPLICATION_SCOPE);
-
-            System.out.println("setting xmlRpcServer: " + namespace + XMLRPC_SERVER_ATTRIBUTE);
             log.info("setting xmlRpcServer: " + namespace + XMLRPC_SERVER_ATTRIBUTE);
-
         }
 
         // If the client ui doesn't exist, create it now
@@ -433,7 +447,7 @@ public class PagPortlet implements Portlet {
                 }
             }
             log.info("TrustedServers:" + trustedServersPreference);
-            venueClientUI = new VenueClientUI(clientProfile, xmlRpcServer,
+            venueClientUI = new VenueClientUI(clientProfile, agEventServer,
                     myVenuesPreference, trustedServersPreference);
             portletSession.setAttribute(namespace + VENUECLIENT_UI_ATTRIBUTE,
                 venueClientUI, PortletSession.APPLICATION_SCOPE);

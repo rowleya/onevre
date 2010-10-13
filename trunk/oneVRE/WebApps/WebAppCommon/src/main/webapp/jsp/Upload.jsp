@@ -34,4 +34,4 @@
 <%-- namespace="${param.namespace}" venue="${param.venue}"
 <pag:pag_upload filename="${param.name}" size="${param.size}" content="${param.content}" namespace="${param.namespace}" />
   --%>
-<pag:pag_upload  namespace="${param.namespace}" venue="${param.venue}" />
+<pag:pag_upload />

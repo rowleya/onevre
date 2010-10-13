@@ -31,6 +31,14 @@
 
 package com.googlecode.onevre.ag.types;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,6 +50,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class DataDescription implements SoapSerializable {
 
 	Log log = LogFactory.getLog(this.getClass());
@@ -106,7 +116,7 @@ public class DataDescription implements SoapSerializable {
     private String type = null;
 
     // The last time the data was modified
-    private String lastModified = null;
+    private String lastModified = (new SimpleDateFormat("EEE, MMM d, yyyy, HH:mm:ss")).format(new Date());
 
     // The last time the data was modified
     private String expires = null;
@@ -124,9 +134,12 @@ public class DataDescription implements SoapSerializable {
      * Returns the last time the data was modified
      * @return the last modified time
      */
+    @XmlElement
     public String getLastModified() {
         return lastModified;
     }
+
+    @XmlElement
     public String getExpires() {
         return expires;
     }
@@ -135,6 +148,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the data type
      * @return the type
      */
+    @XmlElement
     public String getType() {
         return type;
     }
@@ -167,6 +181,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the checksum
      * @return the checksum
      */
+    @XmlElement
     public String getChecksum() {
         return checksum;
     }
@@ -175,6 +190,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -183,6 +199,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -191,6 +208,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -199,6 +217,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the owner
      * @return the owner
      */
+    @XmlElement
     public String getOwner() {
         return owner;
     }
@@ -207,6 +226,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the size
      * @return the size
      */
+    @XmlElement
     public int getSize() {
         return size;
     }
@@ -215,6 +235,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the status
      * @return the status
      */
+    @XmlElement
     public String getStatus() {
         return status;
     }
@@ -223,6 +244,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }
@@ -231,6 +253,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the objectType
      * @return the objectType
      */
+    @XmlElement
     public String getObjectType(){
     	return objectType;
     }
@@ -239,6 +262,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the hierarchyLevel
      * @return the hierarchyLevel
      */
+    @XmlElement
     public int getHierarchyLevel(){
     	return hierarchyLevel;
     }
@@ -247,6 +271,7 @@ public class DataDescription implements SoapSerializable {
      * Checks if it data is a presentation
      * @return true if data is a presentation
      */
+    @XmlElement
     public boolean isPresentation(){
     	if (name.endsWith(".ppt"))
     		return true;
@@ -257,7 +282,8 @@ public class DataDescription implements SoapSerializable {
      * Returns the id of the parent item
      * @return the id of the parent item
      */
-   public String getParentId(){
+    @XmlElement
+    public String getParentId(){
     	return parentId;
     }
 
@@ -273,7 +299,7 @@ public class DataDescription implements SoapSerializable {
      * Sets the description
      * @param description The description
      */
-    public void setDescription(String description) {
+     public void setDescription(String description) {
         this.description = description;
     }
 

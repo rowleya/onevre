@@ -41,4 +41,8 @@ public class JabberMessage {
 		this.date = date;
 	}
 
+	public String toString(){
+		String out = "["+date+"]@"+from+": "+message;
+		return out;
+	}
 }

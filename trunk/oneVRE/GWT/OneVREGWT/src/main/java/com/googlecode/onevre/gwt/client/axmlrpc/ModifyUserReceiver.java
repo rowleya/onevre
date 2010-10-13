@@ -4,7 +4,9 @@ import java.util.Vector;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.onevre.gwt.client.Application;
+import com.googlecode.onevre.gwt.client.ag.types.AgEventJSO;
 import com.googlecode.onevre.gwt.client.ag.types.ClientProfile;
+import com.googlecode.onevre.gwt.client.ag.types.ClientProfileEJSO;
 import com.googlecode.onevre.gwt.client.ag.types.ClientProfileJSO;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
@@ -20,6 +22,13 @@ public class ModifyUserReceiver implements RequestReceiver {
 
 	public void init(String source) {
 		state = Application.getServerManager().getVenuefromSource(source);
+	}
+
+	@Override
+	public void execute(AgEventJSO eventJSO) {
+		ClientProfile  client = new ClientProfile((ClientProfileEJSO) eventJSO.getEventObject());
+		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+		Application.getUserManager().updateUser(state, client);
 	}
 
 }

@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types;
 
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
@@ -63,6 +68,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 </xs:complexType>
 */
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class VenueState implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -140,6 +147,7 @@ public class VenueState implements SoapSerializable {
      * Returns the applications
      * @return A list of application descriptions
      */
+    @XmlElement
     public Vector<ApplicationDescription> getApplications() {
         return applications;
     }
@@ -148,6 +156,7 @@ public class VenueState implements SoapSerializable {
      * Returns the clients
      * @return A list of client profiles
      */
+    @XmlElement
     public Vector<ClientProfile> getClients() {
         return clients;
     }
@@ -156,6 +165,7 @@ public class VenueState implements SoapSerializable {
      * Returns the connections
      * @return A list of connection descriptions
      */
+    @XmlElement
     public Vector<ConnectionDescription> getConnections() {
         return connections;
     }
@@ -164,6 +174,7 @@ public class VenueState implements SoapSerializable {
      * Returns the data
      * @return A list of data descriptions
      */
+    @XmlElement
     public Vector<DataDescription> getData() {
         return data;
     }
@@ -172,6 +183,7 @@ public class VenueState implements SoapSerializable {
      * Returns the data store location
      * @return the data location
      */
+    @XmlElement
     public String getDataLocation() {
         return dataLocation;
     }
@@ -180,6 +192,7 @@ public class VenueState implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -188,6 +201,7 @@ public class VenueState implements SoapSerializable {
      * Returns the location of the event stream
      * @return the event location
      */
+    @XmlElement
     public String getEventLocation() {
         return eventLocation;
     }
@@ -196,6 +210,7 @@ public class VenueState implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -204,6 +219,7 @@ public class VenueState implements SoapSerializable {
      * Returns the venue services
      * @return a list of service descriptions
      */
+    @XmlElement
     public Vector<ServiceDescription> getServices() {
         return services;
     }
@@ -220,6 +236,7 @@ public class VenueState implements SoapSerializable {
      * Returns the location of the jabber service
      * @return the text location
      */
+    @XmlElement
     public String getTextLocation() {
         return textLocation;
     }
@@ -228,6 +245,7 @@ public class VenueState implements SoapSerializable {
      * Returns the unique id
      * @return the unique id
      */
+    @XmlElement
     public String getUniqueId() {
         return uniqueId;
     }
@@ -236,6 +254,7 @@ public class VenueState implements SoapSerializable {
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }
@@ -244,6 +263,7 @@ public class VenueState implements SoapSerializable {
      * Returns the list of venues
      * @return the list of venues
      */
+    @XmlElement
     public VenueList getVenueList(){
         return venueList;
     }
@@ -368,8 +388,13 @@ public class VenueState implements SoapSerializable {
      */
     public String updateData(DataDescription datum) {
         int index = data.indexOf(datum);
-    	String filename = data.get(index).getName();
-    	data.set(index,datum);
+        String filename = datum.getName();
+        if (index!=-1){
+	    	filename = data.get(index).getName();
+	    	data.set(index,datum);
+        } else {
+        	data.add(datum);
+        }
     	return filename;
     }
 

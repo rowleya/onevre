@@ -31,6 +31,11 @@
 
 package com.googlecode.onevre.ag.types.service;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
@@ -40,6 +45,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Anja Le Blanc
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AGServiceManagerDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -70,6 +77,7 @@ public class AGServiceManagerDescription implements SoapSerializable {
      * returns the built-in flag
      * @return the built-in flag
      */
+    @XmlElement
     public int getBuiltin() {
         return builtin;
     }
@@ -104,6 +112,7 @@ public class AGServiceManagerDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -112,6 +121,7 @@ public class AGServiceManagerDescription implements SoapSerializable {
      * Returns the uri
      * @return the uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }

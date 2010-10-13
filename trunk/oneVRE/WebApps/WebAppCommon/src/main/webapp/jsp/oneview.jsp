@@ -56,7 +56,7 @@
 				CommonProtocolsXMLRPC.jar, commons-lang-2.3.jar, commons-logging-1.1.jar,
 				CommonTypesSOAP.jar, CommonUtils.jar, CommonWeb.jar,
 				jmf-cross-platform-2.1.1f.jar, junit-3.8.1.jar, log4j-1.2.12.jar,
-				PlatformUtils.jar, registry-1.0.jar, Security.jar,
+				PlatformUtils.jar, registry-1.0.jar, Security.jar, ServerProtocolsEvent.jar,
 				ServerProtocolsXMLRPC.jar, ws-commons-util-1.0.2.jar,
 				xercesImpl-2.4.0.jar, xml-apis-1.0.b2.jar, xmlrpc-client-3.1.3.jar,
 				xmlrpc-common-3.1.3.jar, xmlrpc-server-3.1.3.jar">
@@ -108,7 +108,7 @@ var Parameters = {
 	pag_storePrefsUrl: "${pag_storePrefsUrl}",
 	pag_setPrefsUrl: "${pageContext.request.contextPath}" + "/jsp/setPreference.jsp",
 	pag_dataDownloadUrl: "/jsp/Download.jsp",
-	pag_dataUploadUrl: "${pageContext.request.contextPath}" + "/jsp/Upload.jsp",
+	pag_dataUploadUrl: "/jsp/Upload.jsp",
 	pag_serviceUploadUrl: "${pageContext.request.contextPath}" + "/jsp/uploadService.jsp",
 	pag_bridgeUploadUrl: "${pageContext.request.contextPath}" + "/jsp/uploadBridge.jsp",
 	pag_getAvailableBridgesUrl: "${pageContext.request.contextPath}" + "/jsp/getAvailableBridges.jsp",

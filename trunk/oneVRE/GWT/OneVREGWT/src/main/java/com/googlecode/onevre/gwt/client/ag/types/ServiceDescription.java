@@ -25,6 +25,14 @@ public class ServiceDescription{
 		mimeType = jso.getMimeType();
 	}
 
+	public ServiceDescription (ServiceDescriptionEJSO jso){
+		id = jso.getId();
+		name = jso.getName();
+		description = jso.getDescription();
+		uri = jso.getUri();
+		mimeType = jso.getMimeType();
+	}
+
     /**
      * Returns the description
      * @return the description

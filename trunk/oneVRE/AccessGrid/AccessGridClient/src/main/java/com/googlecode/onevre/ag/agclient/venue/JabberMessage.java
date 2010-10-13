@@ -34,11 +34,18 @@ package com.googlecode.onevre.ag.agclient.venue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * A message from the Jabber system
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class JabberMessage {
 
     // Who the message is from
@@ -98,6 +105,7 @@ public class JabberMessage {
      * Gets who the message is from
      * @return Who the message is from
      */
+    @XmlElement
     public String getFrom() {
         return from;
     }
@@ -106,6 +114,7 @@ public class JabberMessage {
      * Gets the message
      * @return The message
      */
+    @XmlElement
     public String getMessage() {
         return message;
     }
@@ -114,6 +123,7 @@ public class JabberMessage {
      * Gets the message with urls converted to html links
      * @return The message with urls as html links
      */
+    @XmlElement
     public String getMessageWithLinks() {
         Pattern url = Pattern.compile("(^|[ \t\r\n])((ftp|http|https|"
                 + "gopher|mailto|news|nntp|telnet|wais|file|prospero|"
@@ -144,6 +154,7 @@ public class JabberMessage {
      * Gets the date of the message
      * @return The date of the message
      */
+    @XmlElement
     public String getDate() {
         return date;
     }

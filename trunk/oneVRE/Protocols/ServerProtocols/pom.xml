@@ -11,6 +11,7 @@
     <modules>
         <module>ServerProtocolsSOAP</module>
         <module>ServerProtocolsXMLRPC</module>
+        <module>ServerProtocolsEvents</module>
     </modules>
     <dependencies>
     </dependencies>

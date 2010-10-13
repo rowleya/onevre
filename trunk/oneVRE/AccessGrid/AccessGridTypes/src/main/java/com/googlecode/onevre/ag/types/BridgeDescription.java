@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types;
 
 import java.util.Comparator;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -41,6 +46,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class BridgeDescription implements SoapSerializable {
 
     /**
@@ -117,6 +124,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the host
      * @return the host
      */
+    @XmlElement
     public String getHost() {
         return host;
     }
@@ -125,6 +133,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the port
      * @return the port
      */
+    @XmlElement
     public int getPort() {
         return port;
     }
@@ -133,6 +142,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the portMax
      * @return the portMax
      */
+    @XmlElement
     public int getPortMax() {
         return portMax;
     }
@@ -141,6 +151,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the portMin
      * @return the portMin
      */
+    @XmlElement
     public int getPortMin() {
         return portMin;
     }
@@ -149,6 +160,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the serverType
      * @return the serverType
      */
+    @XmlElement
     public String getServerType() {
         return serverType;
     }
@@ -221,6 +233,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -229,6 +242,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getGuid() {
         return guid;
     }
@@ -237,6 +251,7 @@ public class BridgeDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -269,6 +284,7 @@ public class BridgeDescription implements SoapSerializable {
      * Gets the ping time
      * @return The ping time in milliseconds
      */
+    @XmlElement
     public int getPingTime() {
         return pingTime;
     }
@@ -285,6 +301,7 @@ public class BridgeDescription implements SoapSerializable {
      * Gets the rank of the bridge
      * @return The rank
      */
+    @XmlElement
     public int getRank() {
         return rank;
     }
@@ -414,6 +431,7 @@ public class BridgeDescription implements SoapSerializable {
      * Determines if the bridge has been pinged
      * @return True if the bridge has been pinged
      */
+    @XmlElement
     public boolean wasPinged() {
         return wasPinged;
     }

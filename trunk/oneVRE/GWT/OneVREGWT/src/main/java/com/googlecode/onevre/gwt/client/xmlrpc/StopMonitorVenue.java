@@ -24,7 +24,7 @@ public class StopMonitorVenue implements AsyncCallback<String>{
 		this.state = state;
 		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
-                xmlrpcClient, "stopMonitoringVenue",  new Object[]{state},
+                xmlrpcClient, "stopMonitoringVenue",  new Object[]{state.getUri()},
                 this);
         request.execute();
 	}

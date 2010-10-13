@@ -21,6 +21,13 @@ public class ConnectionDescription {
 		uri = jso.getUri();
 	}
 
+	public ConnectionDescription (ConnectionDescriptionEJSO jso){
+		id = jso.getId();
+		name = jso.getName();
+		description = jso.getDescription();
+		uri = jso.getUri();
+	}
+
     /**
      * Returns the description
      * @return the description

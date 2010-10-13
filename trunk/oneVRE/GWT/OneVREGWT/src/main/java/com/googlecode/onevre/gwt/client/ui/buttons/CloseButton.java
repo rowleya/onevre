@@ -19,7 +19,7 @@ public class CloseButton extends ActionButton implements ClickHandler {
 	public CloseButton(VenueState state, ServerVenueManager serverVenueManager) {
 		this.state = state;
 		this.serverVenueManager = serverVenueManager;
-		setImageUrl("images/close.png");
+		setImageUrl("images/window-close.png");
 		setName("Stop Monitoring");
 		setImageHeight("16px");
 		getButton().addClickHandler(this);

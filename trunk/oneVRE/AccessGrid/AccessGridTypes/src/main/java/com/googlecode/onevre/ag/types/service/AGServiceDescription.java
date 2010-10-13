@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types.service;
 
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 import com.googlecode.onevre.ag.types.Capability;
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
@@ -45,6 +50,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AGServiceDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -75,6 +82,7 @@ public class AGServiceDescription implements SoapSerializable {
      * Returns the capabilities
      * @return the capabilities
      */
+    @XmlElement
     public Vector<Capability> getCapabilities() {
         return capabilities;
     }
@@ -83,6 +91,7 @@ public class AGServiceDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -91,6 +100,7 @@ public class AGServiceDescription implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -139,6 +149,7 @@ public class AGServiceDescription implements SoapSerializable {
      * Gets the package name
      * @return The package name
      */
+    @XmlElement
     public String getPackageName() {
         return packageName;
     }

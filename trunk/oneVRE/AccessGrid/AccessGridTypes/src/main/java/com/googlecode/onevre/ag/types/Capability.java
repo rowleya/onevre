@@ -33,6 +33,11 @@ package com.googlecode.onevre.ag.types;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 /**
@@ -40,6 +45,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class Capability implements SoapSerializable, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -197,6 +204,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the number of channels
      * @return the number of channels
      */
+    @XmlElement
     public int getChannels() {
         return channels;
     }
@@ -205,6 +213,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the codec in use
      * @return the codec name
      */
+    @XmlElement
     public String getCodec() {
         return codec;
     }
@@ -213,6 +222,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the RTP rate
      * @return the rate
      */
+    @XmlElement
     public int getRate() {
         return rate;
     }
@@ -221,6 +231,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the role (e.g. producer or consumer)
      * @return the role
      */
+    @XmlElement
     public String getRole() {
         return role;
     }
@@ -229,6 +240,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the unique id of the service
      * @return the id
      */
+    @XmlElement
     public String getServiceId() {
         return serviceId;
     }
@@ -237,6 +249,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the data type (e.g. audio or video)
      * @return The data type
      */
+    @XmlElement
     public String getType() {
         return type;
     }
@@ -245,6 +258,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the locationType Specifies whether to use multicast assigned by Venue or Unicast as specified by service
      * @return the locationType Specifies whether to use multicast assigned by Venue or Unicast as specified by service
      */
+    @XmlElement
     public String getLocationType(){
         return locationType;
     }
@@ -253,6 +267,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the host ip of the service to use (only applicable if used PFEFERRED_UNICAST)
      * @return the host ip of the service to use (only applicable if used PFEFERRED_UNICAST)
      */
+    @XmlElement
     public String getHost(){
         return host;
     }
@@ -261,6 +276,7 @@ public class Capability implements SoapSerializable, Serializable {
      * Returns the port of the service to use (only applicable if used PREFERRED_UNICAST)
      * @return the port of the service to use (only applicable if used PREFERRED_UNICAST)
      */
+    @XmlElement
     public int getPort() {
         return port;
     }

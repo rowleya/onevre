@@ -33,6 +33,10 @@ package com.googlecode.onevre.ag.types.service.parameter;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * An AG3 TextParameter
@@ -40,6 +44,8 @@ import javax.swing.JTextField;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class TextParameter extends AGParameter {
 
     // The value
@@ -72,6 +78,7 @@ public class TextParameter extends AGParameter {
      * Returns the value
      * @return the value
      */
+    @XmlElement
     public Object getValue() {
         return value;
     }
@@ -90,6 +97,7 @@ public class TextParameter extends AGParameter {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.types.agservice.AGParameter#getVisualComponent()}</dd></dl>
      * @return The component, or null if not modifiable
      */
+    @XmlElement
     public JComponent getVisualComponent() {
         component.setText(value);
         return component;

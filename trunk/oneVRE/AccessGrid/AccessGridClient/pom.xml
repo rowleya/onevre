@@ -22,6 +22,11 @@
             <artifactId>AccessGridServerTypes</artifactId>
             <version>${project.version}</version>
         </dependency>
+    		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>ServerProtocolsEvents</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
 		    <groupId>jivesoftware</groupId>
 		    <artifactId>smack</artifactId>

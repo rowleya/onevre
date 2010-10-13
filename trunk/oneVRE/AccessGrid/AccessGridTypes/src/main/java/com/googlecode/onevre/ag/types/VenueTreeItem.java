@@ -34,6 +34,11 @@ package com.googlecode.onevre.ag.types;
 
 import java.util.Vector;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
     /**
      * A venue tree item
@@ -41,6 +46,8 @@ import java.util.Vector;
      * @author Andrew G D Rowley
      * @version 1.0
      */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class VenueTreeItem implements Comparable <Object> {
 
 
@@ -97,6 +104,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Gets an id that uniquely identifies this node
      * @return The id
      */
+    @XmlElement
     public String getId() {
         return uniqueId;
     }
@@ -113,6 +121,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Gets the name of the venue
      * @return The name of the venue
      */
+    @XmlElement
     public String getName() {
         return venueName;
     }
@@ -129,6 +138,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Returns the uri of the venue
      * @return The venue uri
      */
+    @XmlElement
     public String getUri() {
         return venueUrl;
     }
@@ -145,6 +155,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Returns true if the venue is expanded to show its exits
      * @return True if the venue is expanded, false if not
      */
+    @XmlElement
     public boolean isExpanded() {
         return isExpanded;
     }
@@ -161,6 +172,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Returns true if the connections have been loaded for this node
      * @return True if the connections have been loaded, false if not
      */
+    @XmlElement
     public boolean hasConnections() {
         return connections != null;
     }
@@ -169,6 +181,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Gets the venue connections
      * @return The exits from this venue
      */
+    @XmlElement
     public Vector<VenueTreeItem> getConnections() {
         return connections;
     }
@@ -207,6 +220,7 @@ public class VenueTreeItem implements Comparable <Object> {
      * Returns true if the venue is currently selected
      * @return True if the venue is selected
      */
+    @XmlElement
     public boolean isSelected() {
         return isSelected;
     }

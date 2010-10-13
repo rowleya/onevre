@@ -31,11 +31,17 @@
 
 package com.googlecode.onevre.ag.types.network;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * An AG3 UnicastNetworkLocation
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class UnicastNetworkLocation extends NetworkLocation {
 
     public static String TYPE = "unicast";

@@ -34,6 +34,10 @@ package com.googlecode.onevre.ag.types.service.parameter;
 import java.util.Vector;
 
 import javax.swing.JComponent;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
@@ -46,6 +50,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class AGParameter implements SoapSerializable {
 
     private final Vector<String> soapFields = new Vector<String>();
@@ -88,6 +94,7 @@ public abstract class AGParameter implements SoapSerializable {
      * Returns the name of the parameter
      * @return The name of the parameter
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -96,6 +103,7 @@ public abstract class AGParameter implements SoapSerializable {
      * Returns the type of the parameter
      * @return The type of the parameter
      */
+    @XmlElement
     public String getType() {
         return type;
     }
@@ -183,6 +191,7 @@ public abstract class AGParameter implements SoapSerializable {
      * Gets the parameter value
      * @return The parameter value
      */
+    @XmlElement
     public abstract Object getValue();
 
     /**

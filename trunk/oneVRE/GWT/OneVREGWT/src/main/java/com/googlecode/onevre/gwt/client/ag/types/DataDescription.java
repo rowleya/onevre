@@ -44,20 +44,43 @@ public class DataDescription {
     // The id of the item that is above this one in the hierarchy
     private String parentId = null;
 
+	public DataDescription (String name, String description, String expires){
+		this.name = name;
+		this.description = description;
+		this.expires = expires;
+	}
+
 	public DataDescription (DataDescriptionJSO jso){
 	    id = jso.getId();
 	    name = jso.getName();
 	    description = jso.getDescription();
 	    uri = jso.getUri();
 	    status = jso.getStatus();
-	    size = jso.getSize();
+	    size = Integer.valueOf(jso.getSize());
 	    checksum = jso.getChecksum();
 	    owner = jso.getOwner();
 	    type = jso.getType();
 	    expires = jso.getExpires();
 	    lastModified = jso.getLastModified();
 	    objectType = jso.getObjectType();
-	    hierarchyLevel = jso.getHierarchyLevel();
+	    hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
+	    parentId = jso.getParentId();
+	}
+
+	public DataDescription (DataDescriptionEJSO jso){
+	    id = jso.getId();
+	    name = jso.getName();
+	    description = jso.getDescription();
+	    uri = jso.getUri();
+	    status = jso.getStatus();
+	    size = Integer.valueOf(jso.getSize());
+	    checksum = jso.getChecksum();
+	    owner = jso.getOwner();
+	    type = jso.getType();
+	    expires = jso.getExpires();
+	    lastModified = jso.getLastModified();
+	    objectType = jso.getObjectType();
+	    hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
 	    parentId = jso.getParentId();
 	}
 

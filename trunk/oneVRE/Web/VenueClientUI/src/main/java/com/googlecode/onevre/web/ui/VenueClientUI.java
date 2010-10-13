@@ -78,12 +78,11 @@ import com.googlecode.onevre.ag.types.VenueState;
 import com.googlecode.onevre.ag.types.VenueTreeItem;
 import com.googlecode.onevre.ag.types.application.AppParticipantDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
-import com.googlecode.onevre.ag.types.application.SharedAppState;
 import com.googlecode.onevre.ag.types.server.Venue;
 import com.googlecode.onevre.ag.types.server.VenueServer;
+import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLDeserializer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
-import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
 import com.googlecode.onevre.utils.TimeoutListener;
 import com.googlecode.onevre.utils.Utils;
@@ -173,7 +172,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     private StreamDescription[] currentStreams = new StreamDescription[0];
 
     // The xml rpc server to add requests to
-    private PagXmlRpcServer xmlRpcServer = null;
+    private AgEventServer agEventServer = null;
 
     // The current status
     private String status = "";
@@ -187,10 +186,10 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param myVenuesPreference The myVenues preference item
      */
     public VenueClientUI(ClientProfile clientProfile,
-            PagXmlRpcServer xmlRpcServer, String myVenuesPreference, String trustedServersPreference) {
+            AgEventServer agEventServer, String myVenuesPreference, String trustedServersPreference) {
         this.clientProfile = clientProfile;
         this.currentVenueUri = clientProfile.getHomeVenue();
-        this.xmlRpcServer = xmlRpcServer;
+        this.agEventServer = agEventServer;
         setMyVenues(myVenuesPreference);
         setTrustedServers(Defaults.trustedServerFile);
         try {
@@ -209,8 +208,17 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param current The current size of the file
      */
     public void setUploadStatus(String filename, Long total, Long current) {
-        xmlRpcServer.addRequest("setUploadStatus",
-                new Object[]{filename, total, current});
+     //   agEventServer.addRequest("setUploadStatus", new Object[]{filename, total, current});
+    }
+
+    private String uriFromVenueStateUri(String vsUri){
+    	for (String uri: venueStates.keySet()){
+    		VenueState vs = venueStates.get(uri);
+    		if ((vs!=null) && vsUri.equals(vs.getUri())) {
+    			return uri;
+    		}
+    	}
+    	return null;
     }
 
     /**
@@ -218,7 +226,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      *
      */
     public void showUploadStatus() {
-        xmlRpcServer.addRequest("showUploadStatus", new Object[0]);
+        // agEventServer.addRequest("showUploadStatus", new Object[0]);
     }
 
     /**
@@ -226,7 +234,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      *
      */
     public void hideUploadStatus() {
-        xmlRpcServer.addRequest("hideUploadStatus", new Object[0]);
+        // agEventServer.addRequest("hideUploadStatus", new Object[0]);
     }
 
     /**
@@ -234,7 +242,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param message The message to display
      */
     public void displayMessage(String message) {
-        xmlRpcServer.addRequest("displayMessage", new Object[]{message});
+        // agEventServer.addRequest("displayMessage", new Object[]{message});
     }
 
     private void setMyVenues(String myVenuesPreference) {
@@ -464,7 +472,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 
             EventClient eventClient = new EventClient(new VenueClientEventListener(currentVenueState,
                     currentVenueState.getEventLocation(),
-                    this,xmlRpcServer), connectionId,
+                    this,agEventServer), connectionId,
                     currentVenueState.getUniqueId());
             venueEventClients.put(uri, eventClient);
             Defaults.writeLog("Enter Venue: " + currentVenueState.toLog() + "; Client: " + clientProfile.toLog() );
@@ -497,7 +505,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 //                    System.err.println("Room : " + jabberRoom);
                     try {
                         jabberClient = new JabberClient(jabberHost, jabberPort, true,
-                        	currentVenueState.getUri(),jabberRoom, nickname, xmlRpcServer);
+                        	currentVenueState.getUri(),jabberRoom, nickname, agEventServer);
                         jabberClients.put(currentVenueState.getUri(), jabberClient);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -507,7 +515,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             jabberClients.put(currentVenueState.getUri(), jabberClient);
             this.jabberClient = jabberClients.get(currentVenueUri);
             jabberThread.start();
-            xmlRpcServer.setListener(this);
+            agEventServer.setListener(this);
         } catch (Exception e) {
             exitVenue();
             throw e;
@@ -546,7 +554,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             log.info("VenueState of "+ uri +" : " +  state);
             EventClient eventClient = new EventClient(new VenueClientEventListener(state,
                     state.getEventLocation(),
-                    this,xmlRpcServer), connectionId,
+                    this,agEventServer), connectionId,
                     state.getUniqueId());
             log.info("eventClient started");
             venueEventClients.put(uri,eventClient);
@@ -601,7 +609,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                     log.info("Room : " + jabberRoom);
                     try {
                         jabberClient = new JabberClient(jabberHost, jabberPort, true,
-                        	jabberState.getUri(),jabberRoom, nickname, xmlRpcServer);
+                        	jabberState.getUri(),jabberRoom, nickname, agEventServer);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -609,7 +617,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             };
            jabberThread.start();
            jabberClients.put(uri, jabberClient);
-           xmlRpcServer.setListener(this);
+           agEventServer.setListener(this);
         } catch (SoapException e){
         	e.printStackTrace();
 
@@ -627,13 +635,20 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     	return state;
     }
 
-    public boolean stopMonitoringVenue(VenueState state)  {
-    	String uri = state.getUri();
+    public boolean stopMonitoringVenue(String venueUri)  {
+    	String uri = uriFromVenueStateUri(venueUri);
+    	if (uri==null) {
+    		return false;
+    	}
     	String connId = venueConnIds.get(uri);
     	EventClient evclient = venueEventClients.remove(uri);
-    	evclient.close();
+    	if (evclient!=null){
+    		evclient.close();
+    	}
     	JabberClient jabber = jabberClients.remove(uri);
-    	jabber.close();
+    	if (jabber!=null){
+    		jabber.close();
+    	}
     	Venue venue = venues.get(uri);
     	try {
 			venue.exit(connId);
@@ -644,8 +659,53 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 		return true;
     }
 
-    public boolean uploadData(String uri, DataDescription data){
-    	Venue venue = venues.get(uri);
+    public boolean uploadData(String venueUri,final String parentId, final String filename, final String description,final String expires){
+/*    	String uri = uriFromVenueStateUri(venueUri);
+
+    	final String namespace;
+
+    	final File file = new File(filename);
+        Thread uploader = new Thread() {
+            public void run() {
+                    Part[] parts = new Part[4];
+                    parts[0] = new StringPart("namespace", namespace);
+                    parts[1] = new StringPart("parentId", parentId);
+                    parts[2] = new StringPart("description", description);
+                    parts[3] = new StringPart("expires", expires);
+                    parts[4] = new FilePart(file.getName(),file);
+                    System.out.println("Uploading " + parts.length + " files");
+
+                    try {
+	                    URL url = new URL(urlString);
+	                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	                    connection.setDoOutput(true);
+	                    Utils.addSslConnection(connection);
+	                    PostMethod filePost = new PostMethod(urlString);
+	                    RequestEntity requestEntity = new MultipartRequestEntity(parts,
+	                            filePost.getParams());
+	                    connection.setRequestMethod("POST");
+	                    connection.addRequestProperty("Content-Type", requestEntity.getContentType());
+	                    connection.addRequestProperty("Content-Length", String.valueOf(requestEntity.getContentLength()));
+	                    connection.addRequestProperty("Cookie","JSESSIONID=" + sessionId);
+	                 //   connection.connect();
+	                    OutputStream os = connection.getOutputStream();
+	                    System.out.println("writing files to "+ connection.getURL());
+	                    requestEntity.writeRequest(os);
+	                    os.flush();
+	                    os.close();
+	                    int response=connection.getResponseCode();
+	                    System.out.println("response :" +connection.getResponseMessage() + "( "+ response+")");
+	                    if(connection != null) {
+	                    	connection.disconnect();
+	                    }
+                    } catch (IOException e) {
+                    	e.printStackTrace();
+                    }
+                }
+            }
+        };
+        uploader.start();
+
     	try {
 			venue.updateData(data);
 		} catch (Exception e) {
@@ -653,7 +713,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+*/		return true;
     }
 
     public boolean updateData(String uri, String dataID, String name, String description, String expires){
@@ -675,6 +735,35 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 		return true;
     }
 
+
+	public void updateData(String venueUri, String uri, String fileName, String parentId, String description, String expiry, long fileSize) {
+    	Venue venue = venues.get(venueUri);
+       	try {
+			VenueState venueState = venue.getState();
+			DataDescription data = new DataDescription();
+			boolean found = false;
+			log.info("searching: " + uri +" "+ fileName);
+			for (DataDescription dataDesc: venueState.getData()){
+				log.info("data: " + dataDesc.getId() + " "+ dataDesc.getName() + "\n" +
+						dataDesc.getUri());
+				if (dataDesc.getName().equals(fileName)){
+					data = dataDesc;
+					found = true;
+					break;
+				}
+			}
+			if (!found){
+		    	data.setId(Utils.generateID());
+			}
+			data.setName(fileName);
+			data.setDescription(description);
+			data.setExpires(expiry);
+			data.setSize(""+fileSize);
+			venue.updateData(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     /**
      * Starts the application queued for the applications in the Venue. This is part
@@ -728,7 +817,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return URI to access the data
      * @throws URISyntaxException
      */
-    public URI uploadDataItem(String filename, String venueUrl) throws URISyntaxException {
+    public URI uploadDataItem(String venueUrl, String filename)  throws URISyntaxException {
+    	log.info("Upload file "+ filename +" to "+ venueUrl);
+    	log.info("search in " + venues.toString());
     	Venue currentVenue = venues.get(venueUrl);
     	VenueState currentVenueState = venueStates.get(venueUrl);
 		String connId = venueConnIds.get(venueUrl);
@@ -820,9 +911,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * deletes a data item from the venue
      * @param dataId the id of the data item
      */
-    public void deleteData(String dataId ,String venue) {
+    public void deleteData(String venueUri, String dataId ) {
 
-        Vector<DataDescription> venueData=venueStates.get(venue).getData();
+        Vector<DataDescription> venueData=venueStates.get(venueUri).getData();
         DataDescription dataItem=null;
         for (int i=0; i<venueData.size();i++){
             if (venueData.get(i).getId().equals(dataId)) {
@@ -830,10 +921,12 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                 break;
             }
         }
-        try {
-            venues.get(venue).removeData(dataItem);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (dataItem!=null){
+	        try {
+	            venues.get(venueUri).removeData(dataItem);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
         }
     }
 
@@ -984,7 +1077,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             SharedApplication app=new SharedApplication(application.getUri());
             HashMap<String, String> ids=app.join(null);
             HashMap<String, Object> dataChannel=app.getDataChannel(ids.get("privateId"));
-            applicationClients.add(new EventClient(new ApplicationEventListener(application,dataChannel.get("address")+":"+dataChannel.get("port"),xmlRpcServer),ids.get("publicId"),(String)dataChannel.get("channelId")));
+            applicationClients.add(new EventClient(new ApplicationEventListener(application,dataChannel.get("address")+":"+dataChannel.get("port"),agEventServer),ids.get("publicId"),(String)dataChannel.get("channelId")));
             applicationMonitorPrivateTokens.put(application.getId(),ids.get("privateId"));
             Vector <String> appTokens=new Vector<String>();
             applicationPrivateTokens.put(application.getId(), appTokens);
@@ -1073,7 +1166,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         currentVenueUri = clientProfile.getHomeVenue();
         currentVenueName = NOT_IN_VENUE_STRING;
         currentStreams = new StreamDescription[0];
-        xmlRpcServer.setListener(null);
+        agEventServer.setListener(null);
         try {
         	JabberClient jabberClient= jabberClients.get(venueUrl);
             if (jabberClient != null) {

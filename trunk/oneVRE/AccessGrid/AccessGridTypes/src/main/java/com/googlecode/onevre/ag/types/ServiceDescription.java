@@ -32,6 +32,11 @@
 
 package com.googlecode.onevre.ag.types;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
@@ -40,6 +45,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class ServiceDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -92,6 +99,7 @@ public class ServiceDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -100,6 +108,7 @@ public class ServiceDescription implements SoapSerializable {
      * Returns the id
      * @return the id
      */
+    @XmlElement
     public String getId() {
         return id;
     }
@@ -108,6 +117,7 @@ public class ServiceDescription implements SoapSerializable {
      * Returns the mime type
      * @return the mime type
      */
+    @XmlElement
     public String getMimeType() {
         return mimeType;
     }
@@ -116,6 +126,7 @@ public class ServiceDescription implements SoapSerializable {
      * Returns the name
      * @return the name
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -124,6 +135,7 @@ public class ServiceDescription implements SoapSerializable {
      * Returns the uri
      * @return he uri
      */
+    @XmlElement
     public String getUri() {
         return uri;
     }

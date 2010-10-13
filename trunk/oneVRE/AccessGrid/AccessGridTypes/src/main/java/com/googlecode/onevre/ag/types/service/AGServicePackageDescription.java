@@ -32,6 +32,11 @@
 
 package com.googlecode.onevre.ag.types.service;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
@@ -40,6 +45,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @author Anja Le Blanc
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class AGServicePackageDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
@@ -128,6 +135,7 @@ public class AGServicePackageDescription implements SoapSerializable {
      * Gets the name of the service
      * @return The name of the service
      */
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -153,6 +161,7 @@ public class AGServicePackageDescription implements SoapSerializable {
      * Returns the description
      * @return the description
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -161,6 +170,7 @@ public class AGServicePackageDescription implements SoapSerializable {
      * Returns the launchUrl
      * @return the launchUrl
      */
+    @XmlElement
     public String getLaunchUrl() {
         return launchUrl;
     }
@@ -177,6 +187,7 @@ public class AGServicePackageDescription implements SoapSerializable {
      * Returns the packageName
      * @return the packageName
      */
+    @XmlElement
     public String getPackageName() {
         return packageName;
     }
@@ -199,6 +210,7 @@ public class AGServicePackageDescription implements SoapSerializable {
 	/**
 	 * @return the serviceClass
 	 */
+    @XmlElement
 	public String getServiceClass() {
 		return serviceClass;
 	}

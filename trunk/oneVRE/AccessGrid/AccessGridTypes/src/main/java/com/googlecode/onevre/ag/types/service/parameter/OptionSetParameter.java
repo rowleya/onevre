@@ -35,6 +35,10 @@ import java.util.Vector;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * An AG3 OptionSetParameter
@@ -42,6 +46,8 @@ import javax.swing.JComponent;
  * @author Andrew G D Rowley
  * @version 1.0
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class OptionSetParameter extends AGParameter {
 
     // The value
@@ -86,6 +92,7 @@ public class OptionSetParameter extends AGParameter {
      * Gets the value
      * @return the value
      */
+    @XmlElement
     public Object getValue() {
         return value;
     }
@@ -94,6 +101,7 @@ public class OptionSetParameter extends AGParameter {
      * Gets the available options
      * @return The options
      */
+    @XmlElement
     public String[] getOptions() {
         return options.toArray(new String[0]);
     }
@@ -124,6 +132,7 @@ public class OptionSetParameter extends AGParameter {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.types.agservice.AGParameter#getVisualComponent()}</dd></dl>
      * @return The component, or null if not modifiable
      */
+    @XmlElement
     public JComponent getVisualComponent() {
         component.setSelectedItem(value);
         return component;
