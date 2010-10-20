@@ -3,7 +3,6 @@ package com.googlecode.onevre.gwt.client.interfaces;
 import com.googlecode.onevre.gwt.client.ag.MessageManager;
 import com.googlecode.onevre.gwt.client.ag.types.MessageBox;
 import com.googlecode.onevre.gwt.client.ag.types.UploadStatus;
-import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public interface MessageManagerInterface {
 

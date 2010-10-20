@@ -174,12 +174,9 @@ public class Application implements EntryPoint {
         xmlrpcClient.setDebugMode(true);
         xmlrpcClient.setTimeoutMillis(120000);
         GetTrustedServers.getTrustedServers();
-        receiver = new AXmlRpcMessageReceiver(this);
+        receiver = new AXmlRpcMessageReceiver();
         receiver.start();
         GetClientProfile.getClientProfile();
-
-
-
 
         DockPanel applicationPanel = new DockPanel();
         applicationPanel.setWidth("100%");

@@ -1,25 +1,16 @@
 package com.googlecode.onevre.gwt.client.axmlrpc;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.XMLParser;
-import com.google.gwt.xml.client.impl.DOMParseException;
 
 
 import com.googlecode.onevre.gwt.client.Application;
-import com.googlecode.onevre.gwt.client.VenueClientController;
 import com.googlecode.onevre.gwt.client.ag.types.AgEventJSO;
 
 
@@ -51,7 +42,7 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 
 		RequestMappings.put("jabberClearWindow", new JabberClearWindowReceiver());
 		RequestMappings.put("jabberAddMessage", new JabberAddMessageReceiver());
-		
+
 		RequestMappings.put("setUploadStatus", new SetUploadStatusReceiver());
 		RequestMappings.put("showUploadStatus", new ShowUploadStatusReceiver());
 		RequestMappings.put("hideUploadStatus", new HideUploadStatusReceiver());
@@ -59,10 +50,6 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 	}
 
     private boolean done = false;
-
-    private int count = 0;
-
-    private Application application = null;
 
     private String serverUrl=null;
 
@@ -77,9 +64,7 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 		}
     }
 
-    public AXmlRpcMessageReceiver(Application application) {
-        this.application = application;
-        count = 0;
+    public AXmlRpcMessageReceiver() {
         this.serverUrl =  Application.getParam(Application.XMLRPC_RESPONSE_SERVER)
         			   + "?namespace="+Application.encodeURIComponent(Application.getParam(Application.APPLICATION_NAMESPACE));
 		GWT.log("AXML msg serverURL = " + serverUrl);
@@ -99,10 +84,10 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 	}
 
 	public void onResponseReceived(Request request, Response response) {
-		boolean JSONparse = false;
-		GWT.log("AXmlRpcMessageReceiver.onResponseReceived: "+ response.getText());
+        if (done) {
+        	return;
+        }
         AgEventJSO event = AgEventJSO.parse(response.getText());
-        GWT.log("EVENT: " + event.getEventName());
         if (event.getEventName().equals("none")){
         	getUpdate();
         	return;
@@ -118,7 +103,5 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
         receiver.execute(event);
         getUpdate();
 	}
-
-
 
 }
