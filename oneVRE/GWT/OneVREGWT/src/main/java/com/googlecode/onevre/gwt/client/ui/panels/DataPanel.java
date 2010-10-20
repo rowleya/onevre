@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.NamedFrame;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.DataDescription;
@@ -25,7 +24,6 @@ import com.googlecode.onevre.gwt.client.ui.buttons.DataPropertiesButton;
 import com.googlecode.onevre.gwt.client.ui.buttons.DeleteDataButton;
 import com.googlecode.onevre.gwt.client.xmlrpc.UpdateData;
 import com.googlecode.onevre.gwt.common.client.MessageResponse;
-import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 
 public class DataPanel extends FlexTable implements ClickHandler{
 
