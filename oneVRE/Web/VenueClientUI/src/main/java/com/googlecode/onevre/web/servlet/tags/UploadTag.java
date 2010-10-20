@@ -136,8 +136,7 @@ public class UploadTag extends PortletTag {
                         log.info("Receiving file : "+ fileName);
 
                         long size = item.getSize();
-                        ui.showUploadStatus();
-                        ui.setUploadStatus(fileName, size, 0L);
+                        ui.showUploadStatus(venueUri, fileName, size);
                         String error = null;
                         URI uri = null;
                         try {
@@ -158,7 +157,7 @@ public class UploadTag extends PortletTag {
                             while ((bytesRead = input.read(buffer)) != -1) {
                                 output.write(buffer, 0, bytesRead);
                                 totalBytes += bytesRead;
-              //                  ui.setUploadStatus(fileName, size, totalBytes);
+                                ui.setUploadStatus(venueUri, fileName, size, totalBytes);
                             }
                             output.close();
                             input.close();
@@ -166,13 +165,13 @@ public class UploadTag extends PortletTag {
                             e.printStackTrace();
                             error = e.getMessage();
                         }
-          //              ui.setUploadStatus(fileName, size, size);
-          /*              if (error != null) {
-                            ui.displayMessage("Error uploading file: " + error);
+                        ui.setUploadStatus(venueUri, fileName, size, size);
+                        if (error != null) {
+                            ui.displayMessage(venueUri,"error","Error uploading file: " + error);
                         } else {
-                            ui.displayMessage("File uploaded successfully");
+                            ui.displayMessage(venueUri,"success", "File uploaded successfully");
                         }
-             */           //ui.hideUploadStatus();
+                        ui.hideUploadStatus(venueUri);
                         ui.updateData(venueUri, uri.toString(), fileName, parentId, description, expiry, size);
                         ui.closeDataConnection(venue);
                     }

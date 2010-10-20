@@ -3,6 +3,7 @@ package com.googlecode.onevre.gwt.client.ui.buttons;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.NamedFrame;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.ui.ActionButton;
 import com.googlecode.onevre.gwt.client.ui.panels.AddDataPanel;
@@ -13,10 +14,13 @@ public class AddDataButton extends ActionButton implements ClickHandler {
 
 	private VenueState venueState = null;
 
+	private NamedFrame targetFrame = null;
+
 	private String parent = null;
 
-	public AddDataButton(VenueState state, String parent) {
+	public AddDataButton(VenueState state, String parent, NamedFrame targetFrame) {
 		this.venueState = state;
+		this.targetFrame = targetFrame;
 		this.parent = parent;
 		setImageUrl("images/icons/add.png");
 		setName("Add data item");
@@ -30,7 +34,7 @@ public class AddDataButton extends ActionButton implements ClickHandler {
 	}
 
 	public void onClick(ClickEvent paramClickEvent) {
-		AddDataPanel adp = new AddDataPanel(parent,venueState.getUri());
+		AddDataPanel adp = new AddDataPanel(parent,venueState.getUri(),targetFrame);
 		adp.show();
 	}
 

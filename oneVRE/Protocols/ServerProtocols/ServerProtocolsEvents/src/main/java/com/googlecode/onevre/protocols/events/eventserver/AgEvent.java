@@ -36,4 +36,8 @@ public class AgEvent {
 		this.eventName = eventName;
 		this.eventObject = eventObject;
 	}
+
+	public AgEvent(String string, Object[] objects) {
+		// TODO Auto-generated constructor stub
+	}
 }

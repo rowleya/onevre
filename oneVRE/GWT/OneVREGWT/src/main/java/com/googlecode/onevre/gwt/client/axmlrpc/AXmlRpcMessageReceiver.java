@@ -51,6 +51,11 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
 
 		RequestMappings.put("jabberClearWindow", new JabberClearWindowReceiver());
 		RequestMappings.put("jabberAddMessage", new JabberAddMessageReceiver());
+		
+		RequestMappings.put("setUploadStatus", new SetUploadStatusReceiver());
+		RequestMappings.put("showUploadStatus", new ShowUploadStatusReceiver());
+		RequestMappings.put("hideUploadStatus", new HideUploadStatusReceiver());
+		RequestMappings.put("displayMessage", new DisplayMessageReceiver());
 	}
 
     private boolean done = false;
