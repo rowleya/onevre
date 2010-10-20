@@ -119,6 +119,7 @@ public class UploadServiceTag extends PortletTag {
                 }
             }
             VenueClientUI ui = getVenueClientUI();
+            String uri = null;
             iter = items.iterator();
             if (ui != null) {
                 // Process the uploaded items
@@ -129,8 +130,7 @@ public class UploadServiceTag extends PortletTag {
                         uploadDir.mkdirs();
                         String fileName = item.getName();
                         long size = item.getSize();
-                        ui.showUploadStatus();
-                        ui.setUploadStatus(fileName, size, 0L);
+                        ui.showUploadStatus(uri, fileName, size);
                         String error = null;
                         Vector<String> files = new Vector<String>();
                         String name = null;
@@ -158,14 +158,14 @@ public class UploadServiceTag extends PortletTag {
                                 int bytesRead = 0;
                                 while ((bytesRead = input.read(buffer)) != -1) {
                                     output.write(buffer, 0, bytesRead);
-                                    ui.setUploadStatus(fileName, size,
+                                    ui.setUploadStatus(uri,fileName, size,
                                         count.getCount());
                                 }
                                 output.close();
                                 entry = zipInput.getNextEntry();
                             }
 
-                            ui.setUploadStatus(fileName, size, size);
+                            ui.setUploadStatus(uri,fileName, size, size);
 
                             // Check that the Service.jar exists
                             File serviceJar = new File(
@@ -294,10 +294,10 @@ public class UploadServiceTag extends PortletTag {
                                 contents[i].delete();
                             }
                             uploadDir.delete();
-                            ui.displayMessage("Error uploading service: "
+                            ui.displayMessage(uri,"error", "Error uploading service: "
                                     + error);
                         } else {
-                            ui.displayMessage("Service uploaded successfully");
+                            ui.displayMessage(uri,"success", "Service uploaded successfully");
                             String url = "";
                             url += request.getScheme() + "://";
                             url += request.getServerName();
@@ -313,7 +313,7 @@ public class UploadServiceTag extends PortletTag {
                             getXmlRpcServer().addRequest("addService",
                                 new Object[]{name, desc});
                         }
-                        ui.hideUploadStatus();
+                        ui.hideUploadStatus(uri);
                     }
                 }
             }

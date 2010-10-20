@@ -40,12 +40,13 @@ public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler 
 	PushButton clear = new PushButton("Clear",this);
 	PushButton ok = new PushButton("Upload Data Item",this);
 	FlexTable profilepanel = new FlexTable();
-	NamedFrame targetFrame = new NamedFrame("victim");
-	FormPanel form = new FormPanel(targetFrame);
+//	NamedFrame targetFrame = new NamedFrame("victim");
+	FormPanel form = null;
 	Hidden parent = new Hidden("parentId");
 	Hidden namespace = new Hidden("namespace", Application.getParam("pag_namespace"));
 	Hidden venueUri = new Hidden("venueUri");
 	Hidden expiry = new Hidden("expiry");
+	Hidden description = new Hidden("description");
 
 	boolean changed = false;
 
@@ -53,7 +54,7 @@ public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler 
 		return changed;
 	}
 
-	public AddDataPanel(String parentId, String venueURI) {
+	public AddDataPanel(String parentId, String venueURI, NamedFrame targetFrame) {
 		super(new DockPanel());
 		DockPanel panel= getWidget();
 		Image img = new Image(Icons.addDocumentIcon);
@@ -61,6 +62,8 @@ public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler 
 
 		parent.setValue(parentId);
 		venueUri.setValue(venueURI);
+
+		form = new FormPanel(targetFrame);
 
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
@@ -73,38 +76,41 @@ public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler 
 		form.setAction(baseurl+Application.getParam("pag_dataUploadUrl"));
 
 		HorizontalPanel hiddenElements = new HorizontalPanel();
-		profilepanel.setWidget(0,3, hiddenElements);
+		profilepanel.setWidget(0,0, hiddenElements);
 		hiddenElements.add(parent);
 		hiddenElements.add(namespace);
 		hiddenElements.add(venueUri);
 		hiddenElements.add(expiry);
+		hiddenElements.add(description);
+		//hiddenElements.add(targetFrame);
+//		targetFrame.setVisible(false);
 
 
 		panel.add(img,DockPanel.WEST);
 		panel.setCellVerticalAlignment(img, DockPanel.ALIGN_MIDDLE);
 //		Grid profilepanel = new Grid (3,3);
-		profilepanel.setWidget(0,0, new Image(Icons.fileIcon));
-		profilepanel.setText(0,1, "Name: *");
+		profilepanel.setWidget(1,0, new Image(Icons.fileIcon));
+		profilepanel.setText(1,1, "Name: *");
 		fileNameInput.setName("file");
-		profilepanel.setWidget(0, 2, fileNameInput);
-		profilepanel.getFlexCellFormatter().setColSpan(0,2,2);
+		profilepanel.setWidget(1, 2, fileNameInput);
+		profilepanel.getFlexCellFormatter().setColSpan(1,2,2);
 		Image docInfo = new Image(Icons.docInfoIcon);
 		docInfo.setHeight("22px");
-		profilepanel.setWidget(1,0, docInfo);
-		profilepanel.setText(1,1, "Description: *");
+		profilepanel.setWidget(2,0, docInfo);
+		profilepanel.setText(2,1, "Description: *");
 		descriptionInput.setVisibleLines(3);
-		descriptionInput.setName("description");
-		profilepanel.setWidget(1, 2, descriptionInput);
-		profilepanel.getFlexCellFormatter().setColSpan(1,2,2);
+		//descriptionInput.setName("description");
+		profilepanel.setWidget(2, 2, descriptionInput);
+		profilepanel.getFlexCellFormatter().setColSpan(2,2,2);
 		form.add(profilepanel);
 		panel.add(form,DockPanel.CENTER);
 
 		Image timeout = new Image(Icons.timeoutIcon);
 		timeout.setHeight("22px");
-		profilepanel.setWidget(2,0, timeout);
-		profilepanel.setText(2,1, "expires:");
-		profilepanel.setWidget(2, 2, dateInput);
-		profilepanel.setWidget(2,3,clear);
+		profilepanel.setWidget(3,0, timeout);
+		profilepanel.setText(3,1, "expires:");
+		profilepanel.setWidget(3, 2, dateInput);
+		profilepanel.setWidget(3,3,clear);
 		dateInput.setValue(null);
 
 		DockPanel buttons  = new DockPanel();
@@ -126,6 +132,7 @@ public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler 
 				expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
 			}
 			expiry.setValue(expString);
+			description.setValue(descriptionInput.getValue());
 			if (fileNameInput.getFilename().equals("")) {
 				return;
 			}

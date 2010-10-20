@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.onevre.gwt.client.Application;
@@ -31,6 +32,8 @@ public class DataPanel extends FlexTable implements ClickHandler{
 	Vector<DataDescription> dataDescriptions = new Vector<DataDescription>();
 
 	VenueState venueState = null;
+
+	NamedFrame targetFrame = new NamedFrame("victim");
 
 	HashMap<DataDescription, Widget> dataEntrys =  new HashMap<DataDescription, Widget>();
 
@@ -97,9 +100,11 @@ public class DataPanel extends FlexTable implements ClickHandler{
 		this.getFlexCellFormatter().setColSpan(0, 0, 2);
 		this.setText(0, 1, "Last Modified" );
 		HorizontalPanel buttonPanel = new HorizontalPanel();
-		buttonPanel.add(new AddDataButton(venueState,null).getButton());
+		buttonPanel.add(new AddDataButton(venueState,null,targetFrame).getButton());
 		buttonPanel.add(new CreateFolderButton(venueState).getButton());
 		this.setWidget(0,3,buttonPanel);
+		this.setWidget(0, 4, targetFrame);
+		targetFrame.setVisible(false);
 		this.getCellFormatter().setHorizontalAlignment(0, 3, HorizontalPanel.ALIGN_RIGHT);
 		int i = 1;
 		for (DataDescription dataDescription : dataDescriptions){

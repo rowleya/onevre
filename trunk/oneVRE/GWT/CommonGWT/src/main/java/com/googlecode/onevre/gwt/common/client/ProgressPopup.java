@@ -37,20 +37,33 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class WaitPopup extends ModalPopup<VerticalPanel>
+public class ProgressPopup extends ModalPopup<VerticalPanel>
         implements ClickHandler {
 
     private boolean cancelled = false;
 
-    private Image progress = new Image(GWT.getModuleBaseURL()+"images/popups/progress.gif");
+    private Image progressImg = new Image(GWT.getModuleBaseURL()+"images/popups/progress.gif");
+    HorizontalPanel border = new HorizontalPanel();
 
     private Button cancel = new Button("Cancel");
 
-    public WaitPopup(String msg, boolean cancellable) {
+    private long max = 0;
+    private long min = 0;
+    private long value = 0;
+
+    FlexTable layout = new FlexTable();
+
+    private int width = progressImg.getWidth();
+    private int height = progressImg.getHeight();
+
+    public ProgressPopup(String msg, boolean cancellable) {
         super(new VerticalPanel());
 
 
@@ -63,20 +76,53 @@ public class WaitPopup extends ModalPopup<VerticalPanel>
         VerticalPanel panel = getWidget();
         panel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
         panel.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
-
+        panel.add(layout);
         Label message = new Label(msg);
-        panel.add(message);
-        panel.add(progress);
+        layout.setWidget(0, 0, message);
+        layout.getFlexCellFormatter().setColSpan(0, 0, 3);
+        layout.getFlexCellFormatter().setHorizontalAlignment(0, 0, HorizontalPanel.ALIGN_CENTER);
+        border.setBorderWidth(1);
+        border.setWidth((width+3)+"px");
+        border.setHeight((height+3)+"px");
+        layout.setWidget(1,1,border);
+        layout.getFlexCellFormatter().setHorizontalAlignment(1, 1, HorizontalPanel.ALIGN_CENTER);
+        layout.setText(2, 0, "0%");
+        layout.setText(2, 2, "100%");
+        layout.getFlexCellFormatter().setHorizontalAlignment(2, 1, HorizontalPanel.ALIGN_CENTER);
+
+        progressImg.setSize("0px",height+"px");
+        border.add(progressImg);
         if (cancellable) {
             panel.add(cancel);
             cancel.addClickHandler(this);
         }
 
-        DOM.setStyleAttribute(progress.getElement(), "marginBottom", "20px");
-
+        DOM.setStyleAttribute(border.getElement(), "marginBottom", "20px");
     }
 
-    
+    public void setMax(long max){
+    	this.max = max;
+    }
+
+    public void setMin(long min){
+    	this.min = min;
+    }
+
+    public void setValue(long value){
+    	progressImg.setHeight(height+"px");
+    	float outwidth = 0;
+    	float minval = (float)value-min;
+    	float maxval = (float)max-min;
+    	if (value>min){
+        	outwidth = (minval/maxval)*((float)width);
+    	}
+    	if (value>max){
+    		outwidth = width;
+    	}
+    	progressImg.setWidth(((int)outwidth) + "px");
+    	layout.setText(2, 1, value + " of " + max);
+    }
+
     public void onClick(ClickEvent event) {
         cancelled = true;
         hide();

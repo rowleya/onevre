@@ -47,6 +47,7 @@ import com.googlecode.onevre.gwt.client.ag.ApplicationManager;
 import com.googlecode.onevre.gwt.client.ag.ConnectionManager;
 import com.googlecode.onevre.gwt.client.ag.DataManager;
 import com.googlecode.onevre.gwt.client.ag.JabberManager;
+import com.googlecode.onevre.gwt.client.ag.MessageManager;
 import com.googlecode.onevre.gwt.client.ag.ServerManager;
 import com.googlecode.onevre.gwt.client.ag.ServiceManager;
 import com.googlecode.onevre.gwt.client.ag.UserManager;
@@ -55,6 +56,7 @@ import com.googlecode.onevre.gwt.client.ui.OneVREApplicationManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREConnectionManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREDataManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREJabberManager;
+import com.googlecode.onevre.gwt.client.ui.OneVREMessageManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREServerManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREServiceManager;
 import com.googlecode.onevre.gwt.client.ui.OneVREUserManager;
@@ -80,6 +82,8 @@ public class Application implements EntryPoint {
 
     private static DataManager dataManager = null;
 
+    private static MessageManager messageManager = null;
+
     private static ServiceManager serviceManager = null;
 
 	private static ApplicationManager applicationManager = null;
@@ -93,8 +97,13 @@ public class Application implements EntryPoint {
     public static UserManager getUserManager(){
     	return userManager;
     }
+
     public static JabberManager getJabberManager (){
     	return jabberManager;
+    }
+
+    public static MessageManager getMessageManager (){
+    	return messageManager;
     }
 
 	public static DataManager getDataManager() {
@@ -152,7 +161,7 @@ public class Application implements EntryPoint {
     	applicationManager  = new ApplicationManager (new OneVREApplicationManager());
     	connectionManager = new ConnectionManager(new OneVREConnectionManager());
     	jabberManager = new JabberManager(new OneVREJabberManager());
-
+    	messageManager = new MessageManager(new OneVREMessageManager());
 
     	VenueClientController.setVenueClientController(Application.getParam("pag_venueClientControllerId"));
 

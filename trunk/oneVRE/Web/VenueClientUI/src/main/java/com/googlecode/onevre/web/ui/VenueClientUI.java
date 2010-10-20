@@ -65,6 +65,8 @@ import com.googlecode.onevre.ag.agclient.VenueClientEventListener;
 import com.googlecode.onevre.ag.agclient.interfaces.ApplicationListener;
 import com.googlecode.onevre.ag.agclient.venue.EventClient;
 import com.googlecode.onevre.ag.agclient.venue.JabberClient;
+import com.googlecode.onevre.ag.agclient.venue.MessageBox;
+import com.googlecode.onevre.ag.agclient.venue.UploadStatus;
 import com.googlecode.onevre.ag.common.interfaces.SharedApplication;
 import com.googlecode.onevre.ag.types.BridgeDescription;
 import com.googlecode.onevre.ag.types.Capability;
@@ -80,6 +82,7 @@ import com.googlecode.onevre.ag.types.application.AppParticipantDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
 import com.googlecode.onevre.ag.types.server.Venue;
 import com.googlecode.onevre.ag.types.server.VenueServer;
+import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
 import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLDeserializer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
@@ -207,8 +210,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param total The total size of the file
      * @param current The current size of the file
      */
-    public void setUploadStatus(String filename, Long total, Long current) {
-     //   agEventServer.addRequest("setUploadStatus", new Object[]{filename, total, current});
+    public void setUploadStatus(String venueUri, String filename, long total, long current) {
+    	UploadStatus object = new UploadStatus(filename,total,current);
+        agEventServer.addEvent(new AgEvent(venueUri, "setUploadStatus", object));
     }
 
     private String uriFromVenueStateUri(String vsUri){
@@ -225,24 +229,25 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * Shows the upload status dialog
      *
      */
-    public void showUploadStatus() {
-        // agEventServer.addRequest("showUploadStatus", new Object[0]);
+    public void showUploadStatus(String venueUri, String filename, long total) {
+    	UploadStatus object = new UploadStatus(filename,total,0);
+    	agEventServer.addEvent(new AgEvent(venueUri,"showUploadStatus", object));
     }
 
     /**
      * Hides the upload status dialog
      *
      */
-    public void hideUploadStatus() {
-        // agEventServer.addRequest("hideUploadStatus", new Object[0]);
+    public void hideUploadStatus(String venueUri) {
+        agEventServer.addEvent(new AgEvent(venueUri, "hideUploadStatus", null));
     }
 
     /**
      * Displays a message to the client
      * @param message The message to display
      */
-    public void displayMessage(String message) {
-        // agEventServer.addRequest("displayMessage", new Object[]{message});
+    public void displayMessage(String venueUri, String type, String message) {
+        agEventServer.addEvent(new AgEvent(venueUri, "displayMessage", new MessageBox(type,message)));
     }
 
     private void setMyVenues(String myVenuesPreference) {

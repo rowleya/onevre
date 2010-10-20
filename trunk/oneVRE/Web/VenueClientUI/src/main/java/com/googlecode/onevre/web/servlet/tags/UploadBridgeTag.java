@@ -105,6 +105,7 @@ public class UploadBridgeTag extends PortletTag {
                 }
             }
             VenueClientUI ui = getVenueClientUI();
+            String uri = null;
             iter = items.iterator();
             if (ui != null) {
                 // Process the uploaded items
@@ -113,9 +114,9 @@ public class UploadBridgeTag extends PortletTag {
                     if (!item.isFormField()) {
                         String fileName = item.getName();
                         File tempFile = null;
+
                         long size = item.getSize();
-                        ui.showUploadStatus();
-                        ui.setUploadStatus(fileName, size, 0L);
+                        ui.showUploadStatus(uri,fileName, size);
                         String error = null;
                         try {
                             tempFile = File.createTempFile("uploaded", ".jar",
@@ -130,12 +131,12 @@ public class UploadBridgeTag extends PortletTag {
                             int bytesRead = 0;
                             while ((bytesRead = input.read(buffer)) != -1) {
                                 output.write(buffer, 0, bytesRead);
-                                ui.setUploadStatus(fileName, size,
+                                ui.setUploadStatus(uri,fileName, size,
                                     count.getCount());
                             }
                             output.close();
 
-                            ui.setUploadStatus(fileName, size, size);
+                            ui.setUploadStatus(uri,fileName, size, size);
 
                             JarFile jar = new JarFile(tempFile);
                             Enumeration<JarEntry> entries = jar.entries();
@@ -228,12 +229,12 @@ public class UploadBridgeTag extends PortletTag {
 
                         if (error != null) {
                             //tempFile.delete();
-                            ui.displayMessage("Error uploading bridge: "
+                            ui.displayMessage(uri,"error", "Error uploading bridge: "
                                     + error);
                         } else {
-                            ui.displayMessage("Bridge uploaded successfully");
+                            ui.displayMessage(uri,"success", "Bridge uploaded successfully");
                         }
-                        ui.hideUploadStatus();
+                        ui.hideUploadStatus(uri);
                     }
                 }
             }
