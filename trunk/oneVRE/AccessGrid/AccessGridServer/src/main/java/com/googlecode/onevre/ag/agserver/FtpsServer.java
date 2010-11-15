@@ -131,12 +131,25 @@ public class FtpsServer {
     }
 
     public File getFile(String venueId, String filename){
-    	File f = new File(serverDir + "/" + venueId + "/" +  filename);
+    	return getFile(venueId,"", filename);
+    }
+    public File getFile(String venueId, String path, String filename){
+    	if ((!path.equals(""))&&(!path.startsWith("/"))){
+    		path = "/"+ path;
+    	}
+    	File f = new File(serverDir + "/" + venueId + path +"/" +  filename);
     	return f;
     }
 
     public File[] getFileList (String venueId) {
-        File dir = new File(serverDir + "/" + venueId);
+    	return getFileList(venueId,"");
+    }
+
+    public File[] getFileList (String venueId, String path) {
+    	if ((!path.equals(""))&&(!path.startsWith("/"))){
+    		path = "/" + path;
+    	}
+        File dir = new File(serverDir + "/" + venueId + path);
         if (!dir.exists()){
             dir.mkdirs();
         }
@@ -161,5 +174,15 @@ public class FtpsServer {
         }
         return file;
     }
+
+	public void createDirectory(String venueId, String path, String name) {
+    	if ((!path.equals(""))&&(!path.startsWith("/"))){
+    		path = "/" + path;
+    	}
+        File dir = new File(serverDir + "/" + venueId + path + "/" + name);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+	}
 
 }

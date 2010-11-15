@@ -24,7 +24,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * @return this.getthe type
      */
     public native final String getType() /*-{
-        return this.type;
+        return this.mimeType;
     }-*/;
 
     /**

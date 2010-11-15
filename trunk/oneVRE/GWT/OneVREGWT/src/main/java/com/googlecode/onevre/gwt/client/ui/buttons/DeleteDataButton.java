@@ -1,7 +1,9 @@
 package com.googlecode.onevre.gwt.client.ui.buttons;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.DataDescription;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
@@ -31,7 +33,10 @@ public class DeleteDataButton extends ActionButton implements ClickHandler {
 	}
 
 	public void onClick(ClickEvent paramClickEvent) {
+		GWT.log("Delete Data:"+data.toString());
 		UpdateData.deleteData(state.getUri(), data);
+		Application.getDataManager().deleteData(state, data);
+		paramClickEvent.stopPropagation();
 	}
 
 }

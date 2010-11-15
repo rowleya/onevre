@@ -38,6 +38,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 import com.googlecode.onevre.ag.agclient.venue.GroupClient;
 import com.googlecode.onevre.ag.common.Event;
@@ -75,6 +78,8 @@ import com.googlecode.onevre.utils.Utils;
  * @version 1.0
  */
 public class Venue extends SoapServable {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     private Vector<AGNetworkServiceDescription> networkServices = new Vector<AGNetworkServiceDescription>();
 
@@ -375,6 +380,38 @@ public class Venue extends SoapServable {
         event.setChannelId(venueState.getUniqueId());
         event.setSenderId(venueState.getUniqueId());
         eventServer.addEvent(event,venueState.getUniqueId());
+    }
+
+    @SoapReturn (
+    	name = "data"
+    )
+    public DataDescription addDir(
+    		@SoapParameter("name") String name,
+    		@SoapParameter("desc") String desc,
+    		@SoapParameter("level") String level,
+    		@SoapParameter("parentUID") String parentUID){
+    	DataDescription dataDescription = new DataDescription();
+    	dataDescription.setId(Utils.generateID());
+    	String path = "";
+    	dataDescription.setHierarchyLevel(level);
+    	dataDescription.setName(name);
+    	dataDescription.setParentId(parentUID);
+    	dataDescription.setDescription(desc);
+    	venueState.setData(dataDescription);
+    	DataDescription data =new DataDescription();
+    	data.setId(parentUID);
+    	Vector<DataDescription> dataDescriptions = venueState.getData();
+    	int index = dataDescriptions.indexOf(data);
+    	if (index!=-1){
+    		data = dataDescriptions.get(index);
+    		path = data.getUri();
+    	} else {
+    		path = dataStore.getDataLocation(venueState.getUniqueId());
+    	}
+    	dataDescription.setUri(path + "/" + name);
+    	dataStore.addDir(venueState.getUniqueId(),dataDescription,path);
+    	sendEvent(Event.ADD_DIR, dataDescription);
+    	return dataDescription;
     }
 
     /**

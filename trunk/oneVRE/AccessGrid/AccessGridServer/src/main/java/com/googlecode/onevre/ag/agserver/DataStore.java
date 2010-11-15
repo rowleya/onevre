@@ -33,9 +33,6 @@ public class DataStore {
     public static String STATUS_PENDING = "pending";
     public static String STATUS_UPLOADING = "uploading";
 
-    public static String TYPE_DIR = "Directory";
-    public static String TYPE_FILE = "File";
-    public static String TYPE_COMMON = "Common undefined";
     public static String EXPIRY_FORMAT =  "MMM d, yyyy, HH:mm:ss";
 
     public static String DESC_FILE_NAME = "00INDEX";
@@ -55,10 +52,11 @@ public class DataStore {
 
     private HashMap<String, Venue> venues = new HashMap<String, Venue>();
 
-    public DataDescription createDataDescription(String venueId, File file, HashMap<String, String> descriptions){
-        VenueState venueState = venues.get(venueId).getState();
+    public DataDescription createDataDescription(String venueId, String path, File file, HashMap<String, String> descriptions){
+    	VenueState venueState = venues.get(venueId).getState();
         String fileName = file.getName();
-        String uri = getDataLocation(venueId) + fileName;
+    	log.info("createDataDescription p: " + path +" f: "+ fileName);
+        String uri = getDataLocation(venueId) + path + "/" +fileName;
         for (DataDescription dataItem : venueState.getData()){
             if (dataItem.getUri().equals(uri)) {
                 return dataItem;
@@ -120,7 +118,12 @@ public class DataStore {
             if (dataUri != null){
                 venueState.removeData(dataItem);
                 String fileName = dataUri.replaceFirst(getDataLocation(venueId),"");
-                storeDescription(venueId, dataItem.getName(), null);
+                String path = fileName;
+                int idx = fileName.lastIndexOf("/");
+                if (idx!=-1) {
+                	path = fileName.substring(0, fileName.lastIndexOf("/"));
+                }
+                storeDescription(venueId, path, dataItem.getName(), null);
                 ftpsServer.removeFile(venueId, fileName);
                 return dataItem;
             }
@@ -179,21 +182,31 @@ public class DataStore {
      //   System.out.println("DS upload : venue: "+ venueId + " file: " + fName);
         try {
             File file = ftpsServer.getLocalFile(fName);
-            DataDescription dataDescription = createDataDescription(venueId,file, new HashMap<String, String>());
+            DataDescription dataDescription = createDataDescription(venueId,dir,file, new HashMap<String, String>());
+            dataDescription.setType(DataDescription.TYPE_FILE);
         } catch (FtpException e) {
             e.printStackTrace();
         }
     }
 
     public void storeDescription(String venueId, String oldfilename , DataDescription data){
+    	String path = data.getUri().replaceFirst(getDataLocation(venueId), "");
+    	int index = path.lastIndexOf("/");
+    	if (index!=-1) {
+    		path = path.substring(0, index);
+    	}
+    	storeDescription(venueId, path, oldfilename, data);
+    }
+
+    public void storeDescription(String venueId, String path, String oldfilename , DataDescription data){
     	if ((data!=null)&&(!oldfilename.equals(data.getName()))){
-    		File f = ftpsServer.getFile(venueId, oldfilename);
-    		if (!f.renameTo(ftpsServer.getFile(venueId, data.getName()))){
+    		File f = ftpsServer.getFile(venueId, path, oldfilename);
+    		if (!f.renameTo(ftpsServer.getFile(venueId, path, data.getName()))){
     			log.error("can't rename file");
     			return;
     		}
     	}
-    	File descFile = ftpsServer.getFile(venueId,DESC_FILE_NAME);
+    	File descFile = ftpsServer.getFile(venueId, path, DESC_FILE_NAME);
     	StringBuffer buffer = new StringBuffer();
     	String line = null;
     	boolean found = false;
@@ -233,11 +246,51 @@ public class DataStore {
 
     }
 
+    public void populate(String venueId,String parentId,int level,String path){
+    	level++;
+        File[] filelist = ftpsServer.getFileList(venueId, path);
+        HashMap<String , HashMap<String, String>> descs = new HashMap<String, HashMap<String,String>>();
+        for (File file : filelist){
+        	if (file.getName().equals(DESC_FILE_NAME)){
+        		try {
+					descs = readDescriptorfile(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
+        }
+        for (File file : filelist){
+        	if (file.getName().equals(DESC_FILE_NAME)){
+                continue;
+            }
+            System.out.println("Adding Data:" + file.getName());
+            HashMap<String, String> desc =  descs.get(file.getName());
+            if (desc==null) {
+            	desc = new HashMap<String, String>();
+            }
+
+
+            DataDescription data = createDataDescription(venueId,path,file, desc);
+            data.setObjectType(DataDescription.TYPE_FILE);
+            data.setParentId(parentId);
+            data.setHierarchyLevel(level);
+            if (file.isDirectory()){
+            	populate(venueId, data.getId(), level, path+"/"+file.getName());
+            	data.setObjectType(DataDescription.TYPE_DIR);
+            }
+            System.out.println("Adding DataDescription: " + data.toString());
+        }
+
+    }
+
+
     public void addVenue(String venueId, Venue venue) {
         venues.put(venueId, venue);
         VenueState venueState=venue.getState();
         System.out.println("Adding Venue Id:" + venueId + " State: " + venueState.getName());
         venueState.setDataLocation(ftpsServer.getURI() + venueId + "/");
+        populate(venueId,"-1",0,"");
+  /*
         File[] filelist = ftpsServer.getFileList(venueId);
         HashMap<String , HashMap<String, String>> descs = new HashMap<String, HashMap<String,String>>();
         for (File file : filelist){
@@ -262,7 +315,19 @@ public class DataStore {
             if (desc==null) {
             	desc = new HashMap<String, String>();
             }
-            createDataDescription(venueId,file, desc);
+            createDataDescription(venueId,"",file, desc);
         }
+        */
     }
+
+	public void addDir(String venueId, DataDescription dataDescription, String parentUri) {
+		dataDescription.setObjectType(DataDescription.TYPE_DIR);
+		String path="";
+		String parent= dataDescription.getParentId();
+		if (!parent.equals("0")){
+			path=parentUri.replaceFirst(getDataLocation(venueId),"");
+		}
+		storeDescription(venueId, path, dataDescription.getName(),dataDescription);
+		ftpsServer.createDirectory(venueId,path,dataDescription.getName());
+	}
 }

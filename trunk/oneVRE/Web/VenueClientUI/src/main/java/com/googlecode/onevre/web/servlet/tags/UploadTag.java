@@ -142,7 +142,7 @@ public class UploadTag extends PortletTag {
                         try {
                             BufferedInputStream input =
                                 new BufferedInputStream(item.getInputStream());
-                            uri = ui.uploadDataItem(venueUri, fileName);
+                            uri = ui.uploadDataItem(venueUri,parentId, fileName);
                             //, parentId, description, expiry);
                             log.info("Upload to URL: " + uri);
                             log.info("scheme: " + uri.getScheme());

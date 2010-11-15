@@ -14,12 +14,14 @@ public class Icons {
 	public static String timeoutIcon = GWT.getModuleBaseURL() + "images/timeout.png";
 	public static String docInfoIcon = GWT.getModuleBaseURL() + "images/documentInfo.png";
 	public static String filePropertiesIcon = GWT.getModuleBaseURL() + "images/fileProperties.png";
-	public static String folderIcon = GWT.getModuleBaseURL() + "images/folder.png";
+	public static String folderIcon = GWT.getModuleBaseURL() + "images/icons/folder.png";
+	public static String openfolderIcon = GWT.getModuleBaseURL() + "images/icons/folder-open.png";
 	public static String closeIcon = GWT.getModuleBaseURL() + "images/close.png";
 	public static String addDocumentIcon = GWT.getModuleBaseURL() + "images/addDocument.png";
-
+	public static String addDirectoryIcon = GWT.getModuleBaseURL() + "images/addFolder.png";
 
 	public static String serviceIcon = GWT.getModuleBaseURL() + "images/defaultService.png";
 	public static String applicationIcon = GWT.getModuleBaseURL() + "images/application.png";
 	public static String jabberIcon = GWT.getModuleBaseURL() + "images/jabber.png";
+
 }

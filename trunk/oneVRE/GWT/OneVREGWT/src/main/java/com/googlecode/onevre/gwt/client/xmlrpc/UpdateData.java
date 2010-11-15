@@ -16,6 +16,21 @@ public class UpdateData implements AsyncCallback<String>{
         request.execute();
 	}
 
+	public static void createDirectory(String venueURI, DataDescription data){
+		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
+        XmlRpcRequest<String> request = new XmlRpcRequest<String>(
+                xmlrpcClient, "addDir",
+                new Object[]{
+                		venueURI,data.getName(),
+                		data.getDescription(),
+                		""+data.getHierarchyLevel(),
+                		data.getParentId(),
+                		data.getExpires()
+                },
+                new UpdateData());
+        request.execute();
+	}
+
 	public static void deleteData(String venueURI, DataDescription data){
 		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
