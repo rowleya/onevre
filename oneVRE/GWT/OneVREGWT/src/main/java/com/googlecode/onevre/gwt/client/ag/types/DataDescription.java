@@ -2,6 +2,10 @@ package com.googlecode.onevre.gwt.client.ag.types;
 
 public class DataDescription {
 
+    public static String TYPE_DIR = "Directory";
+    public static String TYPE_FILE = "File";
+    public static String TYPE_COMMON = "Common undefined";
+
     // The id of the data
     private String id = null;
 
@@ -330,6 +334,10 @@ public class DataDescription {
 	    	out += "Size: " + size +"\n";
 	    	out += "lastModified: " + lastModified +"\n";
 	    	out += "expires: " + expires +"\n";
+	    	out += "uri: " + uri + "\n";
+	    	out += "type: " + objectType + "\n";
+	    	out += "parentId: " + parentId + "\n";
+	    	out += "hierarchyLevel: " + hierarchyLevel + "\n";
 		return out;
     }
 

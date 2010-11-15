@@ -740,7 +740,6 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 		return true;
     }
 
-
 	public void updateData(String venueUri, String uri, String fileName, String parentId, String description, String expiry, long fileSize) {
     	Venue venue = venues.get(venueUri);
        	try {
@@ -760,7 +759,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 			if (!found){
 		    	data.setId(Utils.generateID());
 			}
+			data.setObjectType(DataDescription.TYPE_FILE);
 			data.setName(fileName);
+			data.setParentId(parentId);
 			data.setDescription(description);
 			data.setExpires(expiry);
 			data.setSize(""+fileSize);
@@ -769,6 +770,14 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 			e.printStackTrace();
 		}
 	}
+
+
+	public void addDir (String venueUri, String name,  String description, String level, String parentId,  String expiry) throws Exception {
+		Venue venue = venues.get(venueUri);
+		DataDescription data = venue.addDir(name,description,level,parentId);
+//		new DataDescription();
+	}
+
 
     /**
      * Starts the application queued for the applications in the Venue. This is part
@@ -822,12 +831,22 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return URI to access the data
      * @throws URISyntaxException
      */
-    public URI uploadDataItem(String venueUrl, String filename)  throws URISyntaxException {
+    public URI uploadDataItem(String venueUrl,String parentId, String filename)  throws URISyntaxException {
     	log.info("Upload file "+ filename +" to "+ venueUrl);
     	log.info("search in " + venues.toString());
     	Venue currentVenue = venues.get(venueUrl);
     	VenueState currentVenueState = venueStates.get(venueUrl);
-		String connId = venueConnIds.get(venueUrl);
+    	if (!parentId.equals("-1")){
+    		DataDescription data = new DataDescription();
+    		data.setId(parentId);
+    		Vector<DataDescription> dataDescriptions = currentVenueState.getData();
+    		int parentIndex = dataDescriptions.indexOf(data);
+    		data = dataDescriptions.get(parentIndex);
+    		String fname = data.getUri().replaceFirst(currentVenueState.getDataLocation(),"");
+    		filename = fname +"/"+ filename;
+    		log.info("Parent File Name: " + fname);
+    	}
+    	String connId = venueConnIds.get(venueUrl);
     	URI u=null;
         try {
     		if (connId==null){

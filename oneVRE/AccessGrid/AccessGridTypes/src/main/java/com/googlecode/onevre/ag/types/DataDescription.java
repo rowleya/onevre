@@ -54,6 +54,10 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 @XmlAccessorType(XmlAccessType.NONE)
 public class DataDescription implements SoapSerializable {
 
+	public static String TYPE_DIR = "Directory";
+    public static String TYPE_FILE = "File";
+    public static String TYPE_COMMON = "Common undefined";
+
 	Log log = LogFactory.getLog(this.getClass());
 
     private static final String[] SOAP_FIELDS =
@@ -119,7 +123,7 @@ public class DataDescription implements SoapSerializable {
     private String lastModified = (new SimpleDateFormat("EEE, MMM d, yyyy, HH:mm:ss")).format(new Date());
 
     // The last time the data was modified
-    private String expires = null;
+    private String expires = "";
 
     // The type of the data object
     private String objectType = null;
@@ -148,7 +152,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the data type
      * @return the type
      */
-    @XmlElement
+    @XmlElement(name="mimeType")
     public String getType() {
         return type;
     }
@@ -485,6 +489,20 @@ public class DataDescription implements SoapSerializable {
     */
     public int hashCode(){
         return id.hashCode();
+    }
+
+    public String toString(){
+	    String out = "Id: " +id +"\n";
+	    	out += "Name: "+ name +"\n";
+	    	out += "Description: "+ description +"\n";
+	    	out += "Size: " + size +"\n";
+	    	out += "lastModified: " + lastModified +"\n";
+	    	out += "expires: " + expires +"\n";
+	    	out += "uri: " + uri + "\n";
+	    	out += "type: " + objectType + "\n";
+	    	out += "parentId: " + parentId + "\n";
+	    	out += "hierarchyLevel: " + hierarchyLevel + "\n";
+		return out;
     }
 
 }
