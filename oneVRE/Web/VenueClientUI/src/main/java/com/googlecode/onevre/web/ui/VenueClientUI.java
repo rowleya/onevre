@@ -74,6 +74,7 @@ import com.googlecode.onevre.ag.types.ClientProfile;
 import com.googlecode.onevre.ag.types.ConnectionDescription;
 import com.googlecode.onevre.ag.types.DataDescription;
 import com.googlecode.onevre.ag.types.StreamDescription;
+import com.googlecode.onevre.ag.types.VOAttribute;
 import com.googlecode.onevre.ag.types.VenueList;
 import com.googlecode.onevre.ag.types.VenueServerType;
 import com.googlecode.onevre.ag.types.VenueState;
@@ -84,6 +85,7 @@ import com.googlecode.onevre.ag.types.server.Venue;
 import com.googlecode.onevre.ag.types.server.VenueServer;
 import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
 import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
+import com.googlecode.onevre.protocols.gsi.CredentialMappings;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLDeserializer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
@@ -181,6 +183,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     private String status = "";
 
     private boolean updateJabber = false;
+
+    private CredentialMappings credential = null;
 
     /**
      * Creates a new VenueClientUI
@@ -1269,6 +1273,20 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         return trustedServers;
     }
 
+    public Vector<VOAttribute> getVoAttributes(){
+    	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+    	if (credential!=null){
+    		log.info("getting VO attributes for credential:" + credential.getDN() );
+    		voAttributes = credential.getVoAttributes();
+    		for (VOAttribute attr: voAttributes){
+    			log.info("Attribute: "+ attr.toString());
+    		}
+    	} else {
+    		log.info("no credential set");
+    	}
+    	return voAttributes;
+    }
+
     public VenueServerType addTrustedServer(String name, String url){
     	VenueServerType venueServer = null;
     	try {
@@ -1715,5 +1733,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 
         return conns;
     }
+
+	public void setCredential(CredentialMappings credentialMappings) {
+		this.credential = credentialMappings;
+	}
 
 }

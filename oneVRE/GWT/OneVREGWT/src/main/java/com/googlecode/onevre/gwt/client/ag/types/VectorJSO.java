@@ -16,4 +16,5 @@ public class VectorJSO<T extends JavaScriptObject> extends JavaScriptObject {
 		return this.size();
 	}-*/;
 
+
 }

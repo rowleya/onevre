@@ -1,8 +1,10 @@
 package com.googlecode.onevre.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 
 public class Icons {
+
 	public static String participantIcon = GWT.getModuleBaseURL() + "images/icons/defaultParticipant.png";
 	public static String emailIcon = GWT.getModuleBaseURL() + "images/icons/email.png";
 	public static String phoneIcon = GWT.getModuleBaseURL() + "images/icons/phone.png";
@@ -19,6 +21,7 @@ public class Icons {
 	public static String closeIcon = GWT.getModuleBaseURL() + "images/close.png";
 	public static String addDocumentIcon = GWT.getModuleBaseURL() + "images/addDocument.png";
 	public static String addDirectoryIcon = GWT.getModuleBaseURL() + "images/addFolder.png";
+	public static String addVenueIcon = GWT.getModuleBaseURL() + "images/addVenue.png";
 
 	public static String serviceIcon = GWT.getModuleBaseURL() + "images/defaultService.png";
 	public static String applicationIcon = GWT.getModuleBaseURL() + "images/application.png";

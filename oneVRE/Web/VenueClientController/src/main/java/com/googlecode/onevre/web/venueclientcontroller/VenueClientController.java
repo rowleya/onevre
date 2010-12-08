@@ -56,11 +56,8 @@ import java.security.KeyStore;
 import java.security.PrivilegedAction;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Vector;
@@ -79,7 +76,6 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.XmlRpcLiteHttpTransportFactory;
 
 import com.googlecode.onevre.ag.types.BridgeDescription;
-import com.googlecode.onevre.platform.SystemConfig;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLDeserializer;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
 import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
@@ -853,11 +849,8 @@ public class VenueClientController extends Applet {
      * @return The object deserialized
      */
     public Object getObject(String xml) {
-    	log.info("XML :" + xml);
         try {
-        	Object o = XMLDeserializer.deserialize(xml);
-        	log.info(o.toString());
-        	return o;
+        	return XMLDeserializer.deserialize(xml);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -870,7 +863,7 @@ public class VenueClientController extends Applet {
      * @return The object represented by the xml
      */
     public Object getObjectDec(String xmlEnc) {
-        return getObject(Utils.unescapeXmlRpcValue(xmlEnc));
+    	return getObject(Utils.unescapeXmlRpcValue(xmlEnc));
     }
 
     /**

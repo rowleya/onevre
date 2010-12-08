@@ -32,6 +32,8 @@
 package com.googlecode.onevre.web.servlet.tags;
 
 
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -68,10 +70,18 @@ public class GetClientProfileTag extends PortletTag {
         if (ui != null) {
             getJspContext().setAttribute(var,
                     XMLSerializer.serialize(ui.getClientProfile()));
+        	Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
+
+        	System.out.println("IN GetClientProfileTag");
+
+            for (String att :attr){
+            	System.out.println("analyzing: " + att );
+            }
         } else {
         	log.info("ClientProfile namespace = " + getNamespace());
         	log.info("ClientProfile session id = " + getRequest().getSession().getId());
-            getJspContext().setAttribute(var, "not available");
+
+        	getJspContext().setAttribute(var, "not available");
         }
     }
 }

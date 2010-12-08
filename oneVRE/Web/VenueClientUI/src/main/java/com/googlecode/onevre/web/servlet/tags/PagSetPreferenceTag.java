@@ -31,6 +31,8 @@
 
 package com.googlecode.onevre.web.servlet.tags;
 
+import java.util.Vector;
+
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.logging.Log;
@@ -72,7 +74,12 @@ public class PagSetPreferenceTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTag#doTag()
      */
     public void doTag() {
-    	log.info("Setting attribute " + getNamespace() + "pref_" + name + " = " + value);
+    	System.out.println("IN PagSetPreferenceTag");
+    	System.out.println("Setting attribute " + getNamespace() + "pref_" + name + " = " + value);
+    	Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
+        for (String att :attr){
+        	System.out.println("analyzing: " + att );
+        }
         getJspContext().setAttribute(getNamespace() + "pref_" + name, value,
                 PageContext.SESSION_SCOPE);
     }

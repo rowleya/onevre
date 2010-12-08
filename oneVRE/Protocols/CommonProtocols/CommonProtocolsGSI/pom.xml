@@ -1,22 +1,22 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<parent>
-        <artifactId>OneVRE</artifactId>
+        <artifactId>CommonProtocols</artifactId>
         <groupId>com.googlecode.onevre</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>Security</artifactId>
+	<artifactId>CommonProtocolsGSI</artifactId>
 	<packaging>jar</packaging>
-	<name>Security</name>
+	<name>CommonProtocolsGSI</name>
      <build>
-        <finalName>Security</finalName>
+        <finalName>CommonProtocolsGSI</finalName>
     </build>
     <dependencies>
-		<dependency>
-		    <groupId>commons-httpclient</groupId>
-		    <artifactId>commons-httpclient</artifactId>
-		    <version>3.1</version>
-		</dependency>
+   		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridTypes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 		    <groupId>org.globus</groupId>
 		    <artifactId>cog-jglobus</artifactId>

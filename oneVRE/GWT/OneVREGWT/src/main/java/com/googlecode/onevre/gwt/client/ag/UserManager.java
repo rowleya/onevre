@@ -3,6 +3,7 @@ package com.googlecode.onevre.gwt.client.ag;
 import java.util.HashMap;
 import java.util.Vector;
 
+import com.googlecode.onevre.gwt.client.ag.types.VOAttribute;
 import com.googlecode.onevre.gwt.client.ag.types.ClientProfile;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.interfaces.UserManagerInterface;
@@ -13,6 +14,8 @@ public class UserManager {
 	private HashMap<VenueState, Vector<ClientProfile>> users = new HashMap<VenueState, Vector<ClientProfile>>();
 //	private Vector<ClientProfile> users = new Vector<ClientProfile>();
 
+	private Vector<VOAttribute> voAttributes = null;
+
 	private ClientProfile localUser = null;
 
 	private UserManagerInterface ui = null;
@@ -20,6 +23,14 @@ public class UserManager {
 	public UserManager(UserManagerInterface ui){
 		this.ui = ui;
 		ui.setUserManager(this);
+	}
+
+	public void setVOAttributes(Vector<VOAttribute> voAttributes){
+		this.voAttributes = voAttributes;
+	}
+
+	public Vector<VOAttribute> getVOAttributes(){
+		return voAttributes;
 	}
 
 	public Vector<ClientProfile> addVenue(VenueState state){
@@ -67,6 +78,10 @@ public class UserManager {
 
 	public ClientProfile getLocalUser() {
 		return localUser;
+	}
+
+	public Vector<VOAttribute> getLocalUserVoAttributes() {
+		return voAttributes;
 	}
 
 	public void setClientPanel(VenueState state, ClientPanel clientPanel) {
