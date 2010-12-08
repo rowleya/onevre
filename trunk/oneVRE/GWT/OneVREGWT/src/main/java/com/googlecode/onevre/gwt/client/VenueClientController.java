@@ -1,6 +1,7 @@
 package com.googlecode.onevre.gwt.client;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.onevre.gwt.client.ag.types.ClientProfile;
 
@@ -13,7 +14,10 @@ public class VenueClientController {
 	}
 
 	public static JavaScriptObject getObjectDec(String xml){
-		return getPrivObjectDec(vcc,xml);
+		GWT.log("getObjectDec:" + xml);
+		JavaScriptObject out = getPrivObjectDec(vcc,xml);
+		GWT.log("returns:" + out.toString());
+		return out;
 	}
 
 	public static String getStringDec(String xml){

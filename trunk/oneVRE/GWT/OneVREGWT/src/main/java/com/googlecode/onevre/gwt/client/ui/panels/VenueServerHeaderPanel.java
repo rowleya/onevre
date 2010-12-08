@@ -7,7 +7,9 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
+import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.VenueServerType;
+import com.googlecode.onevre.gwt.client.ui.buttons.CreateVenueButton;
 import com.googlecode.onevre.gwt.client.ui.buttons.VenueTreeButton;
 
 public class VenueServerHeaderPanel extends FlexTable implements ClickHandler {
@@ -33,9 +35,15 @@ public class VenueServerHeaderPanel extends FlexTable implements ClickHandler {
 		this.setWidget(0, 0, imgPanel);
 		this.getFlexCellFormatter().setWidth(0, 0, "80px");
 		this.setWidget(0, 1, lblPanel);
-		VenueTreeButton button = new VenueTreeButton(vs);
+		VenueTreeButton vtButton = new VenueTreeButton(vs);
 		this.addClickHandler(this);
-		this.setWidget(0,2,button.getButton());
+		HorizontalPanel buttonpanel = new HorizontalPanel();
+		if (vs.isManagable()){
+			CreateVenueButton cvButton = new CreateVenueButton();
+			buttonpanel.add(cvButton.getButton());
+		}
+		buttonpanel.add(vtButton.getButton());
+		this.setWidget(0,2,buttonpanel);
 		this.getFlexCellFormatter().setWidth(0, 2, "40px");
 	}
 

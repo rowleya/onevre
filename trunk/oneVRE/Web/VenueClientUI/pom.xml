@@ -23,6 +23,11 @@
             <artifactId>CommonProtocolsFTP</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonProtocolsGSI</artifactId>
+            <version>${project.version}</version>
+        </dependency>
    		<dependency>
             <groupId>com.googlecode.onevre</groupId>
             <artifactId>AccessGridServerTypes</artifactId>

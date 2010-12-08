@@ -15,6 +15,7 @@
         <module>CommonProtocolsRTCP</module>
         <module>CommonProtocolsRTP</module>
         <module>CommonProtocolsFTP</module>
+        <module>CommonProtocolsGSI</module>
     </modules>
     <dependencies>
 		<dependency>

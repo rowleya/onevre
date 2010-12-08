@@ -146,6 +146,10 @@ public class VenueServerType {
 		return out;
 	}
 
+	public boolean isManagable(){
+		return version.contains("OneVRE");
+	}
+
 	public String toUrl() {
 		return toString() + defaultVenue;
 

@@ -63,6 +63,7 @@ import com.googlecode.onevre.gwt.client.ui.OneVREUserManager;
 import com.googlecode.onevre.gwt.client.ui.panels.TopPanel;
 import com.googlecode.onevre.gwt.client.xmlrpc.GetClientProfile;
 import com.googlecode.onevre.gwt.client.xmlrpc.GetTrustedServers;
+import com.googlecode.onevre.gwt.client.xmlrpc.GetVoAttributes;
 
 public class Application implements EntryPoint {
 
@@ -174,6 +175,7 @@ public class Application implements EntryPoint {
         xmlrpcClient.setDebugMode(true);
         xmlrpcClient.setTimeoutMillis(120000);
         GetTrustedServers.getTrustedServers();
+        GetVoAttributes.getVoAttributes();
         receiver = new AXmlRpcMessageReceiver();
         receiver.start();
         GetClientProfile.getClientProfile();
