@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 
 import javax.swing.JOptionPane;
 
@@ -170,5 +171,12 @@ public class BridgeClientImpl implements BridgeClient {
      */
     public final int getOrder() {
         return BridgeClient.ORDER_WORST_BRIDGE;
+    }
+
+    /**
+     * @see ag3.bridge.BridgeClient#setDoLoopback(boolean)
+     */
+    public void setDoLoopback(boolean doLoopback) throws SocketException {
+        // Does Nothing
     }
 }
