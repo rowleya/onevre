@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Vector;
 
 import com.googlecode.onevre.ag.types.BridgeDescription;
 import com.googlecode.onevre.ag.types.service.AGBridgeConnectorDescription;
@@ -57,8 +58,13 @@ public class BridgeClientCreator {
         new HashMap<URL, ClassLoader>();
 */
 
+    private static Vector<String> prefixes = new Vector<String>();
+    static {
+        prefixes.add("com.googlecode.onevre.ag.agbridge");
+    }
+
     private static HashMap<String, AGBridgeConnectorDescription> bridgeConnectors =
-    	new HashMap<String, AGBridgeConnectorDescription>();
+        new HashMap<String, AGBridgeConnectorDescription>();
 
     private BridgeClientCreator() {
         // Does Nothing
@@ -102,6 +108,14 @@ public class BridgeClientCreator {
         BridgeClientCreator.bridgeConnectors = bridgeConnectors;
     }
 
+    public static void addBridgeConnector(String type, AGBridgeConnectorDescription connector) {
+        BridgeClientCreator.bridgeConnectors.put(type, connector);
+    }
+
+    public static void addPrefix(String prefix) {
+        BridgeClientCreator.prefixes.add(prefix);
+    }
+
     /**
      * Gets the url of the server
      * @return The url or null if none
@@ -128,15 +142,32 @@ public class BridgeClientCreator {
 
         BridgeClient client = null;
         AGBridgeConnectorDescription bridgeDescription = bridgeConnectors.get(bridge.getServerType());
-        String className = bridgeDescription.getBridgeClass();
-        String resourceDir = Preferences.getInstance().getLocalServicesDir()
-        + bridgeDescription.getName();
-        ServerClassLoader classLoader = new ServerClassLoader(BridgeClientCreator.class.getClassLoader(),
-        		 new File(resourceDir), new URL(bridgeDescription.getLaunchUrl()));
-        Class<?> clientClass = Class.forName(className, true, classLoader);
-        client = (BridgeClient) clientClass.newInstance();
-        client.init(InetAddress.getByName(bridge.getHost()), bridge.getPort());
-        return client;
+
+        if (bridgeDescription != null) {
+            String className = bridgeDescription.getBridgeClass();
+            String resourceDir = Preferences.getInstance().getLocalServicesDir()
+            + bridgeDescription.getName();
+            ServerClassLoader classLoader = new ServerClassLoader(BridgeClientCreator.class.getClassLoader(),
+                     new File(resourceDir), new URL(bridgeDescription.getLaunchUrl()));
+            Class<?> clientClass = Class.forName(className, true, classLoader);
+            client = (BridgeClient) clientClass.newInstance();
+            client.init(InetAddress.getByName(bridge.getHost()), bridge.getPort());
+            return client;
+        }
+        String postfix = "." + bridge.getServerType().toLowerCase()
+            + ".BridgeClientImpl";
+        for (String prefix : prefixes) {
+            try {
+                String className = prefix + postfix;
+                Class<?> clientClass = Class.forName(className);
+                client = (BridgeClient) clientClass.newInstance();
+                client.init(InetAddress.getByName(bridge.getHost()), bridge.getPort());
+                return client;
+            } catch (Exception e) {
+                // Do Nothing
+            }
+        }
+        throw new ClassNotFoundException("No connector found for bridge type " + bridge.getServerType());
     }
 
 /*
