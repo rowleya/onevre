@@ -313,16 +313,7 @@ public class StreamHandler extends Thread  {
      * @return Component with preview of the stream.
      */
     public final Component getPreview(final int width, final int height) {
-        VideoRenderer preview = renderer.getPreviewRenderer();
-        Component comp = null;
-        if (preview != null) {
-            preview.setBounds(new Rectangle(0, 0, width, height));
-            comp = preview.getComponent();
-        } else {
-            comp = new JLabel("No Preview!");
-        }
-        comp.setSize(width, height);
-        return comp;
+        return renderer.getPreviewComponent();
     }
 
     /**
