@@ -36,6 +36,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -299,5 +300,12 @@ public class BridgeClientImpl implements BridgeClient {
      */
     public int getOrder() {
         return 0;
+    }
+
+    /**
+     * @see ag3.bridge.BridgeClient#setDoLoopback(boolean)
+     */
+    public void setDoLoopback(boolean doLoopback) throws SocketException {
+        // Does Nothing
     }
 }

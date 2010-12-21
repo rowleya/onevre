@@ -42,6 +42,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -372,6 +373,13 @@ public class BridgeClientImpl implements BridgeClient {
      */
     public int getOrder() {
         return BridgeClient.ORDER_WORST_BRIDGE;
+    }
+
+    /**
+     * @see ag3.bridge.BridgeClient#setDoLoopback(boolean)
+     */
+    public void setDoLoopback(boolean doLoopback) throws SocketException {
+        // Does Nothing
     }
 
 }

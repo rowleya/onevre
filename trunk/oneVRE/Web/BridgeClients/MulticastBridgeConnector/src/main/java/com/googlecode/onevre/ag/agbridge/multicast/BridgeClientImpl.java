@@ -200,17 +200,17 @@ public class BridgeClientImpl implements BridgeClient {
     public void setReceiveTimeout(int timeout) throws SocketException {
         System.err.println("Setting receive timeout to " + timeout);
         try {
-        	Iterator<NetworkLocation> iterator =
-        		sockets.keySet().iterator();
-	        while (iterator.hasNext()) {
-	            NetworkLocation location = iterator.next();
-	            System.err.println("Setting receive timeout for " + location);
-	            DatagramSocket socket = sockets.get(location);
-	            socket.setSoTimeout(timeout);
-	        }
+            Iterator<NetworkLocation> iterator =
+                sockets.keySet().iterator();
+            while (iterator.hasNext()) {
+                NetworkLocation location = iterator.next();
+                System.err.println("Setting receive timeout for " + location);
+                DatagramSocket socket = sockets.get(location);
+                socket.setSoTimeout(timeout);
+            }
         }
         catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -228,5 +228,18 @@ public class BridgeClientImpl implements BridgeClient {
      */
     public int getOrder() {
         return BridgeClient.ORDER_BEST_BRIDGE;
+    }
+
+    public void setDoLoopback(boolean doLoopback) throws SocketException {
+        Iterator<NetworkLocation> iterator =
+            sockets.keySet().iterator();
+        while (iterator.hasNext()) {
+            NetworkLocation location = iterator.next();
+            DatagramSocket socket = sockets.get(location);
+            if (socket instanceof MulticastSocket) {
+                ((MulticastSocket) socket).setLoopbackMode(!doLoopback);
+            }
+        }
+
     }
 }

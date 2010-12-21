@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.LinkedList;
 
 import com.googlecode.onevre.ag.agbridge.BridgeClient;
@@ -250,6 +251,13 @@ public class BridgeClientImpl implements BridgeClient {
     public void setReceiveTimeout(int timeout) throws IOException {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * @see ag3.bridge.BridgeClient#setDoLoopback(boolean)
+     */
+    public void setDoLoopback(boolean doLoopback) throws SocketException {
+        // Does Nothing
     }
 
 }

@@ -34,6 +34,7 @@ package com.googlecode.onevre.ag.agbridge;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import com.googlecode.onevre.ag.types.network.NetworkLocation;
 
@@ -189,4 +190,13 @@ public interface BridgeClient {
      *         Smaller integers will consider this bridge type before others.
      */
     int getOrder();
+
+    /**
+     * Sets whether to receive packets sent with this bridge back at the bridge again
+     * @param doLoopback true to perform loopback, false to stop loopback
+     * @throws SocketException
+     */
+    void setDoLoopback(boolean doLoopback) throws SocketException;
+
+
 }
