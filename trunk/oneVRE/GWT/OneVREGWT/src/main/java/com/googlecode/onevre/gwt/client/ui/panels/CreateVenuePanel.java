@@ -1,6 +1,7 @@
 package com.googlecode.onevre.gwt.client.ui.panels;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,6 +10,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -22,15 +24,17 @@ import com.googlecode.onevre.gwt.client.ui.Icons;
 import com.googlecode.onevre.gwt.client.ui.VoAttributeRow;
 import com.googlecode.onevre.gwt.client.ui.buttons.AddVOButton;
 
+import com.googlecode.onevre.gwt.common.client.MessageResponse;
+import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 import com.googlecode.onevre.gwt.common.client.ModalPopup;
 
 public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHandler {
 
 	private static String DATE_FORMAT = "EEE, MMM d, yyyy, HH:mm:ss";
 
-	Vector<VOAttribute> voAttributes  = null;
+	Vector<HashMap<String, String>> voAttributesMap  = new Vector<HashMap<String,String>>();
 
-	TextBox fileNameInput = new TextBox();
+	TextBox nameInput = new TextBox();
 	TextArea descriptionInput = new TextArea();
 	DateBox dateInput = new DateBox();
 //	TextBox  = new TextBox();
@@ -39,8 +43,9 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 	ListBox profileInput = new ListBox();
 	PushButton cancel = new PushButton("Cancel",this);
 	PushButton clear = new PushButton("Clear",this);
-	PushButton ok = new PushButton("Upload Data Item",this);
+	PushButton ok = new PushButton("Create Venue",this);
 	FlexTable profilepanel = new FlexTable();
+	FlexTable voAttPanel = new FlexTable();
 //	NamedFrame targetFrame = new NamedFrame("victim");
 //	FormPanel form = null;
 	Hidden parent = new Hidden("parentId");
@@ -49,15 +54,17 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 	Hidden expiry = new Hidden("expiry");
 	Hidden description = new Hidden("description");
 
+	MessageResponseHandler handler = null;
+
 	boolean changed = false;
 
 	public boolean hasChanged(){
 		return changed;
 	}
 
-	public CreateVenuePanel(Vector<VOAttribute> voAttributes) {
+	public CreateVenuePanel(MessageResponseHandler handler) {
 		super(new DockPanel());
-		this.voAttributes = voAttributes;
+		this.handler = handler;
 		DockPanel panel= getWidget();
 		Image img = new Image(Icons.addVenueIcon);
 		img.setHeight("64px");
@@ -66,8 +73,8 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 //		Grid profilepanel = new Grid (3,3);
 		profilepanel.setWidget(1,0, new Image(Icons.fileIcon));
 		profilepanel.setText(1,1, "Name: *");
-		fileNameInput.setName("file");
-		profilepanel.setWidget(1, 2, fileNameInput);
+		nameInput.setName("file");
+		profilepanel.setWidget(1, 2, nameInput);
 		profilepanel.getFlexCellFormatter().setColSpan(1,2,2);
 		Image docInfo = new Image(Icons.docInfoIcon);
 		docInfo.setHeight("22px");
@@ -79,8 +86,9 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 		profilepanel.getFlexCellFormatter().setColSpan(2,2,2);
 		panel.add(profilepanel,DockPanel.CENTER);
 
-		FlexTable voAttPanel = new FlexTable();
+		voAttPanel = new FlexTable();
 		voAttPanel.setText(0, 0, "Required VO attributes");
+		voAttPanel.setTitle("one of the attributes will be required to enter the venue");
 		voAttPanel.getFlexCellFormatter().setColSpan(0,0, 3);
 		voAttPanel.setText(1,0,"VO");
 		voAttPanel.setText(1,1,"Group");
@@ -89,8 +97,9 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 
 		AddVOButton addVOButton = new AddVOButton(this, voAttPanel);
 		profilepanel.setWidget(3, 0, voAttPanel);
-		profilepanel.getFlexCellFormatter().setColSpan(3,0,2);
+		profilepanel.getFlexCellFormatter().setColSpan(3,0,4);
 		profilepanel.setWidget(3, 1, addVOButton.getButton());
+		profilepanel.getFlexCellFormatter().setVerticalAlignment(3,1, HorizontalPanel.ALIGN_MIDDLE);
 		Image timeout = new Image(Icons.timeoutIcon);
 		timeout.setHeight("22px");
 
@@ -107,19 +116,34 @@ public class CreateVenuePanel extends ModalPopup<DockPanel> implements ClickHand
 			return;
 		}
 		if (event.getSource().equals(ok)){
-			Date date = dateInput.getValue();
-			String expString = "";
-			if (date!=null){
-				expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
+			for (int i=1; i<voAttPanel.getRowCount(); i++){
+				if (voAttPanel.getCellCount(i)>3){
+					VoAttributeRow voAttRow = (VoAttributeRow) voAttPanel.getWidget(i, 4);
+					if (voAttRow!=null){
+						voAttributesMap.add(voAttRow.getAttribute().toMap());
+					}
+				}
 			}
-			expiry.setValue(expString);
-			description.setValue(descriptionInput.getValue());
+			changed=true;
+			handler.handleResponse(new MessageResponse(MessageResponse.OK,this));
 		}
 		hide();
 	}
 
 	public void addVOAttribute(FlexTable voAttPanel) {
 		new VoAttributeRow(voAttPanel);
+	}
+
+	public Vector<HashMap<String, String>> getAttributes(){
+		return voAttributesMap;
+	}
+
+	public String getName(){
+		return nameInput.getText();
+	}
+
+	public String getDescription(){
+		return descriptionInput.getText();
 	}
 
 }

@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
+import com.googlecode.onevre.utils.Utils;
 
 /**
  * An AG3 Connection Description
@@ -71,7 +72,18 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
     // The uri of the connection
     private String uri = null;
 
+    public ConnectionDescription (){}
 
+    public ConnectionDescription(String name, String description, String uri){
+    	id = Utils.generateID();
+    	this.name = name;
+    	this.description = description;
+    	this.uri = uri;
+    }
+
+    public ConnectionDescription(VenueState venueState){
+    	this(venueState.getName(),venueState.getDescription(),venueState.getUri());
+    }
 
     /**
      * Returns the description

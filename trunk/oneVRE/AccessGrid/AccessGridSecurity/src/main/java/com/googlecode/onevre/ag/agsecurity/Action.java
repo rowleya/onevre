@@ -133,4 +133,8 @@ public class Action implements SoapSerializable {
         return xml;
     }
 
+    public String toString(){
+    	return name;
+    }
+
 }

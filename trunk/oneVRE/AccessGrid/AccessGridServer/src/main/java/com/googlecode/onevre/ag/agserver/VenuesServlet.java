@@ -29,30 +29,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.googlecode.onevre.web.venueserver;
+package com.googlecode.onevre.ag.agserver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.Principal;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Vector;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.SSLSession;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.googlecode.onevre.ag.agserver.DataStore;
-import com.googlecode.onevre.ag.agserver.Venue;
-import com.googlecode.onevre.ag.agserver.VenueEventServer;
-import com.googlecode.onevre.ag.agserver.VenueServerConfigParameters;
-import com.googlecode.onevre.ag.agserver.VenueServerDefaults;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.glite.voms.VOMSAttribute;
+import org.glite.voms.VOMSValidator;
+import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
+
+import com.googlecode.onevre.ag.agsecurity.AuthorizationException;
+import com.googlecode.onevre.ag.agsecurity.Subject;
+import com.googlecode.onevre.ag.types.ClientProfile;
+import com.googlecode.onevre.ag.types.ConnectionDescription;
+import com.googlecode.onevre.ag.types.VOAttribute;
+import com.googlecode.onevre.ag.types.VenueState;
 import com.googlecode.onevre.protocols.soap.soapserver.SoapServerClient;
 import com.googlecode.onevre.utils.ConfigFile;
+import com.googlecode.onevre.utils.Utils;
 
 
 /**
@@ -60,6 +77,8 @@ import com.googlecode.onevre.utils.ConfigFile;
  * @version 1.0
  */
 public class VenuesServlet extends SoapServerClient {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     /**
 	 *
@@ -84,7 +103,10 @@ public class VenuesServlet extends SoapServerClient {
 
     private String venueName=null;
 
+    ThreadLocal<Subject> subject = new ThreadLocal<Subject>();
+
     private String serverLogFile = VenueServerDefaults.venueServerLogFile;
+    private PrintWriter serverLog=null;
 
     private int port = 0;
     private boolean securedServer = true;
@@ -92,6 +114,7 @@ public class VenuesServlet extends SoapServerClient {
     private int encryptAllMedia = 1;
     private int houseKeeperFrequency = 300;
     private String persistenceFilename = "VenueServer.dat";
+    private String defaultPolicyFilename = "VenueServer.pol";
     private String serverPrefix = "VenueServer";
     private String venuePathPrefix = "Venues";
     private String dataStorageLocation = "Data";
@@ -106,16 +129,25 @@ public class VenuesServlet extends SoapServerClient {
     private int performanceReportFrequency = 0;
 
     private String configFile = "";
-
+    String defaultPolicy = "";
     private String configLocation = "";
 
+    String textHost ="jabber.mcs.anl.gov";
+    int textPort = 5223;
+
     private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
+
+    HashMap<String, HashMap<String, String>> venuesData = new HashMap<String, HashMap<String,String>>();
 
     private VenueEventServer venueEventServer = null;
 
     private boolean dontRunInit = false;
 
     private DataStore dataStore = null;
+
+    public VenuesServlet(PrintWriter serverLog){
+    	this.serverLog = serverLog;
+    }
     /**
      *
      * @see javax.servlet.GenericServlet#init()
@@ -128,7 +160,7 @@ public class VenuesServlet extends SoapServerClient {
         System.out.println("entering VenuesServlet INIT");
         ServletConfig config = getServletConfig();
         HashMap<String, HashMap<String, String>> serverConf = new HashMap<String, HashMap<String,String>>();
-        System.out.println("servletname: "+config.getServletName());
+        log.info("servletname: "+config.getServletName());
         String configFile = config.getInitParameter("ServerConfig");
         if (configFile!=null){
             configLocation = (new File((new File(configFile)).getParent())).getAbsolutePath()+"/";
@@ -166,26 +198,21 @@ public class VenuesServlet extends SoapServerClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Server uri: " + serverUri.toString());
+        log.info("Server uri: " + serverUri.toString());
 
         // .getResource(java.lang.String path)
-
-        PrintWriter serverLog=null;
-        try {
-            serverLogFile = ConfigFile.getParameter(serverConfig,
-                    VenueServerConfigParameters.VENUE_SERVER_SECTION,
-                    VenueServerConfigParameters.VENUE_SERVER_LOG_FILE, serverLogFile);
-            serverLog = new PrintWriter(configLocation + serverLogFile);
-        } catch (FileNotFoundException e) {
-            throw new ServletException(e);
-        }
         addVenues(serverConf, serverLog);
-        System.out.println("leaving VenuesServlet INIT");
+
+        log.info("leaving VenuesServlet INIT");
     }
 
+    public Subject getSubject(){
+    	return subject.get();
+    }
 
-    public void addVenues(HashMap<String, HashMap<String, String>> serverConfig, PrintWriter serverLog) throws ServletException{
-        dontRunInit = true;
+    public void addVenues(HashMap<String, HashMap<String, String>> serverConfig, PrintWriter logfile) throws ServletException{
+        serverLog = logfile;
+    	dontRunInit = true;
         String defaultVenue = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.VENUE_SERVER_DEFAULT_VENUE, "");
@@ -198,10 +225,13 @@ public class VenuesServlet extends SoapServerClient {
         persistenceFilename = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.VENUE_SERVER_VENUE_LIST, persistenceFilename);
+        defaultPolicyFilename = ConfigFile.getParameter(serverConfig,
+                VenueServerConfigParameters.VENUE_SERVER_SECTION,
+                VenueServerConfigParameters.VENUE_SERVER_DEFAULT_POLICY_FILE, defaultPolicyFilename);
+
         if (!persistenceFilename.startsWith("/")){
             persistenceFilename=configLocation + persistenceFilename;
         }
-        HashMap<String, HashMap<String, String>> venuesData = null;
         try {
             venuesData = ConfigFile.read(persistenceFilename);
         } catch (IOException e) {
@@ -210,7 +240,19 @@ public class VenuesServlet extends SoapServerClient {
         if (venuesData==null){
             throw new ServletException(" can't read persistence file @ " + persistenceFilename);
         }
-        System.out.println("ConfigLocation: " + configLocation);
+        if (!defaultPolicyFilename.startsWith("/")){
+            defaultPolicyFilename=configLocation + defaultPolicyFilename;
+        }
+        defaultPolicy = null;
+        try {
+        	defaultPolicy = Utils.readPlainFile(defaultPolicyFilename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (defaultPolicy==null){
+            throw new ServletException(" can't read policy file @ " + defaultPolicyFilename);
+        }
+        log.info("ConfigLocation: " + configLocation);
         if (venueEventServer == null) {
 	        venueEventServer = new VenueEventServer(serverConfig);
 	        venueEventServer.start();
@@ -218,10 +260,10 @@ public class VenuesServlet extends SoapServerClient {
         if (dataStore == null) {
         	dataStore = new DataStore(serverConfig);
         }
-        String textHost = ConfigFile.getParameter(serverConfig,
+        textHost = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_TEXTSERVER_SECTION,
                 VenueServerConfigParameters.TEXTSERVER_HOST, VenueServerDefaults.textHost);
-        int textPort = Integer.valueOf(ConfigFile.getParameter(serverConfig,
+        textPort = Integer.valueOf(ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_TEXTSERVER_SECTION,
                 VenueServerConfigParameters.TEXTSERVER_PORT, VenueServerDefaults.textPort));
 
@@ -234,19 +276,25 @@ public class VenuesServlet extends SoapServerClient {
             }
 //            System.out.println("Add Venue | " + venueIdString + " | " + venueConfig.get("name") + " | " + venueConfig );
             venueConfig.put("venueId", venueIdString);
-            Venue venue = new Venue(venueIdString, venuesData, venueEventServer, dataStore, serverLog);
+            Vector<VOAttribute> voAttributes = null;
+            Venue venue = new Venue(this, venueIdString, venuesData, venueEventServer, dataStore, defaultPolicy, voAttributes, serverLog);
+            serverLog.println("created Venue: "+ venueIdString + " ("+ venueConfig.get("name")+")");
+            log.info("created Venue: "+ venueIdString);
             String connections = venueConfig.get("connections");
             if (connections!=null){
                 venue.setConnections(connections.split(":"),venuesData, importUrl);
             }
-            registerObject("/"+venueIdString,  venue);
             venue.setTextLocation(textHost,textPort);
             venues.put(venueIdString, venue);
-            registerObject("/"+venueIdString,  venue);
+            registerObject("/Venues/"+venueIdString,  venue);
             if (venueIdString.equals(defaultVenue)){
-                registerObject("/default", venue);
+                registerObject("/Venues/default", venue);
             }
+            log.info("registered Venue: "+ venueIdString);
+
         }
+        VenueServer venueServer = new VenueServer(this,serverLog);
+        registerObject("/VenueServer",  venueServer);
 /*        if (multicastAddress == null) {
             multicastAddress = DEFAULT_HOST;
         }
@@ -279,6 +327,37 @@ public class VenuesServlet extends SoapServerClient {
         }*/
     }
 
+    public ConnectionDescription addVenue(String name, String description, Vector<VOAttribute> voAttributes, ClientProfile creator, PrintWriter serverLog) {
+    	String venueIdString =  Utils.generateID();
+
+    	HashMap<String, String> venueConfig = new HashMap<String, String>();
+    	venuesData.put(venueIdString,venueConfig);
+    	venueConfig.put("type","Venue");
+        venueConfig.put("venueId", venueIdString);
+        venueConfig.put("name", name);
+        venueConfig.put("description", description);
+        venueConfig.put("creator", creator.getPublicId());
+        Venue venue = new Venue(this, venueIdString, venuesData, venueEventServer, dataStore, defaultPolicy, voAttributes, serverLog);
+        venue.setTextLocation(textHost,textPort);
+        venues.put(venueIdString, venue);
+        registerObject("/Venues/"+venueIdString,  venue);
+        Venue defautlVenue=(Venue)findObjectForPath("/Venues/default");
+        VenueState defautlVenueState = defautlVenue.getState();
+        String url = defautlVenueState.getUri();
+        url = url.substring(0, url.indexOf("/Venues")) + "/Venues/"+venueIdString;
+        VenueState venueState = venue.getState(venueIdString);
+        venueState.setUri(url);
+        venueState.setEventLocation(defautlVenueState.getEventLocation());
+        ConnectionDescription conns [] = venue.getConnections();
+        if (conns == null){
+        	ConnectionDescription conn = new ConnectionDescription(venue.getState(venueIdString));
+        	conns = new ConnectionDescription[]{conn};
+        	defautlVenue.setConnections(conns);
+        	venue.setConnections(new ConnectionDescription[]{new ConnectionDescription(defautlVenue.getState())});
+        }
+        return conns[0];
+    }
+
     /**
      *
      * @throws IOException
@@ -291,55 +370,78 @@ public class VenuesServlet extends SoapServerClient {
  // receive SOAP request
  // decode SOAP
  // trigger
-        System.out.println("VenuesServlet - RequestProto: " + request.getProtocol());
-        System.out.println("VenuesServlet - venue: " + request.getServletPath());
-        System.out.println("VenuesServlet - venue PI: " + request.getPathInfo());
-        System.out.println("VenuesServlet - venue PT: " + request.getPathTranslated());
-        System.out.println("VenuesServlet - venue LN: " + request.getLocalName());
-        System.out.println("VenuesServlet - venue M : " + request.getMethod());
-        System.out.println("VenuesServlet - venue url: " + request.getRequestURL().toString());
-
+        log.info("VenuesServlet - RequestProto: " + request.getProtocol());
+        log.info("VenuesServlet - venue: " + request.getServletPath());
+        log.info("VenuesServlet - venue PI: " + request.getPathInfo());
+        log.info("VenuesServlet - venue PT: " + request.getPathTranslated());
+        log.info("VenuesServlet - venue LN: " + request.getLocalName());
+        Subject subject = new Subject();
+		X509Certificate[] certificates = (X509Certificate[])request.getAttribute("javax.servlet.request.X509Certificate");
+		if ((certificates!=null)&&(certificates.length>0)){
+			subject.setName(certificates[0].getSubjectDN().getName().toString());
+			VOMSValidator validator = new VOMSValidator(certificates).validate();
+			Vector attribute = new Vector(validator.getVOMSAttributes());
+			log.info("attribute: " + attribute.toString());
+			for (Object attrobj : attribute){
+				VOMSAttribute vomsAttribute = (VOMSAttribute)attrobj;
+				String voText = (String)vomsAttribute.getFullyQualifiedAttributes().get(0);
+				log.info("analyzing VO attribute: " + voText);
+				VOAttribute voAttribute = new VOAttribute(voText);
+				subject.setVoAttribute(voAttribute);
+			}
+		}
+		this.subject.set(subject);
         URL url=new URL(request.getRequestURL().toString());
-        venueName=request.getPathInfo().substring(1);
-        Venue venue=(Venue)findObjectForPath(request.getPathInfo());
-        if (venue==null){
-            System.out.println("venue not found " + request.getPathInfo());
-        }
-        if (venue.getState().getUri()==null){
-            InetAddress addr =  InetAddress.getByName(url.getHost());
-            try {
-                URI uri = new URI(url.getProtocol(),url.getUserInfo(),addr.getCanonicalHostName(),url.getPort(),url.getPath(),url.getQuery(),null);
-                venue.getState().setUri(uri.toString());
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-//        System.out.println("VenuesServlet - contentLength:"+request.getContentLength());
-//        System.out.println("VenuesServlet - contentType:"+request.getContentType());
-//        BufferedReader rd=request.getReader();
-//        String text="";
-//        String line = "";
-//        while ((line = rd.readLine()) != null) {
-//            text += line;
-//        }
-//        System.out.println("VenueServlet - SOAP Message from: "+ venueName);
-//        System.out.println("---------------------------------------------------------------------------");
-//        System.out.println(text);
-//        System.out.println("---------------------------------------------------------------------------");
+        log.info("VenuesServlet - Set Subject: " + subject.toString());
+        try{
+	        venueName=request.getPathInfo().substring(1);
+	        if (venueName.startsWith("Venues/")){
+		        Venue venue=(Venue)findObjectForPath(request.getPathInfo());
+		        if (venue==null){
+		            serverLog.println("venue not found " + request.getPathInfo());
+		        } else {
+			        if (venue.getState().getUri()==null){
+			            InetAddress addr =  InetAddress.getByName(url.getHost());
+			            try {
+			                URI uri = new URI(url.getProtocol(),url.getUserInfo(),addr.getCanonicalHostName(),url.getPort(),url.getPath(),url.getQuery(),null);
+			                venue.getState().setUri(uri.toString());
+			            } catch (URISyntaxException e) {
+			                e.printStackTrace();
+			            }
+			        }
+		        }
+	        }
+	        log.info("VenuesServlet - call Super");
+		//        System.out.println("VenuesServlet - contentType:"+request.getContentType());
+		//        BufferedReader rd=request.getReader();
+		//        String text="";
+		//        String line = "";
+		//        while ((line = rd.readLine()) != null) {
+		//            text += line;
+		//        }
+		//        System.out.println("VenueServlet - SOAP Message from: "+ venueName);
+		//        System.out.println("---------------------------------------------------------------------------");
+		//        System.out.println(text);
+		//        System.out.println("---------------------------------------------------------------------------");
 
-        super.doPost(request, response);
+		    super.doPost(request, response);
+		    log.info("Super success");
+        } catch (AuthorizationException e){
+        	e.printStackTrace();
+        }
 
     }
 
     public synchronized void doGet (HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         PrintWriter http = response.getWriter();
+        doPost(request, response);
         http.println("OneVRE Venue Server");
     }
 
 
     protected void removeVenue(String id) {
-        System.err.println("Removing venue " + id);
+        log.info("Removing venue " + id);
         venues.remove(id);
     }
 

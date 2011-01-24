@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
@@ -62,6 +64,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapServable;
  * @version 1.0
  */
 public class SoapServerClient extends HttpServlet {
+
+	Log log = LogFactory.getLog("SoapServerClient");
 
     private static final long serialVersionUID = 1L;
 
@@ -131,14 +135,14 @@ public class SoapServerClient extends HttpServlet {
         Vector<Method> methodCandidates = new Vector<Method>();
         Method idealMethod = null;
         for (Method m:object.getClass().getMethods()){
-//System.out.println ("CLM: " + m.getName() + " resM: "+ methodName );
+        //	log.info ("Class Method: " + m.getName() + " methodName: "+ methodName );
             if (m.getName().equals(methodName) || methodName.equals(m.getName()+REQUEST_POSTFIX)){
                 int i=0;
                 Vector<String> paramNames =  requestObject.getSubObjectNames();
                 Type[] methodParams = m.getGenericParameterTypes();
                 for (int j = 0; j < methodParams.length; j++) {
                     String methodParam = object.getParameterName(m, j);
-//System.out.println("par "+ j + " SPN: " + paramNames.get(i) + " MPN: "+methodParam);
+        //            log.info("ParamName[" + j+"]: " + paramNames.get(i) + " in Method: "+methodParam);
                     if (i >= paramNames.size()){
                         break;
                     }
@@ -146,7 +150,7 @@ public class SoapServerClient extends HttpServlet {
                         String soapType = requestObject.getSubObject(paramNames.get(i)).firstElement().getSoapType();
                         if (soapType!=null) {
                             Class<?> cls = (Class<?>)methodParams[j];
-//System.out.println("par "+ j + " SPT: " + soapType + " MPT: " + cls);
+        //                    log.info("Paramtype ["+ j + "]: " + soapType + " in Method: " + cls);
                             if (cls.equals(Vector.class)) {
                                 break;
                             }
@@ -205,7 +209,7 @@ public class SoapServerClient extends HttpServlet {
         }
         // find resultType
         Object result = null;
-        System.out.println("invoking "+ idealMethod.getDeclaringClass().getCanonicalName() + " " + idealMethod.toString());
+        log.info("invoking "+ idealMethod.getDeclaringClass().getCanonicalName() + " " + idealMethod.toString());
         String args="";
         String	sep="on ( ";
         String close="";
@@ -214,7 +218,7 @@ public class SoapServerClient extends HttpServlet {
             sep = ", ";
             close = " )";
         }
-        System.out.println(args + close);
+        log.info(args + close);
 
         result = idealMethod.invoke(object, arguments);
         String resultName = object.getResultParameterName(idealMethod);
@@ -229,7 +233,7 @@ public class SoapServerClient extends HttpServlet {
         }
         String resultType = object.getResultParameterType(idealMethod);
 
-        System.out.println("resultName: " +resultName +" "+ methodName);
+        log.info("resultName: " +resultName +" "+ methodName);
 
         return serializer.serializeMethod(methodNameSpace, methodName,
                 new String[]{resultName}, new Object[]{result},
@@ -268,10 +272,10 @@ public class SoapServerClient extends HttpServlet {
                 }
                 dataRead += charsRead;
             }
-//            System.err.println("SOAP-request: "+ new String(data));
+            log.info("SOAP-request: "+ new String(data));
 
             result = parseSoap(new String(data), object);
-//            System.err.println("SOAP-result: "+ result);
+            log.info("SOAP-result: "+ result);
             writer.print(result);
             writer.flush();
         } catch (Exception e) {
@@ -288,7 +292,7 @@ public class SoapServerClient extends HttpServlet {
             faultString += "</SOAP-ENV:Body>";
             faultString += "</SOAP-ENV:Envelope>";
             writer.print(faultString);
-//            System.err.println("SOAP-error: "+ faultString);
+            log.error("SOAP-error: "+ faultString);
             writer.flush();
         }
     }

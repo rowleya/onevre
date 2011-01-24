@@ -41,6 +41,8 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -49,11 +51,19 @@ import org.xml.sax.SAXException;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.soap.common.SoapObjectParser;
 import com.googlecode.onevre.protocols.soap.common.SoapSerializer;
+import com.googlecode.onevre.security.protocol.https.Handler;
 import com.googlecode.onevre.types.soap.SoapObject;
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
 import com.googlecode.onevre.types.soap.interfaces.SoapResponse;
 import com.googlecode.onevre.utils.Utils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.globus.gsi.gssapi.auth.NoAuthorization;
+import org.globus.net.GSIURLConnection;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
 
 /**
  * A Soap Method request
@@ -61,6 +71,8 @@ import com.googlecode.onevre.utils.Utils;
  * @version 1.0
  */
 public final class SoapRequest {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     // The default timeout of 60 seconds
     private static final int DEFAULT_TIMEOUT = 60000;
@@ -88,13 +100,15 @@ public final class SoapRequest {
     private int timeout = DEFAULT_TIMEOUT;
 
     // The current connection
-    private HttpURLConnection connection = null;
+    private URLConnection connection = null;
 
     // The current output stream
     private OutputStream outputstream = null;
 
     // The current input stream
     private InputStream inputstream = null;
+
+    GSSCredential credential = null;
 
     /**
      * Creates a new SOAP request
@@ -105,6 +119,14 @@ public final class SoapRequest {
         this.url = new URL(url);
     }
 
+    public void setGSScredential(GSSCredential credential){
+		try {
+			log.info("Setting credential for venue " + credential.getName().toString());
+		} catch (GSSException e) {
+			e.printStackTrace();
+		}
+    	this.credential = credential;
+    }
     /**
      * Sets the timeout of future connections
      * @param timeout the timeout in ms
@@ -138,12 +160,45 @@ public final class SoapRequest {
                 method, argNames, args, types);
         byte[] requestData = requestString.getBytes(ENCODING);
 
-        connection = (HttpURLConnection) url.openConnection();
-        Utils.addSslConnection(connection);
+/*        if (credential!=null){
+			try {
+				log.info("call soap" + method +" ( "+credential.getName().toString()+")");
+			} catch (GSSException e) {
+				e.printStackTrace();
+			}
+/*
+	        String handlerPackage = System.getProperty("java.protocol.handler.pkgs");
+			log.info("Handlers: " + handlerPackage);
+
+			if (handlerPackage == null) {
+				handlerPackage = "";
+			}
+			if (handlerPackage.length() > 0) {
+				handlerPackage = "|" + handlerPackage;
+			}
+			handlerPackage = "com.googlecode.onevre.security.protocol" + handlerPackage;
+			log.info("Handlers: " + handlerPackage);
+			System.setProperty("java.protocol.handler.pkgs", handlerPackage);
+	        Handler handler = new Handler();
+	        connection =  handler.openConnection(url);
+        } else {*/
+
+        connection = url.openConnection();
+        log.info("Connection type: " + connection.toString());
+   //     URLConnection connection = url.openConnection();
+   /*     if (connection instanceof GSIURLConnection) {
+        	log.info("in connection instanceof GSIURLConnection");
+            ((GSIURLConnection) connection).setCredentials(credential);
+            ((GSIURLConnection) connection).setAuthorization(new NoAuthorization());
+        }*/
+
+        Utils.addSslConnection(connection,credential);
         connection.setReadTimeout(timeout);
         connection.setDoInput(true);
         connection.setDoOutput(true);
-        connection.setRequestMethod(METHOD);
+        if (connection instanceof HttpURLConnection){
+        	((HttpURLConnection)connection).setRequestMethod(METHOD);
+        }
         connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE);
         connection.setRequestProperty(SOAP_ACTION_HEADER, action);
         connection.connect();
@@ -213,6 +268,6 @@ public final class SoapRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        connection.disconnect();
+        ((HttpURLConnection)connection).disconnect();
     }
 }

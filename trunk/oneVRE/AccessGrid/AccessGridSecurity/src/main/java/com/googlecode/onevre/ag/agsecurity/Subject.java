@@ -1,7 +1,10 @@
 package com.googlecode.onevre.ag.agsecurity;
 
+import java.util.Vector;
+
 import org.w3c.dom.Node;
 
+import com.googlecode.onevre.ag.types.VOAttribute;
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 import com.googlecode.onevre.utils.Utils;
 
@@ -27,18 +30,22 @@ public class Subject implements SoapSerializable {
     // a globally unique identifier for this object
     private String id = Utils.generateID();
 
+    private Vector<VOAttribute>  voAttributes = new Vector<VOAttribute>();
+
     private static final String[] SOAP_FIELDS =
         new String[]{"name",
                      "auth_type",
                      "auth_data",
-                     "id"
+                     "id",
+                     "voAttributes" //OneVRE extension
                      };
 
     private static final String[] SOAP_TYPES =
         new String[]{STRING_TYPE,
                      STRING_TYPE,
                      STRING_TYPE,
-                     STRING_TYPE
+                     STRING_TYPE,
+                     null
                      };
 
     /**
@@ -47,6 +54,22 @@ public class Subject implements SoapSerializable {
      */
     public String getName() {
         return name;
+    }
+
+    public Vector<VOAttribute> getVoAttributes(){
+    	return voAttributes;
+    }
+
+    public void setVoAttribute (VOAttribute voAttribute){
+    	this.voAttributes.add(voAttribute);
+    }
+
+    public void setVoAttributes(Vector<String> voAttributes){
+    	this.voAttributes.clear();
+    	for (String voText : voAttributes)
+    	{
+    		this.voAttributes.add(new VOAttribute(voText));
+    	}
     }
 
     /**
@@ -133,6 +156,10 @@ public class Subject implements SoapSerializable {
         name = parser.getAttributes().get("name");
         auth_data = parser.getAttributes().get("auth_data");
         auth_type = parser.getAttributes().get("auth_type");
+    }
+
+    public String toString(){
+    	return name;
     }
 
     public String toXml(){

@@ -39,7 +39,7 @@ public class VenueServerHeaderPanel extends FlexTable implements ClickHandler {
 		this.addClickHandler(this);
 		HorizontalPanel buttonpanel = new HorizontalPanel();
 		if (vs.isManagable()){
-			CreateVenueButton cvButton = new CreateVenueButton();
+			CreateVenueButton cvButton = new CreateVenueButton(vs.toUrl());
 			buttonpanel.add(cvButton.getButton());
 		}
 		buttonpanel.add(vtButton.getButton());

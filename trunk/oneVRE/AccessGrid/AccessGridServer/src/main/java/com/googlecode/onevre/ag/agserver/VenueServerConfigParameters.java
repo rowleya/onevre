@@ -26,6 +26,8 @@ public class VenueServerConfigParameters {
 
     public static String VENUE_SERVER_LOG_FILE = "serverLogFile";
 
+    public static String VENUE_SERVER_DEFAULT_POLICY_FILE = "defaultPolicyFile";
+
     public static String SSL_KEYSTORE_FILE = "keyStore";
 
     public static String SSL_KEYSTORE_TYPE = "keyStoreType";

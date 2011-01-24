@@ -18,7 +18,7 @@ public class Handler extends org.globus.net.protocol.https.Handler {
         Handler.credential = credential;
     }
 
-    protected URLConnection openConnection(URL u) {
+    public URLConnection openConnection(URL u) {
         System.err.println("Creating connection");
         URLConnection connection = super.openConnection(u);
         if ((credential != null) && (connection instanceof GSIURLConnection)) {

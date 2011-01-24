@@ -17,6 +17,11 @@
 		    <artifactId>jsslutils</artifactId>
 		    <version>1.0.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jsslutils</groupId>
+	        <artifactId>jsslutils-extra-gsi</artifactId>
+	        <version>1.0.7</version>
+	    </dependency>
   		<dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -31,7 +36,7 @@
         </dependency>
   		<dependency>
             <groupId>com.googlecode.onevre</groupId>
-            <artifactId>ServerProtocolsSOAP</artifactId>
+            <artifactId>CommonUtils</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>

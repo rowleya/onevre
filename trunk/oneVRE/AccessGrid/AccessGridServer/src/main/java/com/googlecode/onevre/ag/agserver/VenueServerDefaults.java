@@ -31,6 +31,8 @@ public class VenueServerDefaults {
     /** Local dirctory for the dataStore */
     public static String serverDir =  "/home/venueServer";
 
+    public static String defaultPolicy = null;
+
     /** the Version of the VenueServer
      * <ul>
      * <li>version Number of AGTk we are compatible with</li>
@@ -51,14 +53,9 @@ public class VenueServerDefaults {
     /** Port for the Event Server */
     public static String eventPort = "8002";
 
-    public static Role Everybody = new Role();
-    {
-        Everybody.setName("Everybody");
-    }
+    public static Role Everybody = new Role("Everybody",0);
 
-    public static Role Administrators = new Role();
-    {
-        Administrators.setName("Administrators");
-        Administrators.setRequiredDefault(1);
-    }
+    public static Role VOMSdependent = new Role("VOMSdependent",0);
+
+    public static Role Administrators = new Role("Administrators",1);
 }

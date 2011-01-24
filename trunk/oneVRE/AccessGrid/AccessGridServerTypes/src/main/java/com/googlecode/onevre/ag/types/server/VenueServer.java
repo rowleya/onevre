@@ -34,6 +34,7 @@ package com.googlecode.onevre.ag.types.server;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
+import java.util.Vector;
 
 
 import com.googlecode.onevre.ag.types.Capability;
@@ -43,6 +44,7 @@ import com.googlecode.onevre.ag.types.DataDescription;
 import com.googlecode.onevre.ag.types.ProviderProfile;
 import com.googlecode.onevre.ag.types.ServiceDescription;
 import com.googlecode.onevre.ag.types.StreamDescription;
+import com.googlecode.onevre.ag.types.VOAttribute;
 import com.googlecode.onevre.ag.types.VenueState;
 import com.googlecode.onevre.ag.types.application.ApplicationCmdDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
@@ -52,7 +54,10 @@ import com.googlecode.onevre.ag.types.network.UnicastNetworkLocation;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.soap.common.SoapResponseHash;
 import com.googlecode.onevre.protocols.soap.soapclient.SoapRequest;
+import com.googlecode.onevre.types.soap.annotation.SoapParameter;
+import com.googlecode.onevre.types.soap.annotation.SoapReturn;
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
+import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 
 
@@ -115,4 +120,29 @@ public class VenueServer {
         }
         throw new SoapException("Return type not correct");
     }
+
+    @SoapReturn(
+            name="connection"
+        )
+    public ConnectionDescription createVenues(
+    		@SoapParameter("name") String name,
+    		@SoapParameter("description") String description,
+    		@SoapParameter("creator") ClientProfile creator,
+    		@SoapParameter("voAttributes")VOAttribute[] voAttributes
+		) throws IOException, SoapException {
+        HashMap<String, Object> result = soapRequest.call(VENUESERVER_NS,
+                "CreateVenues", "CreateVenuesRequest",
+                new String[]{"name", "description", "creator", "voAttributes"},
+                new Object[]{name, description, creator, voAttributes},
+                new Object[]{SoapSerializable.STRING_TYPE, SoapSerializable.STRING_TYPE, null, null},
+                new SoapResponseHash(
+                    new String[]{VENUESERVER_NS + "/connection"},
+                    new Class[]{ConnectionDescription.class}));
+        Object connection = result.get("connection");
+        if ((connection != null) && ConnectionDescription.class.equals(connection.getClass())){
+            return (ConnectionDescription)connection;
+        }
+        throw new SoapException("Return type not correct");
+	}
+
 }

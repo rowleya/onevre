@@ -3,6 +3,8 @@ package com.googlecode.onevre.ag.agserver;
 import java.io.PrintWriter;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
 
@@ -10,12 +12,15 @@ import com.googlecode.onevre.ag.agsecurity.Action;
 import com.googlecode.onevre.ag.agsecurity.PolicyParser;
 import com.googlecode.onevre.ag.agsecurity.Role;
 import com.googlecode.onevre.ag.agsecurity.Subject;
+import com.googlecode.onevre.ag.types.VOAttribute;
 import com.googlecode.onevre.types.soap.annotation.SoapParameter;
 import com.googlecode.onevre.types.soap.annotation.SoapReturn;
 import com.googlecode.onevre.types.soap.interfaces.SoapServable;
 import com.googlecode.onevre.utils.Utils;
 
 public class AuthorizationManager extends SoapServable {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     String id = Utils.generateID();
 
@@ -24,6 +29,8 @@ public class AuthorizationManager extends SoapServable {
     Vector<Role> defaultRoles = new Vector<Role>();
 
     Vector<Action> actions = new Vector<Action>();
+
+    Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
 
     Vector<Role> rolesRequired = new Vector<Role>();
 
@@ -45,7 +52,7 @@ public class AuthorizationManager extends SoapServable {
     public int isAuthorized(
             @SoapParameter("subject") Subject subject,
             @SoapParameter("action") Action action){
-
+    	securityLog.println("Authorize Subject : " + subject + " Action : " + action);
         Vector<Role> roleList = getRolesForAction(action);
         if (subject==null){
             securityLog.println("Authorizing action " + action.getName() + " for unidentified user");
@@ -53,6 +60,7 @@ public class AuthorizationManager extends SoapServable {
                 securityLog.println("Rejecting access from unidentified user; id required");
                 return 0;
             }
+
             if (roleList.contains(VenueServerDefaults.Everybody)){
                 securityLog.println("Accepting access from unidentified user as part of Everybody role");
                 return 1;
@@ -61,14 +69,23 @@ public class AuthorizationManager extends SoapServable {
             return 0;
         }
         securityLog.println("Authorizing action " + action.getName()
-                + "for subject " + subject.getName());
+                + " for subject " + subject.getName());
         if (roleList.contains(VenueServerDefaults.Everybody)){
-            securityLog.println("Accepting access from " + subject.getName() + "as part of Everybody role");
+            securityLog.println("Accepting access from " + subject.getName() + " as part of Everybody role");
             return 1;
         }
+        if (roleList.contains(VenueServerDefaults.VOMSdependent)){
+            securityLog.println("Authorizing based on VO attributes: " + voAttributes.toString());
+        	if (voAttributes.size()==0) {
+                securityLog.println("Accepting access based on VO attributes - no VO attributes required");
+        		return 1;
+        	}
+        	return checkVOMS(subject.getVoAttributes());
+        }
+
         for (Role role:roleList){
             if (role.hasSubject(subject)){
-                securityLog.println("Accepting access from " + subject.getName() + "as part of " + role.getName());
+                securityLog.println("Accepting access from " + subject.getName() + " as part of " + role.getName());
                 return 1;
             }
         }
@@ -76,7 +93,30 @@ public class AuthorizationManager extends SoapServable {
         return 0;
     }
 
-    public void addAction(@SoapParameter("action") Action action){
+    private int checkVOMS(Vector<VOAttribute> subjectAttributes) {
+    	if (subjectAttributes.isEmpty()){
+    		subjectAttributes.add(new VOAttribute());
+    	}
+    	securityLog.println("in checkVOMS: " + voAttributes.toString() + " matches " + subjectAttributes.toString());
+    	for (VOAttribute voAttribute: voAttributes){
+			for (VOAttribute voAtt: subjectAttributes){
+				voAtt.setLogger(securityLog);
+				if (voAtt.matches(voAttribute)){
+					return 1;
+				}
+			}
+		}
+		return 0;
+	}
+
+    public void setVOattributes(Vector<VOAttribute> voAttributes){
+    	if (voAttributes!=null){
+    		this.voAttributes = voAttributes;
+    	}
+    }
+
+
+	public void addAction(@SoapParameter("action") Action action){
         if (!actions.contains(action)){
             actions.add(action);
         }
@@ -425,7 +465,7 @@ public class AuthorizationManager extends SoapServable {
                     addAction(action);
                 }
             }
-            // final check
+/*            // final check
             for (Action action: actions){
                 for (Role role : action.getRoles()){
                     action.removeRole(role);
@@ -443,7 +483,7 @@ public class AuthorizationManager extends SoapServable {
                         }
                     }
                 }
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
