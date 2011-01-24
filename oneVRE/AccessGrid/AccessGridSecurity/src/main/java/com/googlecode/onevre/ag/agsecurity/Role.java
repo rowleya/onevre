@@ -40,6 +40,12 @@ public class Role implements SoapSerializable {
                      INT_TYPE
                      };
 
+    public Role(){}
+
+    public Role(String name,int requireDefaultId){
+    	this.name = name;
+    	this.requireDefaultId = requireDefaultId;
+    }
 
     /**
      * Returns the name
@@ -122,6 +128,10 @@ public class Role implements SoapSerializable {
         return true;
     }
 
+    public int hashCode(){
+        return name.hashCode();
+    }
+
     public String getSoapType() {
         return "Role";
     }
@@ -145,6 +155,12 @@ public class Role implements SoapSerializable {
             }
         }
     }
+
+    public String toString(){
+    	String out = getName();
+    	return out;
+    }
+
 
     public String toXml(){
         String xml = "<" +getSoapType() + " name=\"" + name+ "\">";

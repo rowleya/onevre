@@ -6,8 +6,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.VenueServerType;
 import com.googlecode.onevre.gwt.client.ui.ActionButton;
-import com.googlecode.onevre.gwt.client.ui.Icons;
 import com.googlecode.onevre.gwt.client.ui.panels.CreateVenuePanel;
+import com.googlecode.onevre.gwt.client.xmlrpc.CreateVenue;
 import com.googlecode.onevre.gwt.client.xmlrpc.SetClientProfile;
 import com.googlecode.onevre.gwt.common.client.MessageResponse;
 import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
@@ -16,9 +16,10 @@ public class CreateVenueButton extends ActionButton implements ClickHandler, Mes
 
 	VenueServerType venueServerType = null;
 	CreateVenuePanel cvp = null;
+	String serverURI = null;
 
-	public CreateVenueButton() {
-		this.venueServerType = venueServerType;
+	public CreateVenueButton(String serverURI) {
+		this.serverURI = serverURI;
 		setImageUrl("images/addVenue.png");
 
 		setImageHeight("22px");
@@ -26,7 +27,6 @@ public class CreateVenueButton extends ActionButton implements ClickHandler, Mes
 		this.getButton().setHeight("22px");
 		this.getButton().setWidth("22px");
 		this.getButton().addClickHandler(this);
-		cvp = new CreateVenuePanel(Application.getUserManager().getVOAttributes());
 	}
 
 	public VenueServerType getVenueServerType(){
@@ -35,15 +35,17 @@ public class CreateVenueButton extends ActionButton implements ClickHandler, Mes
 
 	@Override
 	public void action() {
-		GWT.log("in VenueTreeButton action");
+		GWT.log("in CreateVenueButton action");
+		cvp = new CreateVenuePanel(this);
 		cvp.show();
 	}
 
 	public void handleResponse(MessageResponse response) {
+
 		if (response.getResponseCode()==MessageResponse.OK){
-//			ClientProfile clientProfile = ((CreateVenuePanel)response.getSource()).getClientProfile();
-//			Application.getUserManager().setLocalUser(clientProfile);
-			SetClientProfile.setClientProfile();
+			CreateVenue createVenue = new CreateVenue(Application.getServerManager());
+			createVenue.create(serverURI, cvp.getName(), cvp.getDescription(), cvp.getAttributes());
+			// create Venue
 		}
 	}
 

@@ -35,6 +35,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+
 
 import com.googlecode.onevre.ag.types.Capability;
 import com.googlecode.onevre.ag.types.ClientProfile;
@@ -50,6 +55,7 @@ import com.googlecode.onevre.ag.types.application.ApplicationDescription;
 import com.googlecode.onevre.ag.types.network.MulticastNetworkLocation;
 import com.googlecode.onevre.ag.types.network.NetworkLocation;
 import com.googlecode.onevre.ag.types.network.UnicastNetworkLocation;
+import com.googlecode.onevre.protocols.gsi.CredentialMappings;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.soap.common.SoapResponseHash;
 import com.googlecode.onevre.protocols.soap.soapclient.SoapRequest;
@@ -66,6 +72,7 @@ import com.googlecode.onevre.types.soap.interfaces.SoapServable;
  */
 public class Venue extends SoapServable {
 
+	Log log = LogFactory.getLog(this.getClass());
     // The string that is the connection id parameter
     private static final String CONNECTION_ID = "connectionId";
 
@@ -74,6 +81,8 @@ public class Venue extends SoapServable {
 
     // The soap request
     private SoapRequest soapRequest = null;
+
+    private String sessionId = null;
 
     static {
         SoapDeserializer.mapType(Capability.class);
@@ -99,6 +108,27 @@ public class Venue extends SoapServable {
      */
     public Venue(String serverUrl) throws MalformedURLException {
         this.soapRequest = new SoapRequest(serverUrl);
+    }
+
+    public void setGSScredential (CredentialMappings credential){
+    	if (credential == null) {
+    		return;
+    	}
+    	String version = "";
+    	try {
+			version = getVersion();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (version.contains("OneVRE")){
+	    	GSSCredential cred = credential.getCredential();
+	    	try {
+				log.info("Setting credential for venue " + cred.getName().toString());
+			} catch (GSSException e) {
+				e.printStackTrace();
+			}
+	    	soapRequest.setGSScredential(cred);
+		}
     }
 
     /**

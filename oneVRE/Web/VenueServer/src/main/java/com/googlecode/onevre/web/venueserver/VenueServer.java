@@ -33,9 +33,11 @@ package com.googlecode.onevre.web.venueserver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyStore;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -48,13 +50,14 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import org.jsslutils.keystores.KeyStoreLoader;
 import org.jsslutils.sslcontext.PKIXSSLContextFactory;
+import org.jsslutils.sslcontext.X509SSLContextFactory;
+import org.jsslutils.sslcontext.trustmanagers.TrustAllClientsWrappingTrustManager;
 
 import com.googlecode.onevre.ag.agserver.VenueServerConfigParameters;
 import com.googlecode.onevre.ag.agserver.VenueServerDefaults;
+import com.googlecode.onevre.ag.agserver.VenuesServlet;
 import com.googlecode.onevre.ag.types.Capability;
 import com.googlecode.onevre.utils.ConfigFile;
-
-
 
 /**
  * An Access Grid 3 Venue Server
@@ -69,7 +72,14 @@ public class VenueServer extends Thread {
      */
     public static final String SERVLET_ALL_FILES = "/*";
 
+    public static final boolean SSL_WANT_CLIENT_AUTH = true;
+
+
     private Server server = null;
+
+    private String defaultPolicy ="";
+
+    private PrintWriter serverLog=null;
 
     private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
     /**
@@ -86,13 +96,14 @@ public class VenueServer extends Thread {
         String configLocation =  ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION, "");
-        PrintWriter serverLog=null;
         try {
             String serverLogFile = ConfigFile.getParameter(serverConfig,
                     VenueServerConfigParameters.VENUE_SERVER_SECTION,
                     VenueServerConfigParameters.VENUE_SERVER_LOG_FILE,
                     VenueServerDefaults.venueServerLogFile);
-            serverLog = new PrintWriter(configLocation + serverLogFile);
+            System.out.println("web.venueserver.VenueServer Log-File: " + configLocation + serverLogFile);
+            serverLog = new PrintWriter(new FileOutputStream(configLocation + serverLogFile),true);
+            serverLog.println("Starting Venue Server at: " + new Date());
         } catch (FileNotFoundException e) {
             throw new ServletException(e);
         }
@@ -131,7 +142,7 @@ public class VenueServer extends Thread {
         connector.setPort(Integer.valueOf(serverPort));
         connector.setMaxIdleTime(30000);
         connector.setHandshakeTimeout(10000);
-        connector.setWantClientAuth(true);
+        connector.setWantClientAuth(SSL_WANT_CLIENT_AUTH);
 
         KeyStoreLoader keyStoreLoader = new KeyStoreLoader();
         keyStoreLoader.setKeyStorePath(keyStore);
@@ -151,6 +162,7 @@ public class VenueServer extends Thread {
                 sslContextFactory.addCrl(crl.trim());
             }
         }
+        sslContextFactory.setTrustManagerWrapper(new TrustAllClientsWrappingTrustManager.Wrapper());
         connector.setSslContext(sslContextFactory.buildSSLContext());
 
         server.setConnectors(new Connector[]{connector});
@@ -174,17 +186,17 @@ public class VenueServer extends Thread {
                 VenueServerConfigParameters.addCapabilty(captype, capability);
             }
         }
-        addVenues(serverLog);
+        addVenues();
         server.start();
     }
 
-    private ServletHolder addVenues(PrintWriter serverLog) throws ServletException{
+    private ServletHolder addVenues() throws ServletException{
         ServletContextHandler venuesContext= new ServletContextHandler(ServletContextHandler.SESSIONS);
-        VenuesServlet venuesServlet=new VenuesServlet();
+        VenuesServlet venuesServlet=new VenuesServlet(serverLog);
         venuesServlet.addVenues(serverConfig, serverLog);
         ServletHolder venues = new ServletHolder(venuesServlet);
         venuesContext.addServlet(venues, SERVLET_ALL_FILES);
-        venuesContext.setContextPath("/Venues");
+        venuesContext.setContextPath("/");
         server.setHandler(venuesContext);
         return venues;
     }

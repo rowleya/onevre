@@ -31,7 +31,11 @@
 
 package com.googlecode.onevre.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramSocket;
@@ -44,9 +48,14 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.security.AccessController;
 import java.security.CodeSigner;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedAction;
 import java.security.SecureRandom;
 import java.security.cert.CertPath;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -55,13 +64,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
+import org.ietf.jgss.GSSCredential;
 
 import com.googlecode.onevre.security.AcceptAllHostnameVerifier;
 import com.googlecode.onevre.security.AcceptAllTrustManager;
+import com.googlecode.onevre.security.AliasKeyManager;
 
 
 /**
@@ -70,6 +86,8 @@ import com.googlecode.onevre.security.AcceptAllTrustManager;
  * @version 1.0
  */
 public class Utils {
+
+	static Log log = LogFactory.getLog(Utils.class);
 
     /** get an even port number */
     public static final int PAG_PORT_EVEN = 2;
@@ -437,20 +455,99 @@ public class Utils {
      *
      */
     public static void addSslConnection(final URLConnection connection){
-        if (connection instanceof HttpsURLConnection){
+        addSslConnection(connection, null);
+    }
+
+    public static void addSslConnection(final URLConnection connection,final GSSCredential credential){
+
+    	if (connection instanceof HttpsURLConnection){
             AccessController.doPrivileged(new PrivilegedAction<Void>() {
                 public Void run() {
-                    try {
-                        SSLContext sslContext = SSLContext.getInstance("SSL");
-                        sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+                	KeyManager km[] = null;
+                	if (credential!=null){
+            	    	GlobusGSSCredentialImpl globusCredential = (GlobusGSSCredentialImpl)credential;
+            	    	KeyStore ks = null;
+            			try {
+            				ks = KeyStore.getInstance("JKS");
+            				try {
+								ks.load(null,new String("").toCharArray());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+            		    	ks.setEntry("cert", new KeyStore.PrivateKeyEntry(globusCredential.getPrivateKey(),globusCredential.getCertificateChain()), new KeyStore.PasswordProtection(new String("").toCharArray()));
+            			} catch (KeyStoreException e) {
+            				e.printStackTrace();
+            			}
+            	    	km = new KeyManager[]{new AliasKeyManager(ks, "cert", "")};
+                	}
+
+                	String truststore = "/usr/local/liferay/tomcat5.5/webapps/Venues/WEB-INF/venueTrustStore";
+                	if(truststore != null)
+                	{
+                		log.debug("found configured truststore: "+ truststore);
+  //              		truststore = expandPathname(truststore);
+                		log.debug("final truststore: "+ truststore);
+                		String truststorepw = "gridcert";
+                		try
+                		{
+                			log.info("loading truststore "+ truststore);
+                			KeyStore tsKS = KeyStore.getInstance("JKS");
+                			char[] pw = (truststorepw != null ? truststorepw.toCharArray() : null);
+                			tsKS.load(new FileInputStream(truststore), pw);
+                			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                			tmf.init(tsKS);
+                			log.info("loading truststore "+ truststore);
+                			SSLContext context = SSLContext.getInstance("TLS");
+                            if (credential!=null){
+                            	context.init(km, tmf.getTrustManagers(), new SecureRandom());
+                            }else{
+                            	context.init(km, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+                            }
+                            ((HttpsURLConnection)connection).setSSLSocketFactory(context.getSocketFactory());
+                            ((HttpsURLConnection)connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
+                     	}
+                		catch(KeyStoreException e)
+                		{
+                			log.error("unable to create truststore", e);
+                		}
+                		catch(NoSuchAlgorithmException e)
+                		{
+                			log.error("configuration problem, unable to check integrity of truststore", e);
+                		}
+                		catch(CertificateException e)
+                		{
+                			log.error("configuration problem, unable to load at least one certificate from truststore", e);
+                		}
+                		catch(FileNotFoundException e)
+                		{
+                			log.error("configuration problem, unable load truststore, file not found", e);
+                		}
+                		catch(IOException e)
+                		{
+                			log.error("configuration problem, unable to load truststore", e);
+                		}
+                		catch(KeyManagementException e)
+                		{
+                			log.error("configuration problem, unable to initialise truststore", e);
+                		}
+                	}
+
+
+
+
+    /*            	try {
+                        SSLContext sslContext = SSLContext.getInstance("TLS");
+                        sslContext.init(km, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+                        sslContext.init(km, tmf.getTrustManagers(), new SecureRandom());
                         ((HttpsURLConnection)connection).setSSLSocketFactory(sslContext.getSocketFactory());
                         ((HttpsURLConnection)connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     return null;
                 }});
         }
+
     }
 
     /**
@@ -460,7 +557,7 @@ public class Utils {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
             public Void run() {
 		        try {
-		            SSLContext sslContext = SSLContext.getInstance("SSL");
+		            SSLContext sslContext = SSLContext.getInstance("TLS");
 		            sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
 		            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 		            HttpsURLConnection.setDefaultHostnameVerifier(new AcceptAllHostnameVerifier());
@@ -507,5 +604,20 @@ public class Utils {
         System.err.println("Launching Web Start App: " + launch2);
         Runtime.getRuntime().exec(launch2);
     }
+
+    public static String readPlainFile(String filename) throws IOException
+    {
+        String contents = "";
+    	BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String text = null;
+        // repeat until all lines is read
+        while ((text = reader.readLine()) != null)
+        {
+            contents += text;
+        }
+        return contents;
+    }
+
+
 
 }

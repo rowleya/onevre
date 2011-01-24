@@ -458,7 +458,7 @@ public class PagPortlet implements Portlet {
             }
             log.info("TrustedServers:" + trustedServersPreference);
             venueClientUI = new VenueClientUI(clientProfile, agEventServer,
-                    myVenuesPreference, trustedServersPreference);
+                    myVenuesPreference, trustedServersPreference,request.getPortletSession().getId());
             portletSession.setAttribute(namespace + VENUECLIENT_UI_ATTRIBUTE,
                 venueClientUI, PortletSession.APPLICATION_SCOPE);
             xmlRpcServer.addHandler("", venueClientUI);
@@ -486,31 +486,35 @@ public class PagPortlet implements Portlet {
                 }
 
             }
-
-
-//            String cred = (String)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
-//            GSSCredential credential = null;
-//           	if (cred!=null){
-//	            ByteArrayInputStream bais = new ByteArrayInputStream(cred.getBytes());
-//	    	    ObjectInputStream si = new ObjectInputStream(bais);
-//	    	    try {
-//					credential = (GSSCredential) si.readObject();
-//				} catch (ClassNotFoundException e) {
-//					e.printStackTrace();
-//				}
-//	            si.close();
-//           	}
-//           	if (credential!=null){
-//				log.info("setting GSSCredential");
-//            	venueClientUI.setCredential(new CredentialMappings(credential));
-//            } else {
+            GSSCredential credential = (GSSCredential)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
+            if (credential!=null){
+            	log.info("got GSSCredential: " + credential.toString());
+            }
+/*
+            byte[] cred = (byte[])portletSession.getAttribute("USER_GSSCredentialString",PortletSession.APPLICATION_SCOPE);
+            GSSCredential credential = null;
+           	if (cred!=null){
+	            ByteArrayInputStream bais = new ByteArrayInputStream(cred);
+	    	    ObjectInputStream si = new ObjectInputStream(bais);
+	    	    try {
+					credential = (GSSCredential) si.readObject();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+	            si.close();
+           	}
+*/
+            if (credential!=null){
+				log.info("setting GSSCredential");
+            	venueClientUI.setCredential(new CredentialMappings(credential));
+            } else {
 	            String credDN = (String)portletSession.getAttribute("USER_GSSCredentialDN",PortletSession.APPLICATION_SCOPE);
 	            Vector<String> voAttribs = (Vector<String>)portletSession.getAttribute("USER_VOAttributes",PortletSession.APPLICATION_SCOPE);
 	            if ((credDN!=null) && (voAttribs !=null)){
 	            	log.info("setting GSSCredential");
 	            	venueClientUI.setCredential(new CredentialMappings(credDN,voAttribs));
 	            }
-//            }
+            }
        } else {
             log.error("User is not logged in");
         }

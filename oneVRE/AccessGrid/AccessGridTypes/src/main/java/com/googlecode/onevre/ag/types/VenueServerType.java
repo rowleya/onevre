@@ -72,6 +72,10 @@ public class VenueServerType implements SoapSerializable {
 		this.protocol = protocol;
 	}
 
+	public boolean isManagable(){
+		return version.contains("OneVRE");
+	}
+
 	/**
 	 * @return the protocol
 	 */

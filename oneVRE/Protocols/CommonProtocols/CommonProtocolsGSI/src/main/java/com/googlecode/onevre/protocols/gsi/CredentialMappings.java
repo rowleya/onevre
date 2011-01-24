@@ -38,36 +38,7 @@ public class CredentialMappings {
 			VOMSAttribute vomsAttribute = (VOMSAttribute)attrobj;
 			String voText = (String)vomsAttribute.getFullyQualifiedAttributes().get(0);
 			log.info("analyzing VO attribute: " + voText);
-			if (voText.startsWith("/")){
-				voText = voText.substring(1);
-			}
-			String fqaText [] = voText.split("/");
-			String vo = fqaText[0];
-			String group = "";
-			String capability = "";
-			String sep = "";
-			int length = fqaText.length;
-			if (fqaText[length-1].startsWith("Capability=")){
-				capability = fqaText[length-1].substring(11);
-				length--;
-			}
-			String role="";
-			if (fqaText[length-1].startsWith("Role=")){
-				role = fqaText[length-1].substring(5);
-				length--;
-			}
-			for (int i = 1; i<length ;i++){
-				String it = fqaText[i];
-				if (it.equals("")){
-					continue;
-				}
-				group += sep + it;
-				sep="/";
-			}
-			if (group.equals("")){
-				group="/";
-			}
-			VOAttribute voAttribute = new VOAttribute(vo,group,role,capability);
+			VOAttribute voAttribute = new VOAttribute(voText);
 			voAttributes.add(voAttribute);
 		}
 	}
@@ -76,38 +47,13 @@ public class CredentialMappings {
 		credentialDN = credDN;
 		for (String voText : voAttributeStrings){
 			log.info("analyzing VO attribute: " + voText);
-			if (voText.startsWith("/")){
-				voText = voText.substring(1);
-			}
-			String fqaText [] = voText.split("/");
-			String vo = fqaText[0];
-			String group = "";
-			String capability = "";
-			String sep = "";
-			int length = fqaText.length;
-			if (fqaText[length-1].startsWith("Capability=")){
-				capability = fqaText[length-1].substring(11);
-				length--;
-			}
-			String role="";
-			if (fqaText[length-1].startsWith("Role=")){
-				role = fqaText[length-1].substring(5);
-				length--;
-			}
-			for (int i = 1; i<length ;i++){
-				String it = fqaText[i];
-				if (it.equals("")){
-					continue;
-				}
-				group += sep + it;
-				sep="/";
-			}
-			if (group.equals("")){
-				group="/";
-			}
-			VOAttribute voAttribute = new VOAttribute(vo,group,role,capability);
+			VOAttribute voAttribute = new VOAttribute(voText);
 			voAttributes.add(voAttribute);
 		}
+	}
+
+	public GSSCredential getCredential(){
+		return credential;
 	}
 
 	public String getDN(){

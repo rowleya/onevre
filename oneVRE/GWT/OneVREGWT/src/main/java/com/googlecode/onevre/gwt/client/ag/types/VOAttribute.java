@@ -1,7 +1,10 @@
 package com.googlecode.onevre.gwt.client.ag.types;
 
+import java.io.Serializable;
+import java.util.HashMap;
 
-public class VOAttribute {
+
+public class VOAttribute  {
 
     // The scheme of the profile (e.g. "user" or "service")
     private String vo = "";
@@ -82,10 +85,19 @@ public class VOAttribute {
 	public String getCap() {
 		return cap;
 	}
-	
-	
+
+
 	public String toString(){
 		String out = vo +" G="+ group + " R=" + role + " C=" + cap;
+		return out;
+	}
+
+	public HashMap<String, String> toMap(){
+		HashMap<String, String> out = new HashMap<String, String>();
+		out.put("vo", vo);
+		out.put("group", group);
+		out.put("role", role);
+		out.put("cap", cap);
 		return out;
 	}
 

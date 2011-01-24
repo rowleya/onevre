@@ -4,6 +4,7 @@ package com.googlecode.onevre.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.onevre.gwt.client.ag.types.ClientProfile;
+import com.googlecode.onevre.gwt.client.ag.types.StringJSO;
 
 public class VenueClientController {
 
@@ -26,6 +27,14 @@ public class VenueClientController {
 	private static native JavaScriptObject getPrivObjectDec (String vcc, String xml)/*-{
 		venueClientController = $doc.getElementById(vcc);
 		return venueClientController.getObjectDec(xml);
+	}-*/;
+
+	public static String getXMLEnc(Object object){
+		return getPrivXMLEnc(vcc,object).value();
+	}
+	private static native StringJSO getPrivXMLEnc (String vcc, Object object)/*-{
+		venueClientController = $doc.getElementById(vcc);
+		return venueClientController.getXMLEnc(object);
 	}-*/;
 
 

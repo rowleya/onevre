@@ -19,6 +19,7 @@ public class Icons {
 	public static String folderIcon = GWT.getModuleBaseURL() + "images/icons/folder.png";
 	public static String openfolderIcon = GWT.getModuleBaseURL() + "images/icons/folder-open.png";
 	public static String closeIcon = GWT.getModuleBaseURL() + "images/close.png";
+	public static String deleteIcon = GWT.getModuleBaseURL() + "images/icons/close.png";
 	public static String addDocumentIcon = GWT.getModuleBaseURL() + "images/addDocument.png";
 	public static String addDirectoryIcon = GWT.getModuleBaseURL() + "images/addFolder.png";
 	public static String addVenueIcon = GWT.getModuleBaseURL() + "images/addVenue.png";

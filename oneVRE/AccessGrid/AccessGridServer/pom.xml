@@ -19,6 +19,11 @@
         </dependency>
   		<dependency>
             <groupId>com.googlecode.onevre</groupId>
+            <artifactId>CommonProtocolsGSI</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+  		<dependency>
+            <groupId>com.googlecode.onevre</groupId>
             <artifactId>AccessGridCommon</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -32,6 +37,12 @@
             <artifactId>AccessGridServerTypes</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>ServerProtocolsSOAP</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 		<dependency>
 		    <groupId>org.apache.ftpserver</groupId>
 		    <artifactId>ftplet-api</artifactId>
@@ -42,6 +53,31 @@
 		    <artifactId>ftpserver-core</artifactId>
 		    <version>1.0.4</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.globus</groupId>
+		    <artifactId>cog-jglobus</artifactId>
+		    <version>1.6.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.globus</groupId>
+		    <artifactId>cog-url</artifactId>
+		    <version>1.6.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk16</artifactId>
+		    <version>143</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.glite</groupId>
+		    <artifactId>vomsjapi</artifactId>
+		    <version>1.9.14</version>
+		    <scope>provided</scope>
+		</dependency>
+
     </dependencies>
 
 </project>

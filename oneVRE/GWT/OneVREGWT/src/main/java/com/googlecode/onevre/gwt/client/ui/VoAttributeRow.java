@@ -2,18 +2,23 @@ package com.googlecode.onevre.gwt.client.ui;
 
 import java.util.Vector;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PushButton;
+import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.ag.types.VOAttribute;
 
-public class VoAttributeRow extends Image implements ChangeHandler {
+public class VoAttributeRow extends Image implements ChangeHandler, ClickHandler {
 
 	FlexTable flexTable = null;
 
-	Vector<VOAttribute> voAttributes = null;
+	Vector<VOAttribute> voAttributes = Application.getUserManager().getVOAttributes();
 
 	VOAttribute attribute = new VOAttribute();
 
@@ -26,13 +31,18 @@ public class VoAttributeRow extends Image implements ChangeHandler {
 	public VoAttributeRow(FlexTable table) {
 		this.flexTable = table;
 		int row  = flexTable.getRowCount();
-		flexTable.setWidget(row,5,this);
 		voListBox.addChangeHandler(this);
 		groupListBox.addChangeHandler(this);
 		roleListBox.addChangeHandler(this);
 		flexTable.setWidget(row, 0, voListBox);
 		flexTable.setWidget(row, 1, groupListBox);
 		flexTable.setWidget(row, 2, roleListBox);
+		Image delImg = new Image(Icons.deleteIcon);
+		delImg.setHeight("15px");
+		PushButton delButton=new PushButton(delImg);
+		delButton.addClickHandler(this);
+		flexTable.setWidget(row, 3, delButton);
+		flexTable.setWidget(row,4,this);
 		voListBox.addItem("NONE");
 		groupListBox.addItem("");
 		roleListBox.addItem("");
@@ -49,6 +59,7 @@ public class VoAttributeRow extends Image implements ChangeHandler {
 	}
 
 	public VOAttribute getAttribute() {
+		GWT.log("getAttribute: " + attribute.toString());
 		return attribute;
 	}
 
@@ -95,8 +106,14 @@ public class VoAttributeRow extends Image implements ChangeHandler {
 		}
 		if (event.getSource()==roleListBox){
 			attribute.setRole(roleListBox.getItemText(roleListBox.getSelectedIndex()));
-			populateRole();
+	//		populateRole();
 		}
+	}
+
+	@Override
+	public void onClick(ClickEvent event) {
+		int row = flexTable.getCellForEvent(event).getRowIndex();
+		flexTable.removeRow(row);
 	}
 
 

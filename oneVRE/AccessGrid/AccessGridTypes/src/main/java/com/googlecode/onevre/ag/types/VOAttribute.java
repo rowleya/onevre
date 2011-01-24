@@ -1,16 +1,25 @@
 package com.googlecode.onevre.ag.types;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class VOAttribute implements SoapSerializable {
-    private static final long serialVersionUID = 1L;
+
+	Log log = LogFactory.getLog(this.getClass());
+
+	private static final long serialVersionUID = 1L;
 
     private static final String[] SOAP_FIELDS =
         new String[]{"vo",
@@ -31,6 +40,8 @@ public class VOAttribute implements SoapSerializable {
     // The name of the venue server
     private String group = "";
 
+    private PrintWriter securityLog = null;
+
     // The url address of the venue server
     private String role = "";
 
@@ -45,6 +56,42 @@ public class VOAttribute implements SoapSerializable {
     	this.group = group;
     	this.role = role;
     	this.cap = cap;
+    }
+
+    public VOAttribute(String voText){
+    	if (voText.startsWith("/")){
+			voText = voText.substring(1);
+		}
+		String fqaText [] = voText.split("/");
+		vo = fqaText[0];
+		String sep = "";
+		int length = fqaText.length;
+		if (fqaText[length-1].startsWith("Capability=")){
+			cap = fqaText[length-1].substring(11);
+			length--;
+		}
+		if (fqaText[length-1].startsWith("Role=")){
+			role = fqaText[length-1].substring(5);
+			length--;
+		}
+		for (int i = 1; i<length ;i++){
+			String it = fqaText[i];
+			if (it.equals("")){
+				continue;
+			}
+			group += sep + it;
+			sep="/";
+		}
+		if (group.equals("")){
+			group="/";
+		}
+    }
+
+    public VOAttribute(HashMap<String, String> voMap){
+    	this.vo = voMap.get("vo");
+    	this.group = voMap.get("group");
+    	this.role = voMap.get("role");
+    	this.cap = voMap.get("cap");
     }
 
 	/**
@@ -121,7 +168,72 @@ public class VOAttribute implements SoapSerializable {
     public boolean equals(Object o){
         return this.toString().equals(((VOAttribute)o).toString());
     }
-/*
+
+    public boolean matches(VOAttribute other){
+    	if (securityLog!=null){
+    		securityLog.println(toString() + " matches " +other);
+    	}
+    	log.info(toString() + " matches " +other);
+    	if (vo.equals("")){
+        	log.info("vo not provided");
+        	if (securityLog!=null){
+        		securityLog.println("vo not provided");
+        	}
+        	return true;
+    	}
+    	if (!other.vo.equals(vo)){
+    		log.info("VO doesn't match");
+        	if (securityLog!=null){
+        		securityLog.println("VO doesn't match");
+        	}
+   		return false;
+    	}
+    	if (other.group.equals("")||group.equals("")){
+        	log.info("group not provided");
+        	if (securityLog!=null){
+        		securityLog.println("group not provided");
+        	}
+   		return true;
+    	}
+    	if (!other.group.equals(group)){
+    		log.info("group doesn't match");
+        	if (securityLog!=null){
+        		securityLog.println("group doesn't match");
+        	}
+    		return false;
+    	}
+    	if (other.role.equals("")||role.equals("")){
+        	log.info("role not provided");
+        	if (securityLog!=null){
+        		securityLog.println("role not provided");
+        	}
+    		return true;
+    	}
+    	if (!other.role.equals(role)){
+    		log.info("role doesn't match");
+        	if (securityLog!=null){
+        		securityLog.println("role doesn't match");
+        	}
+    		return false;
+    	}
+    	if (other.cap.equals("")||cap.equals("")){
+        	log.info("cap not provided");
+        	if (securityLog!=null){
+        		securityLog.println("cap not provided");
+        	}
+    		return true;
+    	}
+    	if (!other.cap.equals(cap)){
+    		log.info("cap doesn't match");
+        	if (securityLog!=null){
+        		securityLog.println("cap doesn't match");
+        	}
+    		return false;
+    	}
+    	return true;
+    }
+
+    /*
     public String toLog(){
         return name+" = "+ getDefaultVenueUrl() + " (" + version +")";
     }
@@ -141,6 +253,11 @@ public class VOAttribute implements SoapSerializable {
 
 	public Object[] getTypes() {
         return SOAP_TYPES;
+	}
+
+	public void setLogger(PrintWriter securityLog) {
+		this.securityLog = securityLog;
+
 	}
 
 

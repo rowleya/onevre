@@ -53,7 +53,7 @@ public class DataStore {
     private HashMap<String, Venue> venues = new HashMap<String, Venue>();
 
     public DataDescription createDataDescription(String venueId, String path, File file, HashMap<String, String> descriptions){
-    	VenueState venueState = venues.get(venueId).getState();
+    	VenueState venueState = venues.get(venueId).getState(venueId);
         String fileName = file.getName();
     	log.info("createDataDescription p: " + path +" f: "+ fileName);
         String uri = getDataLocation(venueId) + path + "/" +fileName;
@@ -286,7 +286,7 @@ public class DataStore {
 
     public void addVenue(String venueId, Venue venue) {
         venues.put(venueId, venue);
-        VenueState venueState=venue.getState();
+        VenueState venueState=venue.getState(venueId);
         System.out.println("Adding Venue Id:" + venueId + " State: " + venueState.getName());
         venueState.setDataLocation(ftpsServer.getURI() + venueId + "/");
         populate(venueId,"-1",0,"");

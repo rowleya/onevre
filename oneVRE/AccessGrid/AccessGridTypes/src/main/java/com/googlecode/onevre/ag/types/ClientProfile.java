@@ -654,4 +654,8 @@ public class ClientProfile implements SoapSerializable {
         return name+", "+email+", "+phoneNumber+", " + location;
     }
 
+    public String toString(){
+        return name+", "+email+", "+phoneNumber+", " + location;
+    }
+
 }

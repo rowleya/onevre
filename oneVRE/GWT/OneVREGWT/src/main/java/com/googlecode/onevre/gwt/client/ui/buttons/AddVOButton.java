@@ -27,6 +27,7 @@ public class AddVOButton extends ActionButton implements ClickHandler {
 		setImageUrl("images/icons/add.png");
 		setName("Add VO Attribute");
 		setImageHeight("20px");
+		getButton().setSize("20px", "20px");
 		getButton().addClickHandler(this);
 	}
 
