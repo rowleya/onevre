@@ -160,6 +160,14 @@ public class VOAttribute implements SoapSerializable {
 		return out;
 	}
 
+	public String toFile(){
+		String out = "/"+ vo ;
+		if (!group.equals("/")){
+			out += "/"+ group;
+		}
+		out += "/Role=" + role + "/Capability=" + cap;
+		return out;
+	}
 
     public int hashCode(){
         return toString().hashCode();
@@ -174,10 +182,10 @@ public class VOAttribute implements SoapSerializable {
     		securityLog.println(toString() + " matches " +other);
     	}
     	log.info(toString() + " matches " +other);
-    	if (vo.equals("")){
-        	log.info("vo not provided");
+    	if (other.vo.equals("")){
+        	log.info(" no VO required access permitted to member of : " + vo );
         	if (securityLog!=null){
-        		securityLog.println("vo not provided");
+        		securityLog.println(" no VO required access permitted to member of : " + vo );
         	}
         	return true;
     	}
@@ -186,15 +194,33 @@ public class VOAttribute implements SoapSerializable {
         	if (securityLog!=null){
         		securityLog.println("VO doesn't match");
         	}
-   		return false;
+        	return false;
     	}
-    	if (other.group.equals("")||group.equals("")){
+   /* 	if (other.group.equals("")||group.equals("")){
         	log.info("group not provided");
         	if (securityLog!=null){
         		securityLog.println("group not provided");
         	}
-   		return true;
+        	return true;
+    	}*/
+    	String gr = "";
+    	String ogr = "";
+    	if (!group.startsWith("/")){
+    		gr="/";
     	}
+    	if (!other.group.startsWith("/")){
+    		ogr="/";
+    	}
+    	gr += group;
+    	ogr += other.group;
+    	if (gr.startsWith(ogr)){
+        	log.info("group " + group +" allowed as subgroup of "+ other.group );
+        	if (securityLog!=null){
+        		securityLog.println("group " + group +" allowed as subgroup of "+ other.group );
+        	}
+        	return true;
+    	}
+
     	if (!other.group.equals(group)){
     		log.info("group doesn't match");
         	if (securityLog!=null){

@@ -235,11 +235,20 @@ public class Venue extends SoapServable {
         }
         String authString = ConfigFile.getParameter(venuesData, venueId, "authorizationPolicy",defaultPolicy);
         //System.out.println("authorizationPolicy: "+ authString);
+        venuesData.get(venueId).put("authorizationPolicy", authString);
 
         authorizationManager = new AuthorizationManager(venueServerLog);
         authorizationManager.importPolicy(authString);
         authorizationManager.setVOattributes(voAttributes);
-
+        if (voAttributes!=null) {
+	        String voAttSring = "";
+	        String sep="";
+	        for (VOAttribute att : voAttributes){
+	        	voAttSring += sep + att.toFile();
+	        	sep=":";
+	        }
+	        venuesData.get(venueId).put("VO-Attributes", voAttSring);
+        }
         this.dataStore = dataStore;
         dataStore.addVenue(venueId,this);
         venueServerLog.println("Added Venues");
@@ -524,7 +533,7 @@ public class Venue extends SoapServable {
 		name = "version"
     )
     public String getVersion(){
-    	authorize("GetVersion");
+  //  	authorize("GetVersion");
     	return VenueServerDefaults.serverVersion;
     }
 
@@ -850,17 +859,37 @@ public class Venue extends SoapServable {
 
     /**
      * @param connections
+     * @param venuesData
      */
-    public void setConnections(
-            @SoapParameter("connections") ConnectionDescription[] connections){
-    	authorize("SetConnections");
+    public void setConnections( ConnectionDescription[] connections, HashMap<String, HashMap<String, String>> venuesData, boolean authorize){
+    	if (authorize){
+    		authorize("SetConnections");
+    	}
     	for (ConnectionDescription connection : connections){
             venueState.setConnections(connection);
             venueServerLog.println("adding connection: id=" + connection.getId() + "name="+ connection.getName() + " handle=" + connection.getUri() );
             venueServerLog.flush();
         }
+    	String connstr = "";
+    	String delim = "";
+    	for (ConnectionDescription conns:venueState.getConnections()){
+    		connstr += delim + conns.getId();
+    		delim=":";
+    		venuesData.put(conns.getId(), conns.getHashMap());
+    	}
+		venuesData.get(venueState.getUniqueId()).put("connections",connstr);
+		venuesData.get(venueState.getUniqueId()).put("uri", venueState.getUri());
     }
 
+    /**
+     * @param connections
+     * @param venuesData
+     */
+    public void setConnections(
+            @SoapParameter("connections") ConnectionDescription[] connections,
+            @SoapParameter("venuesData") HashMap<String, HashMap<String, String>> venuesData){
+    	setConnections(connections, venuesData, true);
+    }
 
     /**
      * This method creates a new Multicast Network Location.
@@ -1126,5 +1155,10 @@ public class Venue extends SoapServable {
     	clients.addAll(monitoringClients.values());
     	return clients.toArray(new ClientProfile[0]);
     }
+
+	public ConnectionDescription getConnectionDescription() {
+		ConnectionDescription conn = new ConnectionDescription(venueState);
+		return conn;
+	}
 }
 

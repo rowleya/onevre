@@ -50,6 +50,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.parsers.DOMParser;
+import org.ietf.jgss.GSSCredential;
 import org.jivesoftware.smack.XMPPException;
 
 import org.w3c.dom.Document;
@@ -284,7 +285,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     	}
     	venueServer.setProtocol(url.getProtocol());
     	venueServer.setUrl(url.getHost());
-    	Venue venue = new Venue(venueServer.getDefaultVenueUrl());
+    	Venue venue = new Venue(venueServer.getDefaultVenueUrl(),isOneVREVenue(venueServer.getDefaultVenueUrl()));
    		venue.setGSScredential(credential);
     	String version = venue.getVersion();
     	if (version!=null) {
@@ -467,7 +468,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             applicationMonitorPrivateTokens=new HashMap<String, String>();
             applicationPrivateTokens=new HashMap<String, Vector<String>>();
             currentVenueUri = uri;
-            Venue currentVenue = new Venue(uri);
+            Venue currentVenue = new Venue(uri, isOneVREVenue(uri));
             currentVenue.setGSScredential(credential);
             venues.put(uri, currentVenue);
             String connectionId = currentVenue.enter(clientProfile);
@@ -545,8 +546,26 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @throws Exception
      */
     public VenueState monitorVenue(String uri) throws MalformedURLException  {
-        Venue currentVenue = new Venue(uri);
-        currentVenue.setGSScredential(credential);
+        Venue currentVenue = new Venue(uri,isOneVREVenue(uri));
+        boolean managable = isOneVREVenue(uri);
+        log.info("IN MONITOR VENUE");
+
+        if (credential != null) {
+        	log.info("Monitor " + credential.getDN() + " : " + credential.getVoAttributes().toString() );
+        } else {
+        	log.info("Monitor no credential provided");
+        }
+       	currentVenue.setGSScredential(credential);
+        /*        String version="";
+		try {
+			version = currentVenue.getVersion();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        log.info("VenueServer Version: " + version );
+        if (version.contains("OneVRE")){
+        	currentVenue.setGSScredential(credential);
+        }*/
         venues.put(uri,currentVenue);
         VenueState state = null;
     	try {
@@ -558,10 +577,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             applicationMonitorPrivateTokens=new HashMap<String, String>();
             applicationPrivateTokens=new HashMap<String, Vector<String>>();
             currentVenueUri = uri;
-            String version = currentVenue.getVersion();
-            log.info("VenueServer Version: " + version );
             String connectionId = Utils.generateID();
-            if (version.contains("OneVRE")){
+            if (managable){
             	connectionId = currentVenue.monitor(clientProfile);
             	venueConnIds.put(uri, connectionId);
             }
@@ -646,6 +663,18 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         }
 
     	return state;
+    }
+
+    public boolean isOneVREVenue(String venueUri){
+    	for (VenueServerType st : trustedServers){
+    		if (venueUri.startsWith(st.getBaseUrl())){
+    			if (st.getVersion().contains("OneVRE")){
+    				return true;
+    			}
+    			return false;
+    		}
+    	}
+    	return false;
     }
 
     public boolean stopMonitoringVenue(String venueUri)  {
@@ -1301,7 +1330,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     	return venueServer;
     }
 
-    public VenueState createVenue(String serverUri, String name, String description, Vector<HashMap<String, String>> attributes){
+    public ConnectionDescription createVenue(String serverUri, String name, String description, Vector<HashMap<String, String>> attributes){
     	log.info("Create New Venue:");
     	log.info("Server :" + serverUri);
     	log.info("Name: " + name);
@@ -1310,24 +1339,41 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     	for (HashMap<String, String> map : attributes){
     		voAttributes.add(new VOAttribute(map));
     	}
+    	ConnectionDescription result = null;
 
 		try {
 			URL url = new URL(serverUri);
 	        String serverUrl = url.getProtocol() + "://" + url.getHost()
             + ":" + url.getPort() + "/VenueServer";
 	        VenueServer venueServer = new VenueServer(serverUrl);
-	        venueServer.createVenues(name, description, clientProfile, voAttributes.toArray(new VOAttribute[]{}));
+	        result = venueServer.createVenues(name, description, clientProfile, voAttributes.toArray(new VOAttribute[]{}));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-
-    	return null;
+    	return result;
     }
 
+    public Vector<String> getVenues(String serverUri, Vector<HashMap<String, String>> attributes){
+		Vector <String> urls = new Vector<String>();
+    	try {
+			VenueServer venueServer = new VenueServer(serverUri);
+	    	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+	    	for (HashMap<String, String> map : attributes){
+	    		voAttributes.add(new VOAttribute(map));
+	    	}
+			ConnectionDescription [] conns = venueServer.getVenues(voAttributes.toArray(new VOAttribute[0]));
+			for (ConnectionDescription conn: conns){
+				urls.add(conn.getUri());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SoapException e) {
+			e.printStackTrace();
+		}
+		return urls;
+    }
 
     /**
      * Gets the profile of the current client
@@ -1427,7 +1473,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                 String serverUrl = url.getProtocol() + "://" + url.getHost()
                     + ":" + url.getPort() + "/VenueServer";
                 VenueServer venueServer = new VenueServer(serverUrl);
-                ConnectionDescription[] connections = venueServer.getVenues();
+                ConnectionDescription[] connections = venueServer.getVenues(null);
                 for (int i = 0; i < connections.length; i++) {
                 	VenueTreeItem item = new VenueTreeItem(connections[i].getName(),
                             connections[i].getUri());
@@ -1705,12 +1751,14 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     public Vector<VenueTreeItem> getVenueTree(String venueUri) throws  IOException, SoapException {
-        Venue venue = new Venue(venueUri);
-        venue.setGSScredential(credential);
+    	log.info("in GetVenueTree ( "+ venueUri + ")");
+        Venue venue = new Venue(venueUri,isOneVREVenue(venueUri));
+       	venue.setGSScredential(credential);
         ConnectionDescription[] connections = venue.getConnections();
         Vector<VenueTreeItem> conns = new Vector<VenueTreeItem>();
         for (ConnectionDescription connection : connections) {
             try {
+            	log.info("found connection: " + connection.toString());
                 URL url = new URL(new URL(venueUri), connection.getUri());
                 VenueTreeItem item = new VenueTreeItem(
                         connection.getName(), url.toString());
@@ -1740,7 +1788,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         	log.error("no venueTreeItem for Id: "+ venueId + "\n" +venueList.toString());
 
         }
-        Venue venue = new Venue(venueTreeItem.getUri());
+        Venue venue = new Venue(venueTreeItem.getUri(),isOneVREVenue(venueTreeItem.getUri()));
+
         venue.setGSScredential(credential);
         ConnectionDescription[] connections = venue.getConnections();
         Vector<VenueTreeItem> conns = new Vector<VenueTreeItem>();

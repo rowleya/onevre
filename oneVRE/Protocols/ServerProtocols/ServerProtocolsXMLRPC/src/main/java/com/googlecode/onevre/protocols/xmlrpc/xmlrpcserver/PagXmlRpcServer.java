@@ -36,6 +36,8 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 
@@ -50,6 +52,8 @@ import com.googlecode.onevre.utils.Utils;
  */
 public class PagXmlRpcServer {
 
+	Log log = LogFactory.getLog(this.getClass());
+
     private XmlRpcServer server = new XmlRpcServer();
 
     private XmlRpcResponseQueue queue = new XmlRpcResponseQueue();
@@ -60,7 +64,7 @@ public class PagXmlRpcServer {
      * Creates a new PagXmlRpcServer
      */
     public PagXmlRpcServer() {
-        System.err.println("starting XML_RPC server");
+        log.info("starting XML_RPC server");
         Utils.setDefaultSslConnection();
         server.setHandlerMapping(mapping);
         XmlRpcServerConfigImpl severConfig =
@@ -89,7 +93,7 @@ public class PagXmlRpcServer {
     }
 
     public String handleSyncRequest(HttpServletRequest request){
-    	System.err.println("in PagXmlRpcServer:handleSyncRequest");
+    	log.info("in PagXmlRpcServer:handleSyncRequest");
         XmlRpcThread thread = new XmlRpcThread(server, request, queue);
         return thread.executeSync();
     }

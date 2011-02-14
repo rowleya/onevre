@@ -10,7 +10,7 @@
         <servlet-class>com.googlecode.onevre.web.venueserver.VenueServerStartServlet</servlet-class>
         <init-param>
             <param-name>ServerConfig</param-name>
-            <param-value>webapps/Venues/VenueServer.cfg</param-value>
+            <param-value>VenueServer.cfg</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

@@ -74,6 +74,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
 import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
 
 import com.googlecode.onevre.security.AcceptAllHostnameVerifier;
 import com.googlecode.onevre.security.AcceptAllTrustManager;
@@ -466,6 +467,11 @@ public class Utils {
                 	KeyManager km[] = null;
                 	if (credential!=null){
             	    	GlobusGSSCredentialImpl globusCredential = (GlobusGSSCredentialImpl)credential;
+            	    	try {
+							log.info("credential :"+ globusCredential.getName().toString());
+						} catch (GSSException e1) {
+							log.info("globusCredential.getName() failed");
+						}
             	    	KeyStore ks = null;
             			try {
             				ks = KeyStore.getInstance("JKS");
@@ -479,6 +485,8 @@ public class Utils {
             				e.printStackTrace();
             			}
             	    	km = new KeyManager[]{new AliasKeyManager(ks, "cert", "")};
+                	} else {
+                		log.info("credential not provided");
                 	}
 
                 	String truststore = "/usr/local/liferay/tomcat5.5/webapps/Venues/WEB-INF/venueTrustStore";

@@ -174,8 +174,8 @@ public class Application implements EntryPoint {
         xmlrpcClient = new XmlRpcClient(xmlrpcServer);
         xmlrpcClient.setDebugMode(true);
         xmlrpcClient.setTimeoutMillis(120000);
-        GetTrustedServers.getTrustedServers();
         GetVoAttributes.getVoAttributes();
+        GetTrustedServers.getTrustedServers();
         receiver = new AXmlRpcMessageReceiver();
         receiver.start();
         GetClientProfile.getClientProfile();

@@ -188,7 +188,9 @@ public class PagPortlet implements Portlet {
                 }
                 GSSCredential credential = (GSSCredential)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
                 if (credential!=null){
-                	venueClientUI.setCredential(new CredentialMappings(credential));
+                	CredentialMappings cm = new CredentialMappings(credential);
+                	venueClientUI.setCredential(cm);
+                	log.info("SETTING CREDENTIAL + PROCESS_ACTION: " + cm.getDN() + " | " + cm.getVoAttributes().toString() );
                 }
             } else {
                 log.error("User is not logged in");
@@ -434,6 +436,7 @@ public class PagPortlet implements Portlet {
 
         // If the client ui doesn't exist, create it now
         if (venueClientUI == null) {
+        	log.info("CREATE NEW VENUECLIENT UI");
             PortletPreferences preferences = request.getPreferences();
             Defaults.setLogFile(preferences.getValue("pagLogFile", ""));
             Defaults.setTrustedServerFile(preferences.getValue("trustedServerFile", "trustedServers.xml"));
@@ -487,9 +490,6 @@ public class PagPortlet implements Portlet {
 
             }
             GSSCredential credential = (GSSCredential)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
-            if (credential!=null){
-            	log.info("got GSSCredential: " + credential.toString());
-            }
 /*
             byte[] cred = (byte[])portletSession.getAttribute("USER_GSSCredentialString",PortletSession.APPLICATION_SCOPE);
             GSSCredential credential = null;
@@ -506,7 +506,9 @@ public class PagPortlet implements Portlet {
 */
             if (credential!=null){
 				log.info("setting GSSCredential");
-            	venueClientUI.setCredential(new CredentialMappings(credential));
+				CredentialMappings cm = new CredentialMappings(credential);
+            	venueClientUI.setCredential(cm);
+            	log.info("SETTING CREDENTIAL + RENDER: " + cm.getDN() + " | " + cm.getVoAttributes().toString() );
             } else {
 	            String credDN = (String)portletSession.getAttribute("USER_GSSCredentialDN",PortletSession.APPLICATION_SCOPE);
 	            Vector<String> voAttribs = (Vector<String>)portletSession.getAttribute("USER_VOAttributes",PortletSession.APPLICATION_SCOPE);

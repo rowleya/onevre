@@ -31,6 +31,8 @@
 
 package com.googlecode.onevre.ag.types;
 
+import java.util.HashMap;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -186,6 +188,14 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
         return SOAP_FIELDS;
     }
 
+    public HashMap<String,String> getHashMap(){
+    	HashMap<String, String> map = new HashMap<String, String>();
+    	map.put("uri",uri);
+    	map.put("name",name);
+    	map.put("description",description);
+    	return map;
+    }
+
     /**
      * Returns the types of the fields that should be included with the soap<br>
      * If the field is not a vector or array each of the types must be one of:
@@ -250,7 +260,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return name;
+        return name + " ( " + uri + " ) ";
     }
 
  }

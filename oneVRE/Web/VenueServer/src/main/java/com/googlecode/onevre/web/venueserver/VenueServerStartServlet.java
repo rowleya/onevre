@@ -41,6 +41,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.googlecode.onevre.ag.agserver.VenueServerConfigParameters;
 import com.googlecode.onevre.utils.ConfigFile;
 
@@ -57,6 +60,8 @@ import ag3.interfaces.types.MulticastNetworkLocation;
  */
 public class VenueServerStartServlet extends HttpServlet {
 
+	Log log = LogFactory.getLog(this.getClass());
+
     private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
 
     private String configFile="";
@@ -72,10 +77,10 @@ public class VenueServerStartServlet extends HttpServlet {
     public void init() throws ServletException {
         ServletConfig config = getServletConfig();
 
-        System.out.println("servletname: "+config.getServletName());
+        log.info("servletname: "+config.getServletName());
         String configFile = config.getInitParameter("ServerConfig");
         if (configFile!=null){
-            configLocation = (new File((new File(configFile)).getParent())).getAbsolutePath()+"/";
+            configLocation = (new File(new File(configFile).getAbsolutePath()).getParent())+"/";
             try {
                 serverConfig = ConfigFile.read(configFile);
             } catch (IOException e) {
@@ -89,7 +94,7 @@ public class VenueServerStartServlet extends HttpServlet {
             throw new ServletException("VenueServer config file needs [" +
                     VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
         }
-        System.out.println("ConfigLocation: " + configLocation);
+        log.info("ConfigLocation: " + configLocation);
         serverCfg.put(VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION, configLocation);
         if ((serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_FILE)==null)
                 ||(serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD)==null)
@@ -122,7 +127,7 @@ public class VenueServerStartServlet extends HttpServlet {
  // receive SOAP request
  // decode SOAP
  // trigger
-        System.out.println("VenuesServlet - RequestProto: "+request.getProtocol());
+    	log.info("VenuesServlet - RequestProto: "+request.getProtocol());
                  response.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -144,6 +149,7 @@ public class VenueServerStartServlet extends HttpServlet {
      */
     public void destroy() {
         try {
+
             venueServer.exit();
         } catch (Exception e) {
             e.printStackTrace();

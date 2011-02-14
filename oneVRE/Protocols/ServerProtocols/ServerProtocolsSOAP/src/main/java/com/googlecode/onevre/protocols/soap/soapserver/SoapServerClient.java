@@ -50,6 +50,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
+import com.googlecode.onevre.ag.agsecurity.AuthorizationException;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.soap.common.SoapObjectParser;
 import com.googlecode.onevre.protocols.soap.common.SoapSerializer;
@@ -121,7 +122,7 @@ public class SoapServerClient extends HttpServlet {
 
     private String parseSoap(String request, SoapServable object)
             throws IOException, SAXException,
-            IllegalAccessException, InvocationTargetException, SoapException {
+            IllegalAccessException, SoapException, InvocationTargetException {
 
         SoapObjectParser parser = new SoapObjectParser();
         SoapObject requestObject = parser.parse(request);
@@ -135,22 +136,22 @@ public class SoapServerClient extends HttpServlet {
         Vector<Method> methodCandidates = new Vector<Method>();
         Method idealMethod = null;
         for (Method m:object.getClass().getMethods()){
-        //	log.info ("Class Method: " + m.getName() + " methodName: "+ methodName );
+        	log.info ("Class Method: " + m.getName() + " methodName: "+ methodName );
             if (m.getName().equals(methodName) || methodName.equals(m.getName()+REQUEST_POSTFIX)){
                 int i=0;
                 Vector<String> paramNames =  requestObject.getSubObjectNames();
                 Type[] methodParams = m.getGenericParameterTypes();
                 for (int j = 0; j < methodParams.length; j++) {
                     String methodParam = object.getParameterName(m, j);
-        //            log.info("ParamName[" + j+"]: " + paramNames.get(i) + " in Method: "+methodParam);
                     if (i >= paramNames.size()){
                         break;
                     }
+                    log.info("ParamName[" + j+"]: " + paramNames.get(i) + " in Method: "+methodParam);
                     if (paramNames.get(i).equalsIgnoreCase(methodParam)) {
                         String soapType = requestObject.getSubObject(paramNames.get(i)).firstElement().getSoapType();
                         if (soapType!=null) {
                             Class<?> cls = (Class<?>)methodParams[j];
-        //                    log.info("Paramtype ["+ j + "]: " + soapType + " in Method: " + cls);
+                            log.info("Paramtype ["+ j + "]: " + soapType + " in Method: " + cls);
                             if (cls.equals(Vector.class)) {
                                 break;
                             }
@@ -185,7 +186,8 @@ public class SoapServerClient extends HttpServlet {
             String methodParam = object.getParameterName(idealMethod, j);
             Vector<String> paramNames =  requestObject.getSubObjectNames();
             Object obj = null;
-            if (paramNames.get(i).equalsIgnoreCase(methodParam)) {
+            int nparams=paramNames.size();
+            if ((i<nparams) && paramNames.get(i).equalsIgnoreCase(methodParam)) {
                 Vector<SoapObject> soapObjectVector = requestObject.getSubObject(paramNames.get(i));
                 Class<?> cls = (Class<?>)methodParams[j];
                 if (cls.isArray()){
@@ -212,20 +214,33 @@ public class SoapServerClient extends HttpServlet {
         log.info("invoking "+ idealMethod.getDeclaringClass().getCanonicalName() + " " + idealMethod.toString());
         String args="";
         String	sep="on ( ";
-        String close="";
-        for (Object arg : arguments){
-            args += sep + arg.toString();
-            sep = ", ";
-            close = " )";
-        }
+        String close=")";
+        if (arguments!=null) {
+	        for (Object arg : arguments){
+	        	String argStr = "null";
+	        	if (arg!=null){
+	        		argStr = arg.toString();
+	        	}
+	            args += sep + argStr;
+	            sep = ", ";
+	            close = " )";
+	        }
+    	}
         log.info(args + close);
 
-        result = idealMethod.invoke(object, arguments);
+        try {
+			result = idealMethod.invoke(object, arguments);
+		} catch (InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			if (cause.getClass().equals(AuthorizationException.class)){
+				throw((AuthorizationException)cause);
+			}
+			throw(e);
+		}
         String resultName = object.getResultParameterName(idealMethod);
         methodName = name.replace(REQUEST_POSTFIX, "") + RESPONSE_POSTFIX;
 
-
-        SoapSerializer serializer = new SoapSerializer();
+	    SoapSerializer serializer = new SoapSerializer();
         if (result==null){
             return serializer.serializeMethod(methodNameSpace, methodName,
                     new String[]{}, new Object[]{},
@@ -277,6 +292,21 @@ public class SoapServerClient extends HttpServlet {
             result = parseSoap(new String(data), object);
             log.info("SOAP-result: "+ result);
             writer.print(result);
+            writer.flush();
+        } catch (AuthorizationException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            String faultString = "<SOAP-ENV:Envelope xmlns:SOAP-ENV="
+                    + "\"http://schemas.xmlsoap.org/soap/envelope/\">";
+            faultString += "<SOAP-ENV:Body>";
+            faultString = "<SOAP-ENV:Fault>";
+            faultString += "<faultcode>SOAP-ENV:Server</faultcode>";
+            faultString += "<faultstring>" + e.getMessage()
+                + "</faultstring>";
+            faultString += "</SOAP-ENV:Fault>";
+            faultString += "</SOAP-ENV:Body>";
+            faultString += "</SOAP-ENV:Envelope>";
+            writer.print(faultString);
+            log.error("SOAP-error: "+ faultString);
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();

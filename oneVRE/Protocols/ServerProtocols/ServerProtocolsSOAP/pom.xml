@@ -17,6 +17,11 @@
             <artifactId>CommonProtocolsSOAP</artifactId>
             <version>${project.version}</version>
         </dependency>
+	 	<dependency>
+            <groupId>com.googlecode.onevre</groupId>
+            <artifactId>AccessGridSecurity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 		    <groupId>org.eclipse.jetty</groupId>
 		    <artifactId>jetty-server</artifactId>

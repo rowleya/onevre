@@ -33,6 +33,7 @@ package com.googlecode.onevre.ag.agserver;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -68,6 +69,8 @@ public class VenueServer extends SoapServable {
     private PrintWriter venueServerLog = null;
 
     private VenuesServlet venuesServlet = null;
+
+    private HashMap<ConnectionDescription, Vector<VOAttribute>> venues = new HashMap<ConnectionDescription, Vector<VOAttribute>>();
 /*
     static {
 //    	ADD_METHOD_RESULT("RegisterNetworkService", "", "");
@@ -250,8 +253,52 @@ public class VenueServer extends SoapServable {
         }
         log.info("calling venuesServlet.addVenue("+ name +", "+ description+", " + voAtts +", " + creator +" ...)");
         ConnectionDescription conn = venuesServlet.addVenue(name, description, voAtts, creator, venueServerLog);
+        venues.put(conn, voAtts);
         log.info("returned :" + conn );
         return conn;
     }
+
+    @SoapReturn(
+            name="connectionDescriptionList"
+        )
+    public ConnectionDescription[] getVenues(
+    		@SoapParameter("voAttributes") VOAttribute[] voAttributes
+    	) {
+    	if (voAttributes==null){
+    		voAttributes=new VOAttribute[0];
+    	}
+    	log.info("Venue Server: getVenues (" + voAttributes.toString() +")");
+        Vector<ConnectionDescription> connDescs = new Vector<ConnectionDescription>();
+        Set<ConnectionDescription> venueConns = venues.keySet();
+        if (venueConns.isEmpty()){
+        	return new ConnectionDescription[0];
+        }
+        for (ConnectionDescription conn: venueConns){
+        	Vector<VOAttribute> voAtts= venues.get(conn);
+        	if (voAtts!=null){
+	        	for (VOAttribute voAttribute: voAtts){
+	                boolean matches = false;
+	        		for (VOAttribute voAtt : voAttributes){
+	                	if (voAtt.matches(voAttribute)){
+	                		matches = true;
+	                		connDescs.add(conn);
+	                	}
+	                }
+	        		if (matches) break;
+	        	}
+        	} else {
+        		if (voAttributes==null) {
+        			connDescs.add(conn);
+        		}
+        	}
+        }
+        return connDescs.toArray(new ConnectionDescription[]{});
+    }
+
+	public void addVenue(Venue venue,Vector<VOAttribute> voAttributes) {
+		venues.put(venue.getConnectionDescription(),voAttributes);
+	}
+
+
 }
 

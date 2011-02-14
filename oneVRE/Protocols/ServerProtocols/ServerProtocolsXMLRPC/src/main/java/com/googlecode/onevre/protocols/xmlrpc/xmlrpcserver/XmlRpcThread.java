@@ -104,10 +104,10 @@ public class XmlRpcThread extends Thread {
         String xml = "";
         xml += "<?xml version=\"1.0\"?>";
         xml += "<methodResponse>";
-        if (methodName != null) {
-            xml += "<methodName>" + methodName + "</methodName>";
-        }
         xml += "<fault><value><struct>";
+        if (methodName != null) {
+        	errorMessage += " ... in Method :" + methodName;
+        }
         xml += "<member><name>faultCode</name><value><int>";
         xml += errorCode;
         xml += "</int></value></member>";
@@ -145,7 +145,7 @@ public class XmlRpcThread extends Thread {
             String xml = "";
             xml += "<?xml version=\"1.0\"?>";
             xml += "<methodResponse>";
-            xml += "<methodName>" + methodName + "</methodName>";
+//            xml += "<methodName>" + methodName + "</methodName>";
             xml += "<params><param><value>";
             if (response != null) {
                 xml += Utils.escapeXmlRpcValue(

@@ -330,7 +330,8 @@ public class VenueClientController extends Applet {
         // setup XmlRpc environment
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
         try {
-            config.setServerURL(new URL(HTTP + "localhost:" + remotePort));
+        	String local = Utils.getLocalHost().getCanonicalHostName();
+            config.setServerURL(new URL(HTTP + local + ":" + remotePort));
             config.setEnabledForExtensions(true);
         } catch (Exception e) {
             e.printStackTrace();
