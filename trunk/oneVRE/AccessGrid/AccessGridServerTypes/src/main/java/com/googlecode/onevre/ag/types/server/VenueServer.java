@@ -34,7 +34,9 @@ package com.googlecode.onevre.ag.types.server;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 import com.googlecode.onevre.ag.types.Capability;
@@ -68,6 +70,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @version 1.0
  */
 public class VenueServer {
+
+	Log log = LogFactory.getLog(this.getClass());
 
     private static final String VENUESERVER_NS =
         "http://www.accessgrid.org/v3.0/venueserver";
@@ -106,15 +110,25 @@ public class VenueServer {
      * @throws IOException
      * @throws SoapException
      */
-    public ConnectionDescription[] getVenues()
+    @SoapReturn(
+            name="connectionDescriptionList"
+        )
+    public ConnectionDescription[] getVenues(@SoapParameter("voAttributes")VOAttribute[] voAttributes)
             throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(VENUESERVER_NS,
                 "GetVenues", "GetVenuesRequest",
-                new String[0], new Object[0], new Object[0],
+                new String[]{"voAttributes"},
+                new Object[]{voAttributes},
+                new Object[]{null},
                 new SoapResponseHash(
                     new String[]{VENUESERVER_NS + "/connectionDescriptionList"},
-                    new Class[]{ConnectionDescription.class}));
+                    new Class[]{ConnectionDescription.class},
+                    new boolean[]{true}));
         Object connections = result.get("connectionDescriptionList");
+ //       log.info("getVenues returned: " + connections.getClass().getComponentType());
+        if (connections==null){
+        	return new ConnectionDescription[0];
+        }
         if ((connections != null) && ConnectionDescription.class.equals(connections.getClass().getComponentType())){
             return (ConnectionDescription[])connections;
         }

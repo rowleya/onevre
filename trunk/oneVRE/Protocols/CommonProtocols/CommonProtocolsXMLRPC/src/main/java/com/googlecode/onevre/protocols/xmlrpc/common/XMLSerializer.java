@@ -38,6 +38,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.googlecode.onevre.utils.Utils;
 
 /**
@@ -46,6 +49,8 @@ import com.googlecode.onevre.utils.Utils;
  * @version 1.0
  */
 public class XMLSerializer {
+
+	static Log log = LogFactory.getLog(new XMLSerializer().getClass());
 
     private XMLSerializer() {
         // Does Nothing
@@ -57,6 +62,7 @@ public class XMLSerializer {
      * @return The XML representing the object
      */
     public static String serialize(Object object) {
+    	log.info("serialize (" + object + ")");
         return serialize(object.getClass().getSimpleName(),
                 object);
     }
@@ -68,7 +74,11 @@ public class XMLSerializer {
      * @return The XML representing the object
      */
     public static String serialize(String name, Object object) {
-        return serialize(name, object, object.getClass());
+    	log.info("serialize: " + name + " |" + object);
+    	if (object!=null){
+    		return serialize(name, object, object.getClass());
+    	}
+    	return "";
     }
 
     /**
@@ -183,7 +193,7 @@ public class XMLSerializer {
                                         }
                                     }
                                 } catch (Exception e) {
-                                    System.err.println("serialize - var: "+variable);
+                                    log.error("serialize - var: "+variable);
                                     e.printStackTrace();
                                 }
                             }
@@ -193,7 +203,7 @@ public class XMLSerializer {
             }
             xml += "</" + name + ">";
         }
-//        System.err.println("XML:" + xml);
+        log.info("XML:" + xml);
         return xml;
     }
 }

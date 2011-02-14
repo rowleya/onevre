@@ -197,11 +197,17 @@ public class VenueServer extends Thread {
         ServletHolder venues = new ServletHolder(venuesServlet);
         venuesContext.addServlet(venues, SERVLET_ALL_FILES);
         venuesContext.setContextPath("/");
+        try {
+			ConfigFile.store("/tmp/venueServer-tmp-2", serverConfig);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         server.setHandler(venuesContext);
         return venues;
     }
 
     public synchronized void exit() throws Exception{
+    	ConfigFile.store("/tmp/venueServer-tmp", serverConfig);
         server.stop();
     }
 

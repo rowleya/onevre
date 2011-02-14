@@ -60,10 +60,14 @@ public class AuthorizationManager extends SoapServable {
                 securityLog.println("Rejecting access from unidentified user; id required");
                 return 0;
             }
-
             if (roleList.contains(VenueServerDefaults.Everybody)){
                 securityLog.println("Accepting access from unidentified user as part of Everybody role");
                 return 1;
+            }
+            if (roleList.contains(VenueServerDefaults.VOMSdependent)){
+            	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+                securityLog.println("Authorizing based on VO attributes: " + voAttributes.toString());
+            	return checkVOMS(voAttributes);
             }
             securityLog.println("Rejecting access from unidentified user as part of Everybody role");
             return 0;
@@ -75,12 +79,17 @@ public class AuthorizationManager extends SoapServable {
             return 1;
         }
         if (roleList.contains(VenueServerDefaults.VOMSdependent)){
+        	Vector<VOAttribute> subjectAttributes = subject.getVoAttributes();
+        	if (subjectAttributes.isEmpty()) {
+        		subjectAttributes.add(new VOAttribute());
+        	}
+        	securityLog.println("Subject VO attributes: " + subjectAttributes.toString());
             securityLog.println("Authorizing based on VO attributes: " + voAttributes.toString());
         	if (voAttributes.size()==0) {
                 securityLog.println("Accepting access based on VO attributes - no VO attributes required");
         		return 1;
         	}
-        	return checkVOMS(subject.getVoAttributes());
+        	return checkVOMS(subjectAttributes);
         }
 
         for (Role role:roleList){

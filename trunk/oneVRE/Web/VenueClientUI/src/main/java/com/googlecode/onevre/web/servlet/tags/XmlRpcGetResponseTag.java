@@ -58,7 +58,7 @@ public class XmlRpcGetResponseTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTagSupport#doTag()
      */
     public void doTag() {
-        log.info("XmlRpcGetResponseTag -- NameSpace = " + getNamespace());
+   //     log.info("XmlRpcGetResponseTag -- NameSpace = " + getNamespace());
         if (getAgEventServer()!=null){
             getJspContext().setAttribute(var,
                     getAgEventServer().getNextResponse());

@@ -78,7 +78,7 @@ public abstract class PortletTag extends SimpleTagSupport {
      * @return The venue client ui
      */
     protected VenueClientUI getVenueClientUI() {
-    	System.out.println("VenueClientUI namespace = " + namespace );
+//    	System.out.println("VenueClientUI namespace = " + namespace );
         return (VenueClientUI) getJspContext().getAttribute(
                 namespace + PagPortlet.VENUECLIENT_UI_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);
@@ -98,14 +98,14 @@ public abstract class PortletTag extends SimpleTagSupport {
      * @return The XmlRpcServer
      */
     protected PagXmlRpcServer getXmlRpcServer() {
-    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE);
+//    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE);
         return (PagXmlRpcServer) getJspContext().getAttribute(
                 namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);
     }
 
     protected AgEventServer getAgEventServer() {
-    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE);
+//    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE);
         return (AgEventServer) getJspContext().getAttribute(
                 namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);

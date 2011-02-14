@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.onevre.gwt.client.ag.types.VenueServerType;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.interfaces.ServerVenueManagerInterface;
+import com.googlecode.onevre.gwt.client.xmlrpc.GetMonitoredVenues;
 import com.googlecode.onevre.gwt.client.xmlrpc.MonitorVenue;
 
 public class ServerVenueManager {
@@ -16,13 +17,18 @@ public class ServerVenueManager {
 	private ServerVenueManagerInterface ui = null;
 
 	private MonitorVenue monitorVenue = null;
-
+	private GetMonitoredVenues getMonitoredVenues =  null;
 	private VenueServerType serverType = null;
 
 	public ServerVenueManager(VenueServerType serverType, ServerVenueManagerInterface ui){
 		this.ui=ui;
 		monitorVenue = new MonitorVenue(this);
-		monitorVenue.monitor(serverType.toUrl());
+		if (!serverType.isManagable()){
+			monitorVenue.monitor(serverType.toUrl());
+		} else {
+			getMonitoredVenues = new GetMonitoredVenues(this);
+			getMonitoredVenues.getVenues(serverType.toServerUrl());
+		}
 		this.serverType = serverType;
 		ui.setServerVenueManager(this);
 	}

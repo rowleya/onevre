@@ -191,8 +191,18 @@ public final class SoapRequest {
             ((GSIURLConnection) connection).setCredentials(credential);
             ((GSIURLConnection) connection).setAuthorization(new NoAuthorization());
         }*/
+        if (credential!=null){
+        	try {
+				log.info("Add credential :" + credential.getName().toString());
 
-        Utils.addSslConnection(connection,credential);
+			} catch (GSSException e) {
+				log.info("invalid credential provided");
+			}
+        } else {
+        	log.info("no credential provided");
+        }
+        log.info("to soapCall: " + method);
+       	Utils.addSslConnection(connection,credential);
         connection.setReadTimeout(timeout);
         connection.setDoInput(true);
         connection.setDoOutput(true);

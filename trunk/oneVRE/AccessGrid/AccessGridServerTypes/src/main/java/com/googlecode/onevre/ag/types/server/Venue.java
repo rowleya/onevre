@@ -84,6 +84,8 @@ public class Venue extends SoapServable {
 
     private String sessionId = null;
 
+    private boolean managable = false;
+
     static {
         SoapDeserializer.mapType(Capability.class);
         SoapDeserializer.mapType(VenueState.class);
@@ -106,29 +108,29 @@ public class Venue extends SoapServable {
      * @param serverUrl The url of the venue
      * @throws MalformedURLException
      */
-    public Venue(String serverUrl) throws MalformedURLException {
+    public Venue(String serverUrl, boolean managable) throws MalformedURLException {
         this.soapRequest = new SoapRequest(serverUrl);
+        this.managable = managable;
     }
 
     public void setGSScredential (CredentialMappings credential){
+    	log.info("IN setGSScredential");
     	if (credential == null) {
+    		log.info("Credential=null");
     		return;
     	}
-    	String version = "";
+    	if (!managable){
+    		log.info("Venue not managable");
+    		return;
+    	}
+    	log.info(credential.getDN());
+    	GSSCredential cred = credential.getCredential();
     	try {
-			version = getVersion();
-		} catch (Exception e) {
+			log.info("Setting credential for venue " + cred.getName().toString());
+		} catch (GSSException e) {
 			e.printStackTrace();
 		}
-		if (version.contains("OneVRE")){
-	    	GSSCredential cred = credential.getCredential();
-	    	try {
-				log.info("Setting credential for venue " + cred.getName().toString());
-			} catch (GSSException e) {
-				e.printStackTrace();
-			}
-	    	soapRequest.setGSScredential(cred);
-		}
+    	soapRequest.setGSScredential(cred);
     }
 
     /**

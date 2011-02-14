@@ -19,7 +19,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>1.2</version>
                 <configuration>
-                    <runTarget>https://localhost:8443/web/guest/onevre</runTarget>
+                    <runTarget>https://daffy.rcs.manchester.ac.uk:8443/web/guest/onevre</runTarget>
                     <noServer>true</noServer>
                     <module>com.googlecode.onevre.gwt.Application</module>
                 </configuration>

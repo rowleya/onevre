@@ -22,6 +22,8 @@ public class VenueServerType {
     // The external id of the client (e.g. public key)
     private String defaultVenue = "/Venues/default";
 
+    private String serverInterface = "/VenueServer";
+
     private String defaultVenueId = "";
 
     // The location of the client on the earth
@@ -153,6 +155,9 @@ public class VenueServerType {
 	public String toUrl() {
 		return toString() + defaultVenue;
 
+	}
+	public String toServerUrl() {
+		return toString() + serverInterface;
 	}
 
     public boolean equals(Object o){

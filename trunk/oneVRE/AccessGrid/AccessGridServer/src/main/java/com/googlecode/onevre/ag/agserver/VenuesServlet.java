@@ -32,34 +32,25 @@
 package com.googlecode.onevre.ag.agserver;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.Principal;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.SSLSession;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSException;
 import org.glite.voms.VOMSAttribute;
 import org.glite.voms.VOMSValidator;
-import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
 
 import com.googlecode.onevre.ag.agsecurity.AuthorizationException;
 import com.googlecode.onevre.ag.agsecurity.Subject;
@@ -193,7 +184,7 @@ public class VenuesServlet extends SoapServerClient {
         try {
             URL url = config.getServletContext().getResource("/");
 
-            InetAddress addr =  InetAddress.getByName(url.getHost());
+ //           InetAddress addr =  InetAddress.getByName(url.getHost());
             serverUri = new URI(url.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -266,6 +257,7 @@ public class VenuesServlet extends SoapServerClient {
         textPort = Integer.valueOf(ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_TEXTSERVER_SECTION,
                 VenueServerConfigParameters.TEXTSERVER_PORT, VenueServerDefaults.textPort));
+        VenueServer venueServer = new VenueServer(this,serverLog);
 
         for (String venueIdString : venuesData.keySet()){
             HashMap<String, String> venueConfig = venuesData.get(venueIdString);
@@ -277,6 +269,13 @@ public class VenuesServlet extends SoapServerClient {
 //            System.out.println("Add Venue | " + venueIdString + " | " + venueConfig.get("name") + " | " + venueConfig );
             venueConfig.put("venueId", venueIdString);
             Vector<VOAttribute> voAttributes = null;
+            String voAttr = venueConfig.get("VO-Attributes");
+            if (voAttr!=null){
+            	voAttributes = new Vector<VOAttribute>();
+            	for (String att: voAttr.split(":")){
+            		voAttributes.add(new VOAttribute(att));
+            	}
+            }
             Venue venue = new Venue(this, venueIdString, venuesData, venueEventServer, dataStore, defaultPolicy, voAttributes, serverLog);
             serverLog.println("created Venue: "+ venueIdString + " ("+ venueConfig.get("name")+")");
             log.info("created Venue: "+ venueIdString);
@@ -291,9 +290,8 @@ public class VenuesServlet extends SoapServerClient {
                 registerObject("/Venues/default", venue);
             }
             log.info("registered Venue: "+ venueIdString);
-
+            venueServer.addVenue(venue,voAttributes);
         }
-        VenueServer venueServer = new VenueServer(this,serverLog);
         registerObject("/VenueServer",  venueServer);
 /*        if (multicastAddress == null) {
             multicastAddress = DEFAULT_HOST;
@@ -344,6 +342,7 @@ public class VenuesServlet extends SoapServerClient {
         Venue defautlVenue=(Venue)findObjectForPath("/Venues/default");
         VenueState defautlVenueState = defautlVenue.getState();
         String url = defautlVenueState.getUri();
+        log.info("defaultVenueURL: " + url );
         url = url.substring(0, url.indexOf("/Venues")) + "/Venues/"+venueIdString;
         VenueState venueState = venue.getState(venueIdString);
         venueState.setUri(url);
@@ -352,9 +351,14 @@ public class VenuesServlet extends SoapServerClient {
         if (conns == null){
         	ConnectionDescription conn = new ConnectionDescription(venue.getState(venueIdString));
         	conns = new ConnectionDescription[]{conn};
-        	defautlVenue.setConnections(conns);
-        	venue.setConnections(new ConnectionDescription[]{new ConnectionDescription(defautlVenue.getState())});
+        	defautlVenue.setConnections(conns,venuesData,false);
+        	venue.setConnections(new ConnectionDescription[]{new ConnectionDescription(defautlVenue.getState())},venuesData,false);
         }
+        try {
+			ConfigFile.store(persistenceFilename, venuesData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         return conns[0];
     }
 
@@ -376,6 +380,7 @@ public class VenuesServlet extends SoapServerClient {
         log.info("VenuesServlet - venue PT: " + request.getPathTranslated());
         log.info("VenuesServlet - venue LN: " + request.getLocalName());
         Subject subject = new Subject();
+        this.subject.set(subject);
 		X509Certificate[] certificates = (X509Certificate[])request.getAttribute("javax.servlet.request.X509Certificate");
 		if ((certificates!=null)&&(certificates.length>0)){
 			subject.setName(certificates[0].getSubjectDN().getName().toString());
@@ -389,9 +394,12 @@ public class VenuesServlet extends SoapServerClient {
 				VOAttribute voAttribute = new VOAttribute(voText);
 				subject.setVoAttribute(voAttribute);
 			}
+			this.subject.set(subject);
 		}
-		this.subject.set(subject);
+		subject = getSubject();
+
         URL url=new URL(request.getRequestURL().toString());
+        log.info("VenuesServlet - URL: " + url);
         log.info("VenuesServlet - Set Subject: " + subject.toString());
         try{
 	        venueName=request.getPathInfo().substring(1);
@@ -401,9 +409,19 @@ public class VenuesServlet extends SoapServerClient {
 		            serverLog.println("venue not found " + request.getPathInfo());
 		        } else {
 			        if (venue.getState().getUri()==null){
-			            InetAddress addr =  InetAddress.getByName(url.getHost());
+			            InetAddress addr[] =  InetAddress.getAllByName(url.getHost());
+			            String hostname = "";
+			            InetAddress hostaddr = null;
+			            for (InetAddress add : addr){
+			            	hostname = add.getCanonicalHostName();
+			            	hostaddr = add;
+			            	if (!hostname.equals("localhost")){
+			            			break;
+			            	}
+			            }
 			            try {
-			                URI uri = new URI(url.getProtocol(),url.getUserInfo(),addr.getCanonicalHostName(),url.getPort(),url.getPath(),url.getQuery(),null);
+			                URI uri = new URI(url.getProtocol(),url.getUserInfo(),hostname,url.getPort(),url.getPath(),url.getQuery(),null);
+			                log.info("addr:"+ hostaddr.getHostAddress() +" url:"+uri);
 			                venue.getState().setUri(uri.toString());
 			            } catch (URISyntaxException e) {
 			                e.printStackTrace();
@@ -451,6 +469,11 @@ public class VenuesServlet extends SoapServerClient {
      */
     public void destroy() {
         dataStore.destroy();
+        try {
+			ConfigFile.store(persistenceFilename, venuesData);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         venueEventServer.closeAll();
     }
 }

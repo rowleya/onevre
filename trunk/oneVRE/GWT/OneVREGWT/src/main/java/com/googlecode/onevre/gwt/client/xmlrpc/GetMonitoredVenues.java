@@ -9,26 +9,32 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.VenueClientController;
-import com.googlecode.onevre.gwt.client.ag.ServerManager;
-import com.googlecode.onevre.gwt.client.ag.UserManager;
-import com.googlecode.onevre.gwt.client.ag.types.ConnectionDescription;
-import com.googlecode.onevre.gwt.client.ag.types.ConnectionDescriptionJSO;
+import com.googlecode.onevre.gwt.client.ag.ServerVenueManager;
+import com.googlecode.onevre.gwt.client.ag.types.StringVectorJSO;
 import com.googlecode.onevre.gwt.client.ag.types.VOAttribute;
 
-public class CreateVenue implements AsyncCallback<String>{
+public class GetMonitoredVenues implements AsyncCallback<String>{
 
-	private ServerManager serverManager = null;
+	private ServerVenueManager serverVenueManager = null;
 
 	private String url = null;
 
-	public CreateVenue(ServerManager serverManager){
-		this.serverManager = serverManager;
+	public GetMonitoredVenues(ServerVenueManager serverVenueManager){
+		this.serverVenueManager = serverVenueManager;
 	}
 
-	public void create(String serverUri, String name, String description, Vector<HashMap<String, String>> voAttr){
+	public void getVenues(String url){
+		this.url = url;
+		Vector<HashMap<String, String>> voAttr = new Vector<HashMap<String,String>>();
+		Vector<VOAttribute> voAtts = Application.getUserManager().getVOAttributes();
+		if (voAtts!=null) {
+			for (VOAttribute voAtt : Application.getUserManager().getVOAttributes()){
+				voAttr.add(voAtt.toMap());
+			}
+		}
 		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
-                xmlrpcClient, "createVenue",  new Object[]{serverUri, name, description, voAttr},
+                xmlrpcClient, "getVenues",  new Object[]{url, voAttr},
                 this);
         request.execute();
 	}
@@ -40,19 +46,12 @@ public class CreateVenue implements AsyncCallback<String>{
 	// start venueclientui.entervenue
 
 
-	public void onSuccess(String connectionDescXml) {
-		GWT.log("VS xml: " + connectionDescXml);
-		ConnectionDescription connectionDescription = new ConnectionDescription((ConnectionDescriptionJSO)VenueClientController.getObjectDec(connectionDescXml));
-		Vector<VOAttribute> atts = Application.getUserManager().getLocalUserVoAttributes();
-		GWT.log("Connecting to " + connectionDescription.toString());
-		if (connectionDescription!=null){
-			serverManager.monitorVenue(connectionDescription.getUri());
-		}
-		/*		GWT.log("VS log: " + venueState.toLog());
-		GWT.log("VenueState: " + venueState.toString());
-
-		if (venueState != null) {
-//			serverVenueManager.addVenueState(venueState);
+	public void onSuccess(String connectionsXml) {
+		GWT.log("conns xml: " + connectionsXml);
+//		Vector<String> connections = new Vector<String>();
+		StringVectorJSO connJSO = ((StringVectorJSO)VenueClientController.getObjectDec(connectionsXml));
+		for (int i = 0; i<connJSO.size(); i++) {
+			serverVenueManager.monitorVenue(connJSO.get(i));
 		}
 			/*
             var venuelist = venueState.getVenueList();

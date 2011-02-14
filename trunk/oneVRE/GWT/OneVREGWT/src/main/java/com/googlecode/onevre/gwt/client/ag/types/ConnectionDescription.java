@@ -92,4 +92,9 @@ public class ConnectionDescription {
         this.uri = uri;
     }
 
+    public String toString(){
+    	String out = name + "( "+ uri +" )";
+    	return out;
+    }
+
 }
