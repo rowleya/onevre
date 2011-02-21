@@ -32,6 +32,8 @@
 package com.googlecode.onevre.web.portlet.tags;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
 
@@ -42,6 +44,8 @@ import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
  * @version 1.0
  */
 public class GetStreamsTag extends PortletTag {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private String var = null;
 
@@ -59,7 +63,7 @@ public class GetStreamsTag extends PortletTag {
     public void doTag() {
         String xml = XMLSerializer.serialize(
                 getVenueClientUI().getCurrentStreams());
-        System.err.println("Current streams = " + xml);
+        log.info("Current streams = " + xml);
         getJspContext().setAttribute(var, StringEscapeUtils.escapeXml(xml));
     }
 }

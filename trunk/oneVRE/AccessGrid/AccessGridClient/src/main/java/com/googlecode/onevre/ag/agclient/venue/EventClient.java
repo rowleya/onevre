@@ -66,11 +66,11 @@ import com.googlecode.onevre.types.soap.exceptions.SoapException;
  */
 public class EventClient {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private EventListener listener;
 
-    private boolean done=false;
+    private boolean done = false;
 
     private String connectionId = null;
 
@@ -83,7 +83,7 @@ public class EventClient {
 
  //   private Vector<String> history = new Vector<String>();
 
-    private String hostname=null;
+    private String hostname = null;
     private int port;
 
     private SSLSocket sslsocket = null;
@@ -98,9 +98,10 @@ public class EventClient {
         output.flush();
     }
 
-    static{
+    static {
         SoapDeserializer.mapType(EventDescription.class);
     }
+
     // Gets all the messages in the queue
     private String getMessages() {
         String messages = "<concerns>Exit</concerns><eventType>bye</eventType>";
@@ -116,7 +117,7 @@ public class EventClient {
             if (!queue.isEmpty()) {
                 String message = queue.removeFirst();
                 messages = message;
-            } else if (done == false) {
+            } else if (!done) {
                 messages = "<concerns>Noone</concerns><eventType>empty</eventType>";
             }
         }
@@ -129,13 +130,13 @@ public class EventClient {
      * @param connectionId
      * @param groupId
      */
-    public EventClient(EventListener eventListener, final String connectionId, String groupId ) {
-    	log.info ("starting EventClient");
-        this.listener=eventListener;
+    public EventClient(EventListener eventListener, final String connectionId, String groupId) {
+        log.info("starting EventClient");
+        this.listener = eventListener;
         this.connectionId = connectionId;
-        String [] location=listener.getLocation().split(":");
-        hostname=location[0];
-        port=Integer.parseInt(location[1]);
+        String [] location = listener.getLocation().split(":");
+        hostname = location[0];
+        port = Integer.parseInt(location[1]);
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
@@ -145,7 +146,7 @@ public class EventClient {
             InputStream inputstream = sslsocket.getInputStream();
             BufferedInputStream bufferedin = new BufferedInputStream(inputstream);
             final DataInputStream input = new DataInputStream(bufferedin);
-            nonSOAP=new Vector<String>();
+            nonSOAP = new Vector<String>();
 
             Thread receive = new Thread() {
                 public void run() {
@@ -162,8 +163,9 @@ public class EventClient {
                                         new String(stringarray, 0, 1, "UTF-8"));
                                 String connId = new String(stringarray, 2,
                                         length - 2, "UTF-8");
-                                System.err.println("Version = " + version + " connection Id = " + connId + "; " + connectionId);
-*/                            } else {
+                                System.err.println("Version = " + version + " connection Id = "
+                                         + connId + "; " + connectionId); */
+                            } else {
                                 message = new String(stringarray, "UTF-8");
                                 event = (EventDescription)
                                     soap.deserialize(message);
@@ -186,18 +188,17 @@ public class EventClient {
             receive.start();
 
             // create a monitoring event client if connectionId is null
-            if (connectionId!=null)
-            {
-	            OutputStream outputstream = sslsocket.getOutputStream();
-	            BufferedOutputStream buffered = new BufferedOutputStream(outputstream);
-	            DataOutputStream output = new DataOutputStream(buffered);
-	            NumberFormat format = NumberFormat.getInstance();
-	            format.setMaximumFractionDigits(0);
-	            format.setMinimumIntegerDigits(2);
-	            String data = format.format(groupId.length()) + groupId;
-	            data += format.format(connectionId.length()) + connectionId;
-	            sendString(output, data);
-        	}
+            if (connectionId != null) {
+                OutputStream outputstream = sslsocket.getOutputStream();
+                BufferedOutputStream buffered = new BufferedOutputStream(outputstream);
+                DataOutputStream output = new DataOutputStream(buffered);
+                NumberFormat format = NumberFormat.getInstance();
+                format.setMaximumFractionDigits(0);
+                format.setMinimumIntegerDigits(2);
+                String data = format.format(groupId.length()) + groupId;
+                data += format.format(connectionId.length()) + connectionId;
+                sendString(output, data);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,7 +217,7 @@ public class EventClient {
      * Get the EventListener id
      * @return the id of the EventListener
      */
-    public String getListenerId(){
+    public String getListenerId() {
         return listener.getListenerId();
     }
 
@@ -224,10 +225,10 @@ public class EventClient {
      * Get the EventListeners URL
      * @return the URL of the eventListener
      */
-    public String getListenerUri(){
+    public String getListenerUri() {
         return listener.getListenerUri();
     }
-    public String getConnectionId(){
+    public String getConnectionId() {
         return connectionId;
     }
 
@@ -235,7 +236,7 @@ public class EventClient {
      * Closes the connection to the server
      */
     public void close() {
-        done=true;
+        done = true;
         try {
             sslsocket.close();
         } catch (IOException e) {

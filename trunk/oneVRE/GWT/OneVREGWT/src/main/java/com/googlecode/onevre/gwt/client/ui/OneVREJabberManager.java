@@ -11,30 +11,30 @@ import com.googlecode.onevre.gwt.client.ui.panels.JabberPanel;
 public class OneVREJabberManager implements JabberManagerInterface {
 
 
-	JabberManager jabberManager = null;
+    private JabberManager jabberManager = null;
 
-	HashMap<VenueState, JabberPanel> jabberPanels = new HashMap<VenueState, JabberPanel>();
+    private HashMap<VenueState, JabberPanel> jabberPanels = new HashMap<VenueState, JabberPanel>();
 
-	public void setJabberManager(JabberManager jabberManager) {
-		this.jabberManager = jabberManager;
-	}
+    public void setJabberManager(JabberManager jabberManager) {
+        this.jabberManager = jabberManager;
+    }
 
-	public void setJabberPanel(VenueState state, JabberPanel jabberPanel) {
-		jabberPanels.put(state, jabberPanel);
-	}
+    public void setJabberPanel(VenueState state, JabberPanel jabberPanel) {
+        jabberPanels.put(state, jabberPanel);
+    }
 
-	public void addMessage(VenueState state, JabberMessage message) {
-		JabberPanel jabberPanel = jabberPanels.get(state);
-		if (jabberPanel!=null){
-			jabberPanel.addMessage(message);
-		}
-	}
+    public void addMessage(VenueState state, JabberMessage message) {
+        JabberPanel jabberPanel = jabberPanels.get(state);
+        if (jabberPanel != null) {
+            jabberPanel.addMessage(message);
+        }
+    }
 
-	public void clear(VenueState state) {
-		JabberPanel jabberPanel = jabberPanels.get(state);
-		if (jabberPanel!=null){
-			jabberPanel.clear();
-		}
-	}
+    public void clear(VenueState state) {
+        JabberPanel jabberPanel = jabberPanels.get(state);
+        if (jabberPanel != null) {
+            jabberPanel.clear();
+        }
+    }
 
 }

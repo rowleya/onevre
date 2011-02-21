@@ -97,7 +97,7 @@ public class SharedAppState implements SoapSerializable {
     private String mimeType = null;
 
     // A list of Application Data descriptions
-    private Vector<AppDataDescription> data= new Vector<AppDataDescription>();
+    private Vector<AppDataDescription> data = new Vector<AppDataDescription>();
 
     /**
      * Returns the applications
@@ -150,7 +150,7 @@ public class SharedAppState implements SoapSerializable {
      * @return the mimeType
      */
     @XmlElement
-    public String getMimeType(){
+    public String getMimeType() {
         return mimeType;
     }
 
@@ -167,7 +167,7 @@ public class SharedAppState implements SoapSerializable {
      * @param data The list of data items to add
      */
     public void setData(Vector<AppDataDescription> data) {
-        this.data=data;
+        this.data = data;
     }
 
     /**
@@ -175,7 +175,7 @@ public class SharedAppState implements SoapSerializable {
      * @param datum The data to update
      */
     public void updateData(AppDataDescription datum) {
-        data.set(data.indexOf(datum),datum);
+        data.set(data.indexOf(datum), datum);
     }
 
     /**

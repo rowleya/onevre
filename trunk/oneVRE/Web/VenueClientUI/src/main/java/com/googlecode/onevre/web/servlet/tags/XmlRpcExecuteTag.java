@@ -43,7 +43,7 @@ import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
  */
 public class XmlRpcExecuteTag extends PortletTag {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
     // The message to process
     private String message = null;
 
@@ -59,13 +59,13 @@ public class XmlRpcExecuteTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTagSupport#doTag()
      */
     public void doTag() {
-    	log.info("XmlRpcExecuteTag -- NameSpace = " + getNamespace());
-    	log.info("XmlRpcExecuteTag -- Executing command: " + message);
+        log.info("XmlRpcExecuteTag -- NameSpace = " + getNamespace());
+        log.info("XmlRpcExecuteTag -- Executing command: " + message);
         PagXmlRpcServer server = getXmlRpcServer();
         if (server != null) {
             server.handleRequest(message);
         } else {
-        	log.error("XmlRpcExecuteTag -- XML RPC Server is null!");
+            log.error("XmlRpcExecuteTag -- XML RPC Server is null!");
         }
     }
 }

@@ -98,7 +98,7 @@ public class RtcpPacket {
      *            The length of the data
      * @throws IOException
      */
-    public RtcpPacket(byte data[], int offset, int length) throws IOException {
+    public RtcpPacket(byte[] data, int offset, int length) throws IOException {
         header = new RTCPHeader(data, offset, length);
         this.data = new byte[length - RTCPHeader.SIZE];
         System.arraycopy(data, offset + RTCPHeader.SIZE, this.data, 0, length

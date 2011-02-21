@@ -46,7 +46,7 @@ public class WaitPopup extends ModalPopup<VerticalPanel>
 
     private boolean cancelled = false;
 
-    private Image progress = new Image(GWT.getModuleBaseURL()+"images/popups/progress.gif");
+    private Image progress = new Image(GWT.getModuleBaseURL() + "images/popups/progress.gif");
 
     private Button cancel = new Button("Cancel");
 
@@ -76,7 +76,7 @@ public class WaitPopup extends ModalPopup<VerticalPanel>
 
     }
 
-    
+
     public void onClick(ClickEvent event) {
         cancelled = true;
         hide();

@@ -6,38 +6,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AgEvent {
 
-	String eventSource = null;
+    private String eventSource = null;
 
-	String eventName = null;
+    private String eventName = null;
 
-	Object eventObject = null;
+    private Object eventObject = null;
 
-	public AgEvent() {
-	}
+    public AgEvent() {
+    }
 
-	@XmlElement
-	public String getEventSource() {
-		return eventSource;
-	}
+    @XmlElement
+    public String getEventSource() {
+        return eventSource;
+    }
 
-	@XmlElement
-	public String getEventName() {
-		return eventName;
-	}
+    @XmlElement
+    public String getEventName() {
+        return eventName;
+    }
 
-	@XmlElement
-	public Object getEventObject() {
-		return eventObject;
-	}
+    @XmlElement
+    public Object getEventObject() {
+        return eventObject;
+    }
 
-	public AgEvent(String eventSource, String eventName, Object eventObject) {
-		super();
-		this.eventSource = eventSource;
-		this.eventName = eventName;
-		this.eventObject = eventObject;
-	}
+    public AgEvent(String eventSource, String eventName, Object eventObject) {
+        super();
+        this.eventSource = eventSource;
+        this.eventName = eventName;
+        this.eventObject = eventObject;
+    }
 
-	public AgEvent(String string, Object[] objects) {
-		// TODO Auto-generated constructor stub
-	}
+    public AgEvent(String string, Object[] objects) {
+        // TODO Auto-generated constructor stub
+    }
 }

@@ -73,6 +73,8 @@ public class Application implements EntryPoint {
 
     public static final String APPLICATION_NAMESPACE = "pag_namespace";
 
+    private static final int XMLRPC_TIMEOUT = 120000;
+
     private static XmlRpcClient xmlrpcClient = null;
 
     private AXmlRpcMessageReceiver receiver = null;
@@ -87,52 +89,52 @@ public class Application implements EntryPoint {
 
     private static ServiceManager serviceManager = null;
 
-	private static ApplicationManager applicationManager = null;
+    private static ApplicationManager applicationManager = null;
 
-	private static JabberManager jabberManager = null;
+    private static JabberManager jabberManager = null;
 
-	private static ServerManager serverManager = null;
+    private static ServerManager serverManager = null;
 
-	private static ConnectionManager connectionManager = null;
+    private static ConnectionManager connectionManager = null;
 
-    public static UserManager getUserManager(){
-    	return userManager;
+    public static UserManager getUserManager() {
+        return userManager;
     }
 
-    public static JabberManager getJabberManager (){
-    	return jabberManager;
+    public static JabberManager getJabberManager() {
+        return jabberManager;
     }
 
-    public static MessageManager getMessageManager (){
-    	return messageManager;
+    public static MessageManager getMessageManager() {
+        return messageManager;
     }
 
-	public static DataManager getDataManager() {
-		return dataManager;
-	}
+    public static DataManager getDataManager() {
+        return dataManager;
+    }
 
-	public static ServiceManager getServiceManager(){
-		return serviceManager;
-	}
+    public static ServiceManager getServiceManager() {
+        return serviceManager;
+    }
 
-	public static ConnectionManager getConnectionManager(){
-		return connectionManager;
-	}
+    public static ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
 
-	public static ServerManager getServerManager(){
-		return serverManager;
-	}
+    public static ServerManager getServerManager() {
+        return serverManager;
+    }
 
-	public static ApplicationManager getApplicationManager(){
-		return applicationManager;
-	}
+    public static ApplicationManager getApplicationManager() {
+        return applicationManager;
+    }
 
     public static String getParam(String name) {
         return parameters.get(name);
     }
     public static native String encodeURIComponent(String comp)/*-{
-		return encodeURIComponent(comp);
-	}-*/;
+        return encodeURIComponent(comp);
+    }-*/;
 
     public static XmlRpcClient getXmlRpcClient() {
         return xmlrpcClient;
@@ -153,27 +155,27 @@ public class Application implements EntryPoint {
 
     public void onModuleLoad() {
 
-    	parameters = Dictionary.getDictionary("Parameters");
+        parameters = Dictionary.getDictionary("Parameters");
 
-    	userManager = new UserManager(new OneVREUserManager());
-    	dataManager = new DataManager(new OneVREDataManager());
-    	serviceManager = new ServiceManager(new OneVREServiceManager());
-    	serverManager = new ServerManager(new OneVREServerManager());
-    	applicationManager  = new ApplicationManager (new OneVREApplicationManager());
-    	connectionManager = new ConnectionManager(new OneVREConnectionManager());
-    	jabberManager = new JabberManager(new OneVREJabberManager());
-    	messageManager = new MessageManager(new OneVREMessageManager());
+        userManager = new UserManager(new OneVREUserManager());
+        dataManager = new DataManager(new OneVREDataManager());
+        serviceManager = new ServiceManager(new OneVREServiceManager());
+        serverManager = new ServerManager(new OneVREServerManager());
+        applicationManager  = new ApplicationManager(new OneVREApplicationManager());
+        connectionManager = new ConnectionManager(new OneVREConnectionManager());
+        jabberManager = new JabberManager(new OneVREJabberManager());
+        messageManager = new MessageManager(new OneVREMessageManager());
 
-    	VenueClientController.setVenueClientController(Application.getParam("pag_venueClientControllerId"));
+        VenueClientController.setVenueClientController(Application.getParam("pag_venueClientControllerId"));
 
         String xmlrpcServer = getParam(XMLRPC_REQUEST_SERVER);
         if (xmlrpcServer.startsWith("/")) {
             xmlrpcServer = xmlrpcServer.substring(1);
         }
-        xmlrpcServer+="?namespace="+encodeURIComponent(Application.getParam(Application.APPLICATION_NAMESPACE));
+        xmlrpcServer += "?namespace=" + encodeURIComponent(Application.getParam(Application.APPLICATION_NAMESPACE));
         xmlrpcClient = new XmlRpcClient(xmlrpcServer);
         xmlrpcClient.setDebugMode(true);
-        xmlrpcClient.setTimeoutMillis(120000);
+        xmlrpcClient.setTimeoutMillis(XMLRPC_TIMEOUT);
         GetVoAttributes.getVoAttributes();
         GetTrustedServers.getTrustedServers();
         receiver = new AXmlRpcMessageReceiver();
@@ -196,21 +198,21 @@ public class Application implements EntryPoint {
         GWT.log("found " + parameters.keySet().size() + " Parameters");
         int i=0;
         for (String par : parameters.keySet()){
-        	String val = parameters.get(par);
-        	GWT.log("Parameter "+ i +" " + par + " = " + val  );
-        	flextable.setText(i, 0, String.valueOf(i));
-			flextable.setText(i, 1, par);
-			flextable.setText(i, 2, val);
-			i++;
+            String val = parameters.get(par);
+            GWT.log("Parameter "+ i +" " + par + " = " + val  );
+            flextable.setText(i, 0, String.valueOf(i));
+            flextable.setText(i, 1, par);
+            flextable.setText(i, 2, val);
+            i++;
 
         }
 */
         RootPanel.get("pag-content").add(applicationPanel);
 
         TopPanel buttonPanel = new TopPanel();
-        applicationPanel.add(buttonPanel.getPanel(),DockPanel.NORTH);
+        applicationPanel.add(buttonPanel.getPanel(), DockPanel.NORTH);
         Panel venueServerPanel = getServerManager().getUiPanel();
-        applicationPanel.add(venueServerPanel,DockPanel.CENTER);
+        applicationPanel.add(venueServerPanel, DockPanel.CENTER);
 
 //        topPanel.add(new Label("OneVRE"),DockPanel.CENTER);
 //        topPanel.add(flextable,DockPanel.CENTER);

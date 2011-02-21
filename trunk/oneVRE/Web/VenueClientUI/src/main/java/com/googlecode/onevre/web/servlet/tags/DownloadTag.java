@@ -36,7 +36,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLStreamHandler;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
@@ -60,7 +59,7 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public class DownloadTag extends PortletTag {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The size of the buffer
     private static final int BUFFER_SIZE = 8196;
@@ -70,7 +69,7 @@ public class DownloadTag extends PortletTag {
 
     private String venue = null;
 
-    private String selection =null;
+    private String selection = null;
     /**
      * Sets the file to download
      * @param filename The id of the file in the Venue
@@ -81,14 +80,14 @@ public class DownloadTag extends PortletTag {
 
     public void setVenue(String venue) {
         this.venue = venue;
-log.info ("set Venue : "+ venue);
+        log.info("set Venue : " + venue);
     }
 
     /**
      * sets the flag to decide if the filename is a filename or a data item id
      * @param selection
      */
-    public void setSelection(String selection){
+    public void setSelection(String selection) {
         this.selection = selection;
     }
 
@@ -98,16 +97,17 @@ log.info ("set Venue : "+ venue);
     public void doTag() throws JspException {
         VenueClientUI ui = getVenueClientUI();
         if ((ui != null)) {
-            HttpServletResponse response = (HttpServletResponse) ((PageContext)getJspContext()).getResponse();
+            HttpServletResponse response = (HttpServletResponse) ((PageContext) getJspContext()).getResponse();
             try {
                 Download.startDownloading();
-                DataDescription dataItem=ui.downloadDataItem(filename,selection.equals("filename"),venue);
+                DataDescription dataItem = ui.downloadDataItem(filename, selection.equals("filename"), venue);
 
                 log.info("uri: " + dataItem.getUri());
 
                 URI uri = new URI(dataItem.getUri());
-                URL datafile = new URL((URL)null,uri.toString(),SessionFactory.getURLStreamHandlerFactory().createURLStreamHandler(uri.getScheme()));
-                URLConnection conn=datafile.openConnection();
+                URL datafile = new URL((URL) null, uri.toString(),
+                        SessionFactory.getURLStreamHandlerFactory().createURLStreamHandler(uri.getScheme()));
+                URLConnection conn = datafile.openConnection();
                 BufferedInputStream input = new BufferedInputStream(conn.getInputStream());
                 OutputStream output = response.getOutputStream();
                 byte[] buffer = new byte[BUFFER_SIZE];

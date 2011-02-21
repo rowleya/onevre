@@ -12,34 +12,34 @@ public class VenueClientState {
 
     private long timeout = new Date().getTime();
 
-    public VenueClientState(Venue venue, long timeout, ClientProfile clientProfile){
-        this.venue=venue;
-        this.timeout = new Date().getTime()+timeout;
-        this.clientProfile=clientProfile;
+    public VenueClientState(Venue venue, long timeout, ClientProfile clientProfile) {
+        this.venue = venue;
+        this.timeout = new Date().getTime() + timeout;
+        this.clientProfile = clientProfile;
     }
 
-    public ClientProfile getClientProfile(){
+    public ClientProfile getClientProfile() {
         return clientProfile;
     }
 
-    public long getTimeout(){
+    public long getTimeout() {
         return timeout;
     }
 
-    public boolean hasTimedOut(){
-    	 return new Date().after(new Date(timeout));
+    public boolean hasTimedOut() {
+         return new Date().after(new Date(timeout));
     }
 
-    public void setTimeout(long timeout){
-        this.timeout=timeout;
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 
-    public Venue getVenue(){
+    public Venue getVenue() {
         return venue;
     }
 
-    public String getConnectionId(){
-        if (clientProfile!=null){
+    public String getConnectionId() {
+        if (clientProfile != null) {
             return clientProfile.getConnectionId();
         }
         return null;
@@ -51,8 +51,8 @@ public class VenueClientState {
      *
      * @return true if the profile was changed false otherwise
      */
-    public boolean updateClientProfile(ClientProfile clientProfile){
-        if (this.clientProfile.equals(clientProfile)){
+    public boolean updateClientProfile(ClientProfile clientProfile) {
+        if (this.clientProfile.equals(clientProfile)) {
             this.clientProfile = clientProfile;
             return true;
         }

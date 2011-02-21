@@ -74,17 +74,18 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
     // The uri of the connection
     private String uri = null;
 
-    public ConnectionDescription (){}
-
-    public ConnectionDescription(String name, String description, String uri){
-    	id = Utils.generateID();
-    	this.name = name;
-    	this.description = description;
-    	this.uri = uri;
+    public ConnectionDescription() {
     }
 
-    public ConnectionDescription(VenueState venueState){
-    	this(venueState.getName(),venueState.getDescription(),venueState.getUri());
+    public ConnectionDescription(String name, String description, String uri) {
+        id = Utils.generateID();
+        this.name = name;
+        this.description = description;
+        this.uri = uri;
+    }
+
+    public ConnectionDescription(VenueState venueState) {
+        this(venueState.getName(), venueState.getDescription(), venueState.getUri());
     }
 
     /**
@@ -157,7 +158,9 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
 
     /**
      * Returns the SOAP type of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd>
+     * </dl>
      * @return the SOAP Type - "ConnectionDescription"
      */
     public String getSoapType() {
@@ -166,7 +169,9 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
 
     /**
      * Returns the namespace of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd>
+     * </dl>
      * @return the namespace - "http://www.accessgrid.org/v3.0"
      */
     public String getNameSpace() {
@@ -174,8 +179,13 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
     }
 
     /**
-     * Returns the fields that should be included with the soap Each of the fields should have a getter and a setter with the same name e.g. field is "test" there should be a "getTest" and a "setTest" method (note standard capitalisation)
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
+     * Returns the fields that should be included with the soap.
+     * Each of the fields should have a getter and a setter with
+     * the same name e.g. field is "test" there should be a "getTest"
+     * and a "setTest" method (note standard capitalisation)
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getFields()}</dd>
+     * </dl>
      * @return the fields :
      *	<ul>
      *	<li>"id"</li>
@@ -188,12 +198,12 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
         return SOAP_FIELDS;
     }
 
-    public HashMap<String,String> getHashMap(){
-    	HashMap<String, String> map = new HashMap<String, String>();
-    	map.put("uri",uri);
-    	map.put("name",name);
-    	map.put("description",description);
-    	return map;
+    public HashMap<String, String> getHashMap() {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("uri", uri);
+        map.put("name", name);
+        map.put("description", description);
+        return map;
     }
 
     /**
@@ -205,7 +215,9 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
      * If the return type is an array or vector, the type must be one of:
      * <ol><li>A type as above if all the values have the same type</li>
      * <li>A Vector of types if the field is a vector with different types</li></ol>
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd>
+     * </dl>
      * @return the types :
      * <ul>
      * <li>STRING_TYPE (id)</li>
@@ -251,7 +263,7 @@ public class ConnectionDescription implements SoapSerializable, Comparable<Conne
     *
     * @see java.lang.Object#hashCode()
     */
-    public int hashCode(){
+    public int hashCode() {
         return id.hashCode();
     }
 

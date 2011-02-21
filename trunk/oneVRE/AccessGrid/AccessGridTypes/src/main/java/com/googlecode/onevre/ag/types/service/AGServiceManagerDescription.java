@@ -64,7 +64,7 @@ public class AGServiceManagerDescription implements SoapSerializable {
     private String uri = null;
 
     // Flag to identify if a Services Manaager is built in or stand alone
-    private int builtin=0;
+    private int builtin = 0;
 
     /**
      * empty default constructor for the ServiceManagerDescription
@@ -104,8 +104,8 @@ public class AGServiceManagerDescription implements SoapSerializable {
      * @param url Service Manager URL
      */
     public AGServiceManagerDescription(String n, String url) {
-        name=n;
-        uri=url;
+        name = n;
+        uri = url;
     }
 
     /**

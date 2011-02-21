@@ -271,7 +271,7 @@ public class ClientProfile implements SoapSerializable {
      * @param email the e-mail
      */
     public void setEmail(String email) {
-        if (email!=null) {
+        if (email != null) {
             this.email = email;
         }
     }
@@ -313,7 +313,7 @@ public class ClientProfile implements SoapSerializable {
      * @param homeVenue the home venue
      */
     public void setHomeVenue(String homeVenue) {
-        if (homeVenue != null){
+        if (homeVenue != null) {
             this.homeVenue = homeVenue;
         }
     }
@@ -355,7 +355,7 @@ public class ClientProfile implements SoapSerializable {
      * @param location the location
      */
     public void setLocation(String location) {
-        if (location != null){
+        if (location != null) {
             this.location = location;
         }
     }
@@ -397,7 +397,7 @@ public class ClientProfile implements SoapSerializable {
      * @param name name
      */
     public void setName(String name) {
-        if (name !=null) {
+        if (name != null) {
             this.name = name;
         }
     }
@@ -416,7 +416,7 @@ public class ClientProfile implements SoapSerializable {
      * @param phoneNumber the number
      */
     public void setPhoneNumber(String phoneNumber) {
-        if (phoneNumber != null){
+        if (phoneNumber != null) {
             this.phoneNumber = phoneNumber;
         }
     }
@@ -452,7 +452,7 @@ public class ClientProfile implements SoapSerializable {
      * @param profileType the type
      */
     public void setProfileType(String profileType) {
-        if (profileType != null){
+        if (profileType != null) {
             this.profileType = profileType;
         }
     }
@@ -551,7 +551,10 @@ public class ClientProfile implements SoapSerializable {
     }
 
     /**
-     * Returns the fields that should be included with the soap Each of the fields should have a getter and a setter with the same name e.g. field is "test" there should be a "getTest" and a "setTest" method (note standard capitalisation)
+     * Returns the fields that should be included with the soap.
+     *  Each of the fields should have a getter and a setter with the
+     *   same name e.g. field is "test" there should be a "getTest" and
+     *   a "setTest" method (note standard capitalisation)
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
      * @return the fields :
      *	<ul>
@@ -589,7 +592,8 @@ public class ClientProfile implements SoapSerializable {
      * If the return type is an array or vector, the type must be one of:
      * <ol><li>A type as above if all the values have the same type</li>
      * <li>A Vector of types if the field is a vector with different types</li></ol>
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd></dl>
      * @return the types :
      * <ul>
      * <li>STRING_TYPE (profileType)</li>
@@ -621,15 +625,15 @@ public class ClientProfile implements SoapSerializable {
      * compares two ClientProfiles in [ publicId ]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return this.publicId.equals(((ClientProfile)o).publicId);
+    public boolean equals(Object o) {
+        return this.publicId.equals(((ClientProfile) o).publicId);
     }
 
     /**
      *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return publicId.hashCode();
     }
 
@@ -637,12 +641,13 @@ public class ClientProfile implements SoapSerializable {
      * Gets the Icon to represent the ClientProfile as a Group or personal node
      * @return the profile Icon
      */
-    public String getProfileIcon(){
-        String profileImg=Defaults.PAG_USER_NODE_IMG;
-        if (getProfileType().equals("user"))
+    public String getProfileIcon() {
+        String profileImg = Defaults.PAG_USER_NODE_IMG;
+        if (getProfileType().equals("user")) {
             profileImg = Defaults.PAG_USER_PARTICIPANT_IMG;
-        else
+        } else {
             profileImg = Defaults.PAG_USER_NODE_IMG;
+        }
         return profileImg;
      }
 
@@ -650,12 +655,12 @@ public class ClientProfile implements SoapSerializable {
      * Returns a string to go into the log file
      * @return log file string
      */
-    public String toLog(){
-        return name+", "+email+", "+phoneNumber+", " + location;
+    public String toLog() {
+        return name + ", " + email + ", " + phoneNumber + ", " + location;
     }
 
-    public String toString(){
-        return name+", "+email+", "+phoneNumber+", " + location;
+    public String toString() {
+        return name + ", " + email + ", " + phoneNumber + ", " + location;
     }
 
 }

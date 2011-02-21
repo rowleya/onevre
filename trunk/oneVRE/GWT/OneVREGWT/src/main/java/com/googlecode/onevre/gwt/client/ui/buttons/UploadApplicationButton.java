@@ -6,14 +6,14 @@ import com.googlecode.onevre.gwt.common.client.MessageResponse;
 
 public class UploadApplicationButton extends ActionButton {
 
-	public UploadApplicationButton() {
-		setImageUrl("images/uploadapp.png");
-		setName("Upload Application");
-	}
+    public UploadApplicationButton() {
+        setImageUrl("images/uploadapp.png");
+        setName("Upload Application");
+    }
 
-	@Override
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    @Override
+    public void action() {
+        new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
 }

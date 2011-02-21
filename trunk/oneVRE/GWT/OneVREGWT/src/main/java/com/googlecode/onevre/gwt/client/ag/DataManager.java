@@ -10,72 +10,73 @@ import com.googlecode.onevre.gwt.client.ui.panels.DataPanel;
 
 public class DataManager {
 
-	private HashMap<VenueState,Vector<DataDescription>> dataTree = new HashMap<VenueState, Vector<DataDescription>>();
+    private HashMap<VenueState, Vector<DataDescription>> dataTree =
+        new HashMap<VenueState, Vector<DataDescription>>();
 
-	private DataManagerInterface ui = null;
+    private DataManagerInterface ui = null;
 
-	public Vector<DataDescription> addVenue(VenueState state){
-		Vector<DataDescription> dataItems = new Vector<DataDescription>();
-		dataTree.put(state, dataItems);
-		return dataItems;
-	}
+    public Vector<DataDescription> addVenue(VenueState state) {
+        Vector<DataDescription> dataItems = new Vector<DataDescription>();
+        dataTree.put(state, dataItems);
+        return dataItems;
+    }
 
-	public DataManager(DataManagerInterface ui) {
-		this.ui = ui;
-		ui.setDataManager(this);
-	}
+    public DataManager(DataManagerInterface ui) {
+        this.ui = ui;
+        ui.setDataManager(this);
+    }
 
-	public void addData(VenueState state, DataDescription data) {
-		Vector<DataDescription> dataItems = dataTree.get(state);
-		if (dataItems == null){
-			dataItems = addVenue(state);
-		}
-		dataItems.add(data);
-		ui.addData(state, data);
-	}
+    public void addData(VenueState state, DataDescription data) {
+        Vector<DataDescription> dataItems = dataTree.get(state);
+        if (dataItems == null) {
+            dataItems = addVenue(state);
+        }
+        dataItems.add(data);
+        ui.addData(state, data);
+    }
 
-	public void deleteData(VenueState state, DataDescription data) {
-		Vector<DataDescription> dataItems = dataTree.get(state);
-		if (dataItems != null){
-			ui.removeData(state, data);
-			dataItems.remove(data);
-		}
-	}
+    public void deleteData(VenueState state, DataDescription data) {
+        Vector<DataDescription> dataItems = dataTree.get(state);
+        if (dataItems != null) {
+            ui.removeData(state, data);
+            dataItems.remove(data);
+        }
+    }
 
-	public void updateData(VenueState state, DataDescription data) {
-		Vector<DataDescription> dataItems = dataTree.get(state);
-		if (dataItems != null){
-			int idx = dataItems.indexOf(data);
-			if (idx!=-1){
-				dataItems.remove(data);
-				dataItems.insertElementAt(data, idx);
-				ui.updateData(state,data);
-			} else {
-				dataItems.add(data);
-				ui.addData(state, data);
-			}
-		}
-	}
+    public void updateData(VenueState state, DataDescription data) {
+        Vector<DataDescription> dataItems = dataTree.get(state);
+        if (dataItems != null) {
+            int idx = dataItems.indexOf(data);
+            if (idx != -1) {
+                dataItems.remove(data);
+                dataItems.insertElementAt(data, idx);
+                ui.updateData(state, data);
+            } else {
+                dataItems.add(data);
+                ui.addData(state, data);
+            }
+        }
+    }
 
-	public void addDirectory(VenueState state, DataDescription data) {
-		Vector<DataDescription> dataItems = dataTree.get(state);
-		if (dataItems != null){
-			dataItems.add(data);
-			ui.addDirectory(state,data);
-		}
-	}
+    public void addDirectory(VenueState state, DataDescription data) {
+        Vector<DataDescription> dataItems = dataTree.get(state);
+        if (dataItems != null) {
+            dataItems.add(data);
+            ui.addDirectory(state, data);
+        }
+    }
 
-	public void deleteDirectory(VenueState state, DataDescription data) {
-		Vector<DataDescription> dataItems = dataTree.get(state);
-		if (dataItems != null){
-			dataItems.remove(data);
-			ui.deleteDirectory(state,data);
-		}
-	}
+    public void deleteDirectory(VenueState state, DataDescription data) {
+        Vector<DataDescription> dataItems = dataTree.get(state);
+        if (dataItems != null) {
+            dataItems.remove(data);
+            ui.deleteDirectory(state, data);
+        }
+    }
 
-	public void setDataPanel(VenueState state, DataPanel dataPanel) {
-		dataTree.put(state, state.getData());
-		ui.setDataPanel(state,dataPanel);
-	}
+    public void setDataPanel(VenueState state, DataPanel dataPanel) {
+        dataTree.put(state, state.getData());
+        ui.setDataPanel(state, dataPanel);
+    }
 
 }

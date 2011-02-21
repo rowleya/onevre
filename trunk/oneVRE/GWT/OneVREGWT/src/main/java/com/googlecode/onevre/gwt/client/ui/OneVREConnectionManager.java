@@ -8,36 +8,36 @@ import com.googlecode.onevre.gwt.client.interfaces.ConnectionManagerInterface;
 
 public class OneVREConnectionManager implements ConnectionManagerInterface {
 
-	ConnectionManager connectionManager = null;
+    private ConnectionManager connectionManager = null;
 
-	public void setConnectionManager(ConnectionManager connectionManager) {
-		this.connectionManager = connectionManager;
-	}
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
-	public void addConnection(VenueState state, ConnectionDescription connection) {
-		// TODO Auto-generated method stub
+    public void addConnection(VenueState state, ConnectionDescription connection) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public void removeConnection(VenueState state,
-			ConnectionDescription connection) {
-		// TODO Auto-generated method stub
+    public void removeConnection(VenueState state,
+            ConnectionDescription connection) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public void addStream(VenueState state, StreamDescription stream) {
-		// TODO Auto-generated method stub
+    public void addStream(VenueState state, StreamDescription stream) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public void updateStream(VenueState state, StreamDescription stream) {
-		// TODO Auto-generated method stub
+    public void updateStream(VenueState state, StreamDescription stream) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public void removeStream(VenueState state, StreamDescription stream) {
-		// TODO Auto-generated method stub
+    public void removeStream(VenueState state, StreamDescription stream) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
 }

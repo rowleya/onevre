@@ -75,8 +75,7 @@ public class RtpSink implements RTPPacketSink {
 
     /**
      * Replaces the SSRC and adds packet into the writer queue.
-     * @see com.googlecode.vicovre.media.rtp.RTPPacketSink#handleRTPPacket(
-     * 			java.net.DatagramPacket)
+     * @see com.googlecode.vicovre.media.rtp.RTPPacketSink#handleRTPPacket(java.net.DatagramPacket)
      */
     public final void handleRTPPacket(final DatagramPacket packet)
             throws IOException {

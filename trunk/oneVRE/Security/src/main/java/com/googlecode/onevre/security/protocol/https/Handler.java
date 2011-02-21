@@ -3,10 +3,14 @@ package com.googlecode.onevre.security.protocol.https;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.globus.net.GSIURLConnection;
 import org.ietf.jgss.GSSCredential;
 
 public class Handler extends org.globus.net.protocol.https.Handler {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private static GSSCredential credential = null;
 
@@ -19,10 +23,10 @@ public class Handler extends org.globus.net.protocol.https.Handler {
     }
 
     public URLConnection openConnection(URL u) {
-        System.err.println("Creating connection");
+        log.info("Creating connection");
         URLConnection connection = super.openConnection(u);
         if ((credential != null) && (connection instanceof GSIURLConnection)) {
-            System.err.println("Setting credential");
+            log.info("Setting credential");
             ((GSIURLConnection) connection).setCredentials(credential);
         }
         return connection;

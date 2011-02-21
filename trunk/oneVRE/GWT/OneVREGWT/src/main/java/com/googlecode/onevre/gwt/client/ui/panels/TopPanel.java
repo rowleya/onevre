@@ -18,12 +18,12 @@ import com.googlecode.onevre.gwt.client.ui.buttons.UploadServiceButton;
 import com.googlecode.onevre.gwt.client.ui.buttons.VideoConsumerButton;
 import com.googlecode.onevre.gwt.client.ui.buttons.VideoProducerButton;
 
-public class TopPanel{
+public class TopPanel {
 
-	DockPanel panel = new DockPanel();
+    private DockPanel panel = new DockPanel();
 
-	public TopPanel() {
-		ButtonPanel leftButtons = new ButtonPanel("leftButtons", ButtonPanel.LEFT);
+    public TopPanel() {
+        ButtonPanel leftButtons = new ButtonPanel("leftButtons", ButtonPanel.LEFT);
         leftButtons.addButton(new AudioButton());
         leftButtons.addButton(new VideoConsumerButton());
         leftButtons.addButton(new VideoProducerButton());
@@ -43,13 +43,13 @@ public class TopPanel{
         rightButtons.addButton(new HelpButton());
 
         panel.add(leftButtons.getPanel(), DockPanel.WEST);
-        panel.add(rightButtons.getPanel(),DockPanel.EAST);
-        panel.setCellHorizontalAlignment(rightButtons.getPanel(),HorizontalPanel.ALIGN_RIGHT);
+        panel.add(rightButtons.getPanel(), DockPanel.EAST);
+        panel.setCellHorizontalAlignment(rightButtons.getPanel(), HorizontalPanel.ALIGN_RIGHT);
         panel.setWidth("100%");
-	}
+    }
 
-	public Panel getPanel(){
-		return this.panel;
-	}
+    public Panel getPanel() {
+        return this.panel;
+    }
 
 }

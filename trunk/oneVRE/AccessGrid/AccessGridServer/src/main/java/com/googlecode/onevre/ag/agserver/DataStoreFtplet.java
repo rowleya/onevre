@@ -10,9 +10,9 @@ import org.apache.ftpserver.ftplet.FtpletResult;
 
 public class DataStoreFtplet extends DefaultFtplet {
 
-    DataStore dataStore = null;
+    private DataStore dataStore = null;
 
-    public DataStoreFtplet(DataStore dataStore){
+    public DataStoreFtplet(DataStore dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -21,9 +21,9 @@ public class DataStoreFtplet extends DefaultFtplet {
         String venueId = session.getUser().getName();
         String dir = session.getFileSystemView().getWorkingDirectory().getAbsolutePath();
         FtpletResult result = super.onUploadEnd(session, request);
-        if (request.hasArgument()){
-            dataStore.addFile(venueId,dir,request.getArgument());
-        };
+        if (request.hasArgument()) {
+            dataStore.addFile(venueId, dir, request.getArgument());
+        }
         return result;
     }
 }

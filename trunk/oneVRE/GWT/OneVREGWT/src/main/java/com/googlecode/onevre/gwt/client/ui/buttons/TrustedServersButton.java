@@ -14,25 +14,26 @@ import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 public class TrustedServersButton extends ActionButton implements MessageResponseHandler {
 
 
-	public TrustedServersButton() {
-		setImageUrl("images/trustedServer.png");
-		setName("Add Trusted Server");
-	}
+    public TrustedServersButton() {
+        setImageUrl("images/trustedServer.png");
+        setName("Add Trusted Server");
+    }
 
-	@Override
-	public void action() {
-		GWT.log("in TrustedServerButton action");
-		AddTrustedServerPanel atsp = new AddTrustedServerPanel(this);
-		atsp.setTrustedServers(Application.getServerManager().getTrustedServers());
-		atsp.show();
-	}
+    @Override
+    public void action() {
+        GWT.log("in TrustedServerButton action");
+        AddTrustedServerPanel atsp = new AddTrustedServerPanel(this);
+        atsp.setTrustedServers(Application.getServerManager().getTrustedServers());
+        atsp.show();
+    }
 
-	public void handleResponse(MessageResponse response) {
-		if (response.getResponseCode() == MessageResponse.OK){
-			Vector<VenueServerType> trustedServers = ((AddTrustedServerPanel)response.getSource()).getTrustedServers();
-			Application.getServerManager().setTrustedServers(trustedServers);
-			SetTrustedServers.setTrustedServers();
-		}
-	}
+    public void handleResponse(MessageResponse response) {
+        if (response.getResponseCode() == MessageResponse.OK) {
+            Vector<VenueServerType> trustedServers =
+                ((AddTrustedServerPanel) response.getSource()).getTrustedServers();
+            Application.getServerManager().setTrustedServers(trustedServers);
+            SetTrustedServers.setTrustedServers();
+        }
+    }
 
 }

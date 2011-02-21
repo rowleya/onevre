@@ -52,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class BlankLineFilter implements Filter {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     /**
      *
@@ -75,8 +75,8 @@ public class BlankLineFilter implements Filter {
                 new BlankLineResponseWrapper(httpResponse);
             filterChain.doFilter(request, wrapper);
             if (!wrapper.getGotOutput()) {
-            	response.getWriter().print(wrapper.toString());
-            	response.flushBuffer();
+                response.getWriter().print(wrapper.toString());
+                response.flushBuffer();
             }
         }
     }

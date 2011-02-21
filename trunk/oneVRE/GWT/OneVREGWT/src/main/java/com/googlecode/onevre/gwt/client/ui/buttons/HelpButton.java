@@ -6,14 +6,14 @@ import com.googlecode.onevre.gwt.common.client.MessageResponse;
 
 public class HelpButton extends ActionButton {
 
-	public HelpButton() {
-		setImageUrl("images/help.png");
-		setName("Help");
-	}
+    public HelpButton() {
+        setImageUrl("images/help.png");
+        setName("Help");
+    }
 
-	@Override
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    @Override
+    public void action() {
+        MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
 }

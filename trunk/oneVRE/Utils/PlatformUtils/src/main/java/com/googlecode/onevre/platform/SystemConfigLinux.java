@@ -62,27 +62,26 @@ public class SystemConfigLinux extends SystemConfig {
      * @param path a path from the file system
      * @return the amount of free space in the filesystem (in bytes)
      */
-   public long getFileSystemFreeSpace(String path){
-        try{
-            Process p=Runtime.getRuntime().exec(df);
-            BufferedInputStream i=new BufferedInputStream(p.getInputStream());
-            StringBuffer buffer=new StringBuffer();
-            for(;;){
-                int c=i.read();
-                if(c==-1){
+   public long getFileSystemFreeSpace(String path) {
+        try {
+            Process p = Runtime.getRuntime().exec(df);
+            BufferedInputStream i = new BufferedInputStream(p.getInputStream());
+            StringBuffer buffer = new StringBuffer();
+            for (;;) {
+                int c = i.read();
+                if (c == -1) {
                     break;
                 }
-                buffer.append((char)c);
+                buffer.append((char) c);
             }
-            String output=buffer.toString();
+            String output = buffer.toString();
             i.close();
-            String[] split=output.split("\n");
-            String[] numbers=split[split.length-1].split(" +");
-            long length=Long.parseLong(numbers[numbers.length-3]);
+            String[] split = output.split("\n");
+            String[] numbers = split[split.length - 1].split(" +");
+            long length = Long.parseLong(numbers[numbers.length - 3]);
             log.log(Level.INFO, "free disk space " + length);
             return length;
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             log.log(Level.SEVERE, e.toString());
         }
         return 0;
@@ -93,19 +92,19 @@ public class SystemConfigLinux extends SystemConfig {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.platform.SystemConfig#getResources()}</dd></dl>
      * @return The resources
      */
-    public Hashtable<String,String[]> getResources() {
+    public Hashtable<String, String[]> getResources() {
         File path = new File(DIR);
 
-        Hashtable<String, String[]> resources=new Hashtable<String, String[]>();
-        String[] ports=new String[]{"Camera"};
-        File[] list=path.listFiles(new VideoFilter());
-        for(int i=0; i<list.length;i++){
-            if(list[i].isDirectory()==true){
+        Hashtable<String, String[]> resources = new Hashtable<String, String[]>();
+        String[] ports = new String[]{"Camera"};
+        File[] list = path.listFiles(new VideoFilter());
+        for (int i = 0; i < list.length; i++) {
+            if (list[i].isDirectory()) {
                 continue;
             }
-            log.log(Level.INFO,"can write: " + list[i].canRead());
-            if(list[i].canRead()==true) {
-            	resources.put(list[i].getName(), ports);
+            log.log(Level.INFO, "can write: " + list[i].canRead());
+            if (list[i].canRead()) {
+                resources.put(list[i].getName(), ports);
             }
         }
         return resources;
@@ -122,7 +121,7 @@ public class SystemConfigLinux extends SystemConfig {
     }
 
     private class VideoFilter implements FilenameFilter {
-        public boolean accept(File dir, String name){
+        public boolean accept(File dir, String name) {
             String f = new File(name).getName();
             return f.matches("video[0-1]*");
         }

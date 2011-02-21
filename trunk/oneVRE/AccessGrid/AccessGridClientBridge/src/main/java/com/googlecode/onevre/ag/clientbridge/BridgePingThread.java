@@ -38,29 +38,30 @@ import com.googlecode.onevre.ag.agbridge.BridgeClientCreator;
 import com.googlecode.onevre.ag.types.BridgeDescription;
 
 /**
- * A Thread that pings bridges periodically
+ * A Thread that pings bridges periodically.
  *
  * @author Andrew G D Rowley
  * @version 1.0
  */
 public class BridgePingThread extends Thread {
 
-    private static final long TIMEOUT = 2000;
+    /** The timeout between pings. */
+   private static final long TIMEOUT = 2000;
 
-    // The clients
+    /** The clients. */
     private BridgeClient[] bridgeClients = null;
 
-    // The bridges to ping
+    /** The bridges to ping. */
     private BridgeDescription[] bridges = null;
 
-    // The delay between pings
+    /** The delay between pings.*/
     private int pingDelay = 0;
 
-    // True when the thread has done
+    /** True when the thread has done. */
     private boolean done = false;
 
     /**
-     * Creates a new BridgePingThread
+     * Creates a new BridgePingThread.
      * @param bridges The bridges to ping
      * @param pingDelay The delay between pings
      */
@@ -95,7 +96,7 @@ public class BridgePingThread extends Thread {
         done = true;
         synchronized (this) {
             notifyAll();
-		}
+        }
     }
 
     private class PingThread extends Thread {

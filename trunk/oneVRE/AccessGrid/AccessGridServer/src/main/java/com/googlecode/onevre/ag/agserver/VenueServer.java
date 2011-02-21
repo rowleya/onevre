@@ -64,17 +64,18 @@ import com.googlecode.onevre.utils.Utils;
  */
 public class VenueServer extends SoapServable {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private PrintWriter venueServerLog = null;
 
     private VenuesServlet venuesServlet = null;
 
-    private HashMap<ConnectionDescription, Vector<VOAttribute>> venues = new HashMap<ConnectionDescription, Vector<VOAttribute>>();
+    private HashMap<ConnectionDescription, Vector<VOAttribute>> venues =
+        new HashMap<ConnectionDescription, Vector<VOAttribute>>();
 /*
     static {
-//    	ADD_METHOD_RESULT("RegisterNetworkService", "", "");
-//    	ADD_METHOD_RESULT("UnRegisterNetworkService", "", "");
+//      ADD_METHOD_RESULT("RegisterNetworkService", "", "");
+//      ADD_METHOD_RESULT("UnRegisterNetworkService", "", "");
         // no result: Exit
         // no result: DestroyApplication
         // no result: RecycleMulticastLocation
@@ -139,30 +140,31 @@ public class VenueServer extends SoapServable {
      * @param log The services that are available to this node service
      */
     public VenueServer(VenuesServlet venuesServlet, PrintWriter log) {
-        this.venueServerLog=log;
+        this.venueServerLog = log;
         this.venuesServlet = venuesServlet;
-//        System.out.println("Venue Server: Create Venue ");
+//        log.info("Venue Server: Create Venue ");
     }
 
-    private ServiceDescription getServiceDescription(String serviceId, HashMap<String, HashMap<String, String>> venuesData) {
+    private ServiceDescription getServiceDescription(String serviceId,
+            HashMap<String, HashMap<String, String>> venuesData) {
         ServiceDescription serviceDescription = new ServiceDescription();
         serviceDescription.setId(Utils.generateID());
         String name = ConfigFile.getParameter(venuesData, serviceId, "name", "");
-        if ((name==null) || name.trim().equals("")){
+        if ((name == null) || name.trim().equals("")) {
             return null;
         }
         serviceDescription.setName(name);
         String description = ConfigFile.getParameter(venuesData, serviceId, "description", "");
-        if (description==null) {
-            description ="";
+        if (description == null) {
+            description = "";
         }
         serviceDescription.setDescription(description);
         String mimeType = ConfigFile.getParameter(venuesData, serviceId, "mimeType", "");
-        if ((mimeType==null) || mimeType.trim().equals("")){
+        if ((mimeType == null) || mimeType.trim().equals("")) {
             return null;
         }
         String uri = ConfigFile.getParameter(venuesData, serviceId, "uri", "");
-        if ((uri==null) || uri.trim().equals("")){
+        if ((uri == null) || uri.trim().equals("")) {
             return null;
         }
         serviceDescription.setUri(uri);
@@ -170,7 +172,8 @@ public class VenueServer extends SoapServable {
     }
 
 
-    public StreamDescription getStreamDescription(String streamId,HashMap<String,HashMap<String, String>> venuesData){
+    public StreamDescription getStreamDescription(String streamId,
+            HashMap<String, HashMap<String, String>> venuesData) {
         StreamDescription stream = new StreamDescription();
         stream.setId(streamId);
         int encryptionFlag = Integer.valueOf(ConfigFile.getParameter(venuesData, streamId, "encryptionFlag", "0"));
@@ -179,13 +182,13 @@ public class VenueServer extends SoapServable {
         stream.setName(ConfigFile.getParameter(venuesData, streamId, "name", ""));
         String capString = ConfigFile.getParameter(venuesData, streamId, "capability", "");
         Vector<Capability> capabilities = VenueServerConfigParameters.defaultCapablities.get(capString);
-        if (capabilities==null){
+        if (capabilities == null) {
             return null;
         }
         stream.setCapabilities(capabilities);
         NetworkLocation networkLocation =  getNetworkLocation(
                 ConfigFile.getParameter(venuesData, streamId, "location", "").split(" "));
-        if (networkLocation == null){
+        if (networkLocation == null) {
             return null;
         }
         stream.setLocation(networkLocation);
@@ -193,16 +196,16 @@ public class VenueServer extends SoapServable {
     }
 
 
-    public NetworkLocation getNetworkLocation(String[] locString){
-        NetworkLocation networkLocation=null;
-        if (locString.length<3){
+    public NetworkLocation getNetworkLocation(String[] locString) {
+        NetworkLocation networkLocation = null;
+        if (locString.length < 3) {
             return null;
         }
         String locationType = locString[0];
         String host = locString[1];
         int port = Integer.valueOf(locString[2]);
-        if (MulticastNetworkLocation.TYPE.equals(locationType.trim())){
-            if (locString.length<4){
+        if (MulticastNetworkLocation.TYPE.equals(locationType.trim())) {
+            if (locString.length < 4) {
                 return null;
             }
             int ttl = Integer.valueOf(locString[3]);
@@ -216,15 +219,16 @@ public class VenueServer extends SoapServable {
         return networkLocation;
     }
 
-    public void setConnections(String[] connections, HashMap<String,HashMap<String, String>>venuesData, String importUri){
-        for (String conn:connections){
+    public void setConnections(String[] connections, HashMap<String,
+            HashMap<String, String>>venuesData, String importUri) {
+        for (String conn : connections) {
             ConnectionDescription connectionDescription = new ConnectionDescription();
             connectionDescription.setId(conn);
             connectionDescription.setName(ConfigFile.getParameter(venuesData, conn, "name", ""));
             connectionDescription.setDescription(ConfigFile.getParameter(venuesData, conn, "description", ""));
-            String uri= ConfigFile.getParameter(venuesData, conn, "uri", "");
-            if (uri.startsWith(importUri)){
-                uri = uri.substring(uri.lastIndexOf("/")+1);
+            String uri = ConfigFile.getParameter(venuesData, conn, "uri", "");
+            if (uri.startsWith(importUri)) {
+                uri = uri.substring(uri.lastIndexOf("/") + 1);
             }
             connectionDescription.setUri(uri);
 //            venueState.setConnections(connectionDescription);
@@ -238,66 +242,69 @@ public class VenueServer extends SoapServable {
      * @return the connectionId that joined the venue
      */
     @SoapReturn(
-            name="connection"
+            name = "connection"
         )
     public ConnectionDescription createVenues(
-    		@SoapParameter("name") String name,
-    		@SoapParameter("description") String description,
-    		@SoapParameter("creator") ClientProfile creator,
-    		@SoapParameter("voAttributes") VOAttribute[] voAttributes
-		) {
-        log.info("Venue Server create Venue " + name +"(" + description +")");
+            @SoapParameter("name") String name,
+            @SoapParameter("description") String description,
+            @SoapParameter("creator") ClientProfile creator,
+            @SoapParameter("voAttributes") VOAttribute[] voAttributes
+        ) {
+        log.info("Venue Server create Venue " + name + "(" + description + ")");
         Vector<VOAttribute> voAtts = new Vector<VOAttribute>();
-        for (VOAttribute voAttribute : voAttributes){
-        	voAtts.add(voAttribute);
+        for (VOAttribute voAttribute : voAttributes) {
+            voAtts.add(voAttribute);
         }
-        log.info("calling venuesServlet.addVenue("+ name +", "+ description+", " + voAtts +", " + creator +" ...)");
+        log.info("calling venuesServlet.addVenue(" + name + ", " + description + ", "
+                + voAtts + ", " + creator + " ...)");
         ConnectionDescription conn = venuesServlet.addVenue(name, description, voAtts, creator, venueServerLog);
         venues.put(conn, voAtts);
-        log.info("returned :" + conn );
+        log.info("returned :" + conn);
         return conn;
     }
 
     @SoapReturn(
-            name="connectionDescriptionList"
+            name = "connectionDescriptionList"
         )
     public ConnectionDescription[] getVenues(
-    		@SoapParameter("voAttributes") VOAttribute[] voAttributes
-    	) {
-    	if (voAttributes==null){
-    		voAttributes=new VOAttribute[0];
-    	}
-    	log.info("Venue Server: getVenues (" + voAttributes.toString() +")");
+            @SoapParameter("voAttributes") VOAttribute[] voAttributes
+        ) {
+        if (voAttributes == null) {
+            voAttributes = new VOAttribute[0];
+        }
+        log.info("Venue Server: getVenues (" + voAttributes.toString() + ")");
         Vector<ConnectionDescription> connDescs = new Vector<ConnectionDescription>();
         Set<ConnectionDescription> venueConns = venues.keySet();
-        if (venueConns.isEmpty()){
-        	return new ConnectionDescription[0];
+        if (venueConns.isEmpty()) {
+            return new ConnectionDescription[0];
         }
-        for (ConnectionDescription conn: venueConns){
-        	Vector<VOAttribute> voAtts= venues.get(conn);
-        	if (voAtts!=null){
-	        	for (VOAttribute voAttribute: voAtts){
-	                boolean matches = false;
-	        		for (VOAttribute voAtt : voAttributes){
-	                	if (voAtt.matches(voAttribute)){
-	                		matches = true;
-	                		connDescs.add(conn);
-	                	}
-	                }
-	        		if (matches) break;
-	        	}
-        	} else {
-        		if (voAttributes==null) {
-        			connDescs.add(conn);
-        		}
-        	}
+        for (ConnectionDescription conn : venueConns) {
+            Vector<VOAttribute> voAtts = venues.get(conn);
+            if (voAtts != null) {
+                for (VOAttribute voAttribute : voAtts) {
+                    boolean matches = false;
+                    for (VOAttribute voAtt : voAttributes) {
+                        if (voAtt.matches(voAttribute)) {
+                            matches = true;
+                            connDescs.add(conn);
+                        }
+                    }
+                    if (matches) {
+                        break;
+                    }
+                }
+            } else {
+                if (voAttributes == null) {
+                    connDescs.add(conn);
+                }
+            }
         }
         return connDescs.toArray(new ConnectionDescription[]{});
     }
 
-	public void addVenue(Venue venue,Vector<VOAttribute> voAttributes) {
-		venues.put(venue.getConnectionDescription(),voAttributes);
-	}
+    public void addVenue(Venue venue, Vector<VOAttribute> voAttributes) {
+        venues.put(venue.getConnectionDescription(), voAttributes);
+    }
 
 
 }

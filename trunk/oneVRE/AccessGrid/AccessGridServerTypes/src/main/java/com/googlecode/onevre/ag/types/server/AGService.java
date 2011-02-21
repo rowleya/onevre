@@ -233,7 +233,7 @@ public abstract class AGService {
      */
     public Capability configureStream(StreamDescription description) {
         try {
-            Vector caps = description.getCapability();
+            Vector<Capability> caps = description.getCapability();
             for (int i = 0; i < capabilities.size(); i++) {
                 Capability capability = capabilities.get(i);
                 for (int j = 0; j < caps.size(); j++) {

@@ -430,16 +430,16 @@ public class StreamDescription implements SoapSerializable {
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString(){
-        String out="StreamDescription: {" + id +", ";
-        out+=  name +", ";
-        out+=  location +", ";
-        out+=  description +", ";
-        out+=  capability +", ";
-        out+=  encryptionFlag +", ";
-        out+=  encryptionKey +", ";
-        out+=  sstatic +", ";
-        out+=  "(" + networkLocations +") } ";
+    public String toString() {
+        String out = "StreamDescription: {" + id + ", ";
+        out +=  name + ", ";
+        out +=  location + ", ";
+        out +=  description + ", ";
+        out +=  capability + ", ";
+        out +=  encryptionFlag + ", ";
+        out +=  encryptionKey + ", ";
+        out +=  sstatic + ", ";
+        out +=  "(" + networkLocations + ") } ";
         return out;
     }
 }

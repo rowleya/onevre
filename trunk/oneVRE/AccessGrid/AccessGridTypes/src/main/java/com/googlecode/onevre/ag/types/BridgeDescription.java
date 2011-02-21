@@ -332,7 +332,8 @@ public class BridgeDescription implements SoapSerializable {
 
     /**
      * Returns the SOAP type of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd></dl>
      * @return the SOAP Type - "BridgeDescription"
      */
     public String getSoapType() {
@@ -341,7 +342,8 @@ public class BridgeDescription implements SoapSerializable {
 
     /**
      * Returns the namespace of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd></dl>
      * @return the namespace - "http://www.accessgrid.org/v3.0"
      */
     public String getNameSpace() {
@@ -349,8 +351,12 @@ public class BridgeDescription implements SoapSerializable {
     }
 
     /**
-     * Returns the fields that should be included with the soap Each of the fields should have a getter and a setter with the same name e.g. field is "test" there should be a "getTest" and a "setTest" method (note standard capitalisation)
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
+     * Returns the fields that should be included with the soap.
+     * Each of the fields should have a getter and a setter with
+     * the same name e.g. field is "test" there should be a "getTest"
+     *  and a "setTest" method (note standard capitalisation)
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
      * @return the fields :
      *	<ul>
      *	<li>"guid"</li>
@@ -378,7 +384,8 @@ public class BridgeDescription implements SoapSerializable {
      * If the return type is an array or vector, the type must be one of:
      * <ol><li>A type as above if all the values have the same type</li>
      * <li>A Vector of types if the field is a vector with different types</li></ol>
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getTypes()}</dd></dl>
      * @return the types :
      * <ul>
      * <li>STRING_TYPE (guid)</li>
@@ -415,7 +422,7 @@ public class BridgeDescription implements SoapSerializable {
      * @return "BridgeDescription: &lt;name&gt;:&lt;host&gt;:&lt;port&gt; (ping = &lt;pingTime&gt;)"
      */
     public String toString() {
-        return "BridgeDescription: " + name + ":" + host + ":" + port +":"+ serverType
+        return "BridgeDescription: " + name + ":" + host + ":" + port + ":" + serverType
             + " (ping = " + pingTime + ")";
     }
 

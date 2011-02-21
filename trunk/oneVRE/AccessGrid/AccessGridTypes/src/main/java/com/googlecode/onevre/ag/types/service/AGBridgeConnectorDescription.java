@@ -162,25 +162,25 @@ public class AGBridgeConnectorDescription implements SoapSerializable {
         this.serverType = serverType;
     }
 
-	/**
-	 * @param bridgeClass the serviceClass to set
-	 */
-	public void setBridgeClass(String bridgeClass) {
-		this.bridgeClass = bridgeClass;
-	}
+    /**
+     * @param bridgeClass the serviceClass to set
+     */
+    public void setBridgeClass(String bridgeClass) {
+        this.bridgeClass = bridgeClass;
+    }
 
-	/**
-	 * @return the serviceClass
-	 */
+    /**
+     * @return the serviceClass
+     */
     @XmlElement
-	public String getBridgeClass() {
-		return bridgeClass;
-	}
+    public String getBridgeClass() {
+        return bridgeClass;
+    }
 
-	public String toString(){
-		String out = "\nName: " + name + "\ndescription: "+ description
-			+ "\nlaunchUrl: "+ launchUrl + "\n serverType: " + serverType
-			+ "\nbridgeClass: "+ bridgeClass +"\n\n";
-		return out;
-	}
+    public String toString() {
+        String out = "\nName: " + name + "\ndescription: " + description
+            + "\nlaunchUrl: " + launchUrl + "\n serverType: " + serverType
+            + "\nbridgeClass: " + bridgeClass + "\n\n";
+        return out;
+    }
 }

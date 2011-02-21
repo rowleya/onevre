@@ -1,9 +1,7 @@
 package com.googlecode.onevre.ag.agsecurity;
 
 import java.util.Vector;
-
 import org.w3c.dom.Node;
-
 import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 
 public class Role implements SoapSerializable {
@@ -40,11 +38,12 @@ public class Role implements SoapSerializable {
                      INT_TYPE
                      };
 
-    public Role(){}
+    public Role() {
+    }
 
-    public Role(String name,int requireDefaultId){
-    	this.name = name;
-    	this.requireDefaultId = requireDefaultId;
+    public Role(String name, int requireDefaultId) {
+        this.name = name;
+        this.requireDefaultId = requireDefaultId;
     }
 
     /**
@@ -68,7 +67,7 @@ public class Role implements SoapSerializable {
      * @param subject The subject to add
      */
     public void setSubjects(Subject subject) {
-        if (!subjects.contains(subject)){
+        if (!subjects.contains(subject)) {
             subjects.add(subject);
         }
     }
@@ -77,7 +76,7 @@ public class Role implements SoapSerializable {
         return subjects;
     }
 
-    public boolean removeSubject(Subject subject){
+    public boolean removeSubject(Subject subject) {
         return subjects.remove(subject);
     }
 
@@ -92,14 +91,14 @@ public class Role implements SoapSerializable {
     /**
      * @return 1 if this role requires default subject, otherwise 0.
      */
-    public int getRequiredDefault(){
+    public int getRequiredDefault() {
         return requireDefaultId;
     }
 
     /**
      * @param requireDefaultId flag set to 1 if this role requires default subject, otherwise 0.
      */
-    public void setRequiredDefault(int requireDefaultId){
+    public void setRequiredDefault(int requireDefaultId) {
         this.requireDefaultId = requireDefaultId;
     }
 
@@ -107,7 +106,7 @@ public class Role implements SoapSerializable {
         return "http://www.accessgrid.org/v3.0";
     }
 
-    public boolean hasSubject(Subject subject){
+    public boolean hasSubject(Subject subject) {
         return subjects.contains(subject);
     }
 
@@ -128,7 +127,7 @@ public class Role implements SoapSerializable {
         return true;
     }
 
-    public int hashCode(){
+    public int hashCode() {
         return name.hashCode();
     }
 
@@ -147,24 +146,24 @@ public class Role implements SoapSerializable {
     public void parseXml(PolicyParser parser, Node node) {
         parser.parse(node);
         name = parser.getAttributes().get("name");
-        for (Node childNode : parser.getSubElements()){
-            if (childNode.getNodeName().equals(new Subject().getSoapType())){
+        for (Node childNode : parser.getSubElements()) {
+            if (childNode.getNodeName().equals(new Subject().getSoapType())) {
                 Subject subject = new Subject();
-                subject.parseXml(parser,childNode);
+                subject.parseXml(parser, childNode);
                 subjects.add(subject);
             }
         }
     }
 
-    public String toString(){
-    	String out = getName();
-    	return out;
+    public String toString() {
+        String out = getName();
+        return out;
     }
 
 
-    public String toXml(){
-        String xml = "<" +getSoapType() + " name=\"" + name+ "\">";
-        for (Subject subject: subjects){
+    public String toXml() {
+        String xml = "<" + getSoapType() + " name=\"" + name + "\">";
+        for (Subject subject : subjects) {
             xml += subject.toXml();
         }
         xml += "</" + getSoapType() + ">";

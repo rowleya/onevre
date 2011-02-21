@@ -10,18 +10,18 @@ import com.googlecode.onevre.ag.types.network.NetworkLocation;
 
 public interface BridgeInterface {
 
-	String setPointOfReferenceUrl(String url) throws BridgeException;
+    String setPointOfReferenceUrl(String url) throws BridgeException;
 
-	void joinBridge(BridgeDescription bridgeDescription) throws BridgeException;
+    void joinBridge(BridgeDescription bridgeDescription) throws BridgeException;
 
-	void setStreams(Vector<StreamDescription> streamDescriptions) throws BridgeException;
+    void setStreams(Vector<StreamDescription> streamDescriptions) throws BridgeException;
 
-	void stop();
+    void stop();
 
-	NetworkLocation getLocalLocation(StreamDescription stream);
+    NetworkLocation getLocalLocation(StreamDescription stream);
 
-	void setEncryption(String encryption);
+    void setEncryption(String encryption);
 
-	void runAutomaticBridging() throws BridgeException;
+    void runAutomaticBridging() throws BridgeException;
 
 }

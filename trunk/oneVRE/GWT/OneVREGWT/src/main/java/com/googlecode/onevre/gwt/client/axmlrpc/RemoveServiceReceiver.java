@@ -12,23 +12,23 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class RemoveServiceReceiver implements RequestReceiver {
 
-	private VenueState state = null;
+    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
-		ServiceDescription service = new ServiceDescription((ServiceDescriptionJSO) parameters.get(0));
-		state = Application.getServerManager().getVenuefromSource(source);
-		Application.getServiceManager().deleteService(state, service);
-	}
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
+        ServiceDescription service = new ServiceDescription((ServiceDescriptionJSO) parameters.get(0));
+        state = Application.getServerManager().getVenuefromSource(source);
+        Application.getServiceManager().deleteService(state, service);
+    }
 
-	public void init(String source) {
-		state = Application.getServerManager().getVenuefromSource(source);
-	}
+    public void init(String source) {
+        state = Application.getServerManager().getVenuefromSource(source);
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		ServiceDescription service = new ServiceDescription((ServiceDescriptionEJSO) eventJSO.getEventObject());
-		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-		Application.getServiceManager().deleteService(state, service);
-	}
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        ServiceDescription service = new ServiceDescription((ServiceDescriptionEJSO) eventJSO.getEventObject());
+        state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+        Application.getServiceManager().deleteService(state, service);
+    }
 
 }

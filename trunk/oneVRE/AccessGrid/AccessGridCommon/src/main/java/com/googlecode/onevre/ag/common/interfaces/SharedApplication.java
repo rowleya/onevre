@@ -117,7 +117,7 @@ public class SharedApplication {
      * not implemented yet
      * @param name
      */
-    public void setName(String name){
+    public void setName(String name) {
         // not implemented yet
 
     }
@@ -126,7 +126,7 @@ public class SharedApplication {
      * not implemented yet
      * @param Identity
       */
-   public void setIdentity (ClientProfile Identity){
+   public void setIdentity(ClientProfile identity) {
         // not implemented yet
 
     }
@@ -135,7 +135,7 @@ public class SharedApplication {
      * not implemented yet
      * @param packageName
      */
-    public void setPackageName(String packageName){
+    public void setPackageName(String packageName) {
         // not implemented yet
     }
 
@@ -144,7 +144,7 @@ public class SharedApplication {
      * not implemented yet
      * @return null
      */
-    public AGSharedApplicationDescription getDescription(){
+    public AGSharedApplicationDescription getDescription() {
             return null;
     };
 
@@ -166,8 +166,9 @@ public class SharedApplication {
                         new String[]{APPLICATION_NS + "/participants"},
                          new Class[]{AppParticipantDescription.class}));
         Object participants = result.get("participants");
-        if ((participants != null) && AppParticipantDescription.class.equals(participants.getClass().getComponentType())){
-            return (AppParticipantDescription[])participants;
+        if ((participants != null)
+                && AppParticipantDescription.class.equals(participants.getClass().getComponentType())) {
+            return (AppParticipantDescription[]) participants;
         }
         throw new SoapException("Return type not correct");
     }
@@ -182,8 +183,8 @@ public class SharedApplication {
     public HashMap<String, Object> getDataChannel(String privateToken)
             throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(APPLICATION_NS, "GetDataChannel",
-                "GetDataChannelRequest", new String[] { "privateToken" },
-                new Object[] { privateToken }, new Object[] {SoapSerializable.STRING_TYPE},
+                "GetDataChannelRequest", new String[] {"privateToken" },
+                new Object[] {privateToken }, new Object[] {SoapSerializable.STRING_TYPE},
                 new SoapResponseHash(new String[] {
                         APPLICATION_NS + "/channelId",
                         APPLICATION_NS + "/address" ,
@@ -193,13 +194,13 @@ public class SharedApplication {
         Object o = result.get("channelId");
         Object o1 = result.get("address");
         Object o2 = result.get("port");
-        if ((o == null) ||! (o instanceof String)) {
+        if ((o == null) || !(o instanceof String)) {
             throw new SoapException("Return type not correct -- channelId");
         }
-        if ((o1== null) ||! (o1 instanceof String)) {
+        if ((o1 == null) || !(o1 instanceof String)) {
             throw new SoapException("Return type not correct -- address");
         }
-        if ((o2 == null) ||! (o2 instanceof Integer)) {
+        if ((o2 == null) || !(o2 instanceof Integer)) {
             throw new SoapException("Return type not correct -- port");
         }
         return result;
@@ -221,17 +222,17 @@ public class SharedApplication {
                 new Object[]{clientProfile}, new Object[]{null},
                 new SoapResponseHash(
                         new String[]{APPLICATION_NS + "/publicId", APPLICATION_NS + "/privateId"},
-                         new Class[]{String.class,String.class}));
+                         new Class[]{String.class, String.class}));
         HashMap<String, String> retval = new HashMap<String, String>();
         Object publicId = result.get("publicId");
         Object privateId = result.get("privateId");
-        if ((publicId!=null) && (publicId instanceof String)){
-            retval.put("publicId",(String) publicId);
+        if ((publicId != null) && (publicId instanceof String)) {
+            retval.put("publicId", (String) publicId);
         } else  {
             throw new SoapException("Return type not correct -- publicId");
         }
-        if ((privateId!=null) && (privateId instanceof String)){
-            retval.put("privateId",(String) privateId);
+        if ((privateId != null) && (privateId instanceof String)) {
+            retval.put("privateId", (String) privateId);
         } else  {
             throw new SoapException("Return type not correct -- privateId");
         }
@@ -248,14 +249,14 @@ public class SharedApplication {
      */
     public int leave(String privateToken) throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(APPLICATION_NS, "Leave",
-                "LeaveRequest", new String[] { "privateToken" },
-                new Object[] { privateToken }, new Object[] {SoapSerializable.STRING_TYPE},
+                "LeaveRequest", new String[] {"privateToken" },
+                new Object[] {privateToken }, new Object[] {SoapSerializable.STRING_TYPE},
                 new SoapResponseHash(new String[] {
                         APPLICATION_NS + "/retval"}, new Class[] {
                         Integer.class}));
         Object retval = result.get("retval");
-        if ((retval!=null) && (retval instanceof Integer)){
-                return ((Integer)retval).intValue();
+        if ((retval != null) && (retval instanceof Integer)) {
+                return ((Integer) retval).intValue();
         }
         throw new SoapException("Return type not correct");
     }
@@ -269,10 +270,11 @@ public class SharedApplication {
      * @throws SoapException
      */
     public void removeData(String privateToken, String key)
-            throws IOException, SoapException{
-            soapRequest.call(APPLICATION_NS, "RemoveData",
-                "RemoveDataRequest", new String[]{"privateToken","key"},
-                new Object[]{privateToken,key}, new Object[]{SoapSerializable.STRING_TYPE,SoapSerializable.STRING_TYPE},
+            throws IOException, SoapException {
+            soapRequest.call(APPLICATION_NS, "RemoveData", "RemoveDataRequest",
+                new String[]{"privateToken", "key"},
+                new Object[]{privateToken, key},
+                new Object[]{SoapSerializable.STRING_TYPE, SoapSerializable.STRING_TYPE},
                 null);
     }
 

@@ -131,9 +131,7 @@ public class VenueListTag extends PortletTag {
 
     // Goes through the tree executing the tag body
     private void processTree(String parentId, Vector<VenueTreeItem> tree)
-            throws JspException, IOException, SecurityException,
-            IllegalArgumentException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException, SAXException {
+            throws JspException, IOException, IllegalAccessException, InvocationTargetException, SAXException {
         for (int i = 0; i < tree.size(); i++) {
             getJspContext().setAttribute(parentVar, parentId);
             getJspContext().setAttribute(nameVar, tree.get(i).getName());

@@ -41,6 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.ag.types.service.AGBridgeConnectorDescription;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
@@ -54,6 +56,8 @@ import com.googlecode.onevre.web.servlet.tags.PortletTag;
  * @version 1.0
  */
 public class GetBridgesTag extends PortletTag {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private String var = null;
 
@@ -70,8 +74,7 @@ public class GetBridgesTag extends PortletTag {
             HashMap<String, AGBridgeConnectorDescription> bridges,
             String baseUrl)
             throws IOException {
-        System.err.println("Searching " + dir.getAbsolutePath()
-                + " for bridges");
+        log.info("Searching " + dir.getAbsolutePath() + " for bridges");
         File[] listing = dir.listFiles();
         for (int i = 0; i < listing.length; i++) {
             if (listing[i].isDirectory()) {
@@ -94,7 +97,7 @@ public class GetBridgesTag extends PortletTag {
                     svc.setServerType(bridgeType);
 
                     String launchClass = description.get("class");
-                    if (launchClass==null){
+                    if (launchClass == null) {
                         launchClass = bridgeName.substring(0, 1).toLowerCase()
                         + bridgeName.substring(1) + "." + bridgeName;
                     }
@@ -124,7 +127,7 @@ public class GetBridgesTag extends PortletTag {
         url += request.getContextPath()
             + "/jsp/findJarForBridge.jsp?dir=";
         bridges = searchForBridges(dir, bridges, url);
-        System.err.println("Bridges = " + bridges.toString());
+        log.info("Bridges = " + bridges.toString());
         getJspContext().setAttribute(var,
                 StringEscapeUtils.escapeXml(
                         XMLSerializer.serialize(bridges)));

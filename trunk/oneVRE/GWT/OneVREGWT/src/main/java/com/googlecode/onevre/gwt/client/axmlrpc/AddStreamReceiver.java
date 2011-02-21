@@ -12,23 +12,23 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class AddStreamReceiver implements RequestReceiver {
 
-	private VenueState state = null;
+    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
-		StreamDescription stream = new StreamDescription((StreamDescriptionJSO) parameters.get(0));
-		state = Application.getServerManager().getVenuefromSource(source);
-		Application.getConnectionManager().addStream(state, stream);
-	}
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
+        StreamDescription stream = new StreamDescription((StreamDescriptionJSO) parameters.get(0));
+        state = Application.getServerManager().getVenuefromSource(source);
+        Application.getConnectionManager().addStream(state, stream);
+    }
 
-	public void init(String source) {
-		state = Application.getServerManager().getVenuefromSource(source);
-	}
+    public void init(String source) {
+        state = Application.getServerManager().getVenuefromSource(source);
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		StreamDescription stream = new StreamDescription((StreamDescriptionEJSO) eventJSO.getEventObject());
-		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-		Application.getConnectionManager().addStream(state, stream);
-	}
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        StreamDescription stream = new StreamDescription((StreamDescriptionEJSO) eventJSO.getEventObject());
+        state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+        Application.getConnectionManager().addStream(state, stream);
+    }
 
 }

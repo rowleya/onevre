@@ -189,16 +189,16 @@ public class AppParticipantDescription implements SoapSerializable {
      * compares two AppDataDescriptions in [appId && clientProfile]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return (this.appId.equals(((AppParticipantDescription)o).appId) &&
-        		this.clientProfile.equals(((AppParticipantDescription)o).clientProfile));
+    public boolean equals(Object o) {
+        return (this.appId.equals(((AppParticipantDescription) o).appId)
+                && this.clientProfile.equals(((AppParticipantDescription) o).clientProfile));
     }
 
     /**
      *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return appId.hashCode();
     }
 

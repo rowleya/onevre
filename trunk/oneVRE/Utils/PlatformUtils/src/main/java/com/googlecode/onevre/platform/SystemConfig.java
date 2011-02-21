@@ -120,7 +120,7 @@ public class SystemConfig {
     public Hashtable<String, String[]> getResources() {
         Hashtable<String, String[]> resources =
             new Hashtable<String, String[]>();
-        Vector list = detectCaptureDevices();
+        Vector<?> list = detectCaptureDevices();
         String[] ports = new String[]{"external-in"};
         for (int i = 0; i < list.size(); i++) {
             CaptureDeviceInfo info = (CaptureDeviceInfo) list.get(i);
@@ -134,23 +134,23 @@ public class SystemConfig {
      * Detects capture devices for use
      * @return the capture devices detected
      */
-    public Vector detectCaptureDevices() {
+    public Vector<?> detectCaptureDevices() {
 
         // Civil devices
 
-        System.err.println("Lib path = " + System.getenv("LD_LIBRARY_PATH"));
+        log.info("Lib path = " + System.getenv("LD_LIBRARY_PATH"));
         try {
 
-	        if (!OS.IS_OSX){
-	        	System.loadLibrary("civil");
-	        }
-	//      System.load(getNodeServicesDir().concat(
-	//                System.mapLibraryName("civil")));
-	        CaptureSystemFactory factory =
+            if (!OS.IS_OSX) {
+                System.loadLibrary("civil");
+            }
+    //      System.load(getNodeServicesDir().concat(
+    //                System.mapLibraryName("civil")));
+            CaptureSystemFactory factory =
             DefaultCaptureSystemFactorySingleton.instance();
             CaptureSystem system = factory.createCaptureSystem();
             system.init();
-            List list = system.getCaptureDeviceInfoList();
+            List<?> list = system.getCaptureDeviceInfoList();
             for (int i = 0; i < list.size(); ++i) {
                 com.lti.civil.CaptureDeviceInfo civilInfo =
                     (com.lti.civil.CaptureDeviceInfo) list.get(i);
@@ -160,7 +160,7 @@ public class SystemConfig {
                                 CIVIL_LOCATOR + civilInfo.getDeviceID()),
                         new Format[] {new RGBFormat()});
                 CaptureDeviceManager.addDevice(jmfInfo);
-                System.err.println("Device: " + jmfInfo.getName() + " "
+                log.info("Device: " + jmfInfo.getName() + " "
                         + jmfInfo.getLocator().getProtocol().toString());
             }
         } catch (CaptureException e) {
@@ -168,9 +168,9 @@ public class SystemConfig {
         } catch (Exception e) {
             e.printStackTrace();
         } catch (UnsatisfiedLinkError e) {
-			System.err.println("WARNING: civil not found!!" );
-		}
-        Vector list = CaptureDeviceManager.getDeviceList(new RGBFormat());
+            log.warning("WARNING: civil not found!!");
+        }
+        Vector<?> list = CaptureDeviceManager.getDeviceList(new RGBFormat());
 
         return list;
     }

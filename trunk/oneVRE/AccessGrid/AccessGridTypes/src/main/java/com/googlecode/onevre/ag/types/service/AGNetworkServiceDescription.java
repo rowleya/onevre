@@ -240,9 +240,13 @@ public class AGNetworkServiceDescription implements SoapSerializable {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals( Object other){
-        AGNetworkServiceDescription onsd = (AGNetworkServiceDescription)other;
+    public boolean equals(Object other) {
+        AGNetworkServiceDescription onsd = (AGNetworkServiceDescription) other;
         return uri.equals(onsd.uri);
+    }
+
+    public int hashCode() {
+        return uri.hashCode();
     }
 
 }

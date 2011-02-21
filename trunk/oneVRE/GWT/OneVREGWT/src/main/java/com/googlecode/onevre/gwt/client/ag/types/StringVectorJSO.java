@@ -4,15 +4,15 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class StringVectorJSO extends JavaScriptObject {
 
-	protected StringVectorJSO (){
-	}
+    protected StringVectorJSO() {
+    }
 
-	public native final String get(int i) /*-{
-		return this.get(i);
-	}-*/;
+    public final native String get(int i) /*-{
+        return this.get(i);
+    }-*/;
 
-	public native final int size() /*-{
-		return this.size();
-	}-*/;
+    public final native int size() /*-{
+        return this.size();
+    }-*/;
 
 }

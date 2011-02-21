@@ -4,26 +4,26 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class DataDescriptionEJSO extends JavaScriptObject {
 
-	protected DataDescriptionEJSO (){
-	}
+    protected DataDescriptionEJSO() {
+    }
 
     /**
      * Returns the last time the data was modified
      * @return this.getthe last modified time
      */
-    public native final String getLastModified() /*-{
+    public final native String getLastModified() /*-{
         return this.lastModified;
     }-*/;
 
-    public native final String getExpires() /*-{
-	    return this.expires;
-	}-*/;
+    public final native String getExpires() /*-{
+        return this.expires;
+    }-*/;
 
     /**
      * Returns the data type
      * @return this.getthe type
      */
-    public native final String getType() /*-{
+    public final native String getType() /*-{
         return this.mimeType;
     }-*/;
 
@@ -31,7 +31,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the checksum
      * @return this.getthe checksum
      */
-    public native final String getChecksum() /*-{
+    public final native String getChecksum() /*-{
         return this.checksum;
     }-*/;
 
@@ -39,7 +39,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the description
      * @return this.getthe description
      */
-    public native final String getDescription() /*-{
+    public final native String getDescription() /*-{
         return this.description;
     }-*/;
 
@@ -47,7 +47,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the id
      * @return this.getthe id
      */
-    public native final String getId() /*-{
+    public final native String getId() /*-{
         return this.id;
     }-*/;
 
@@ -55,7 +55,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the name
      * @return this.getthe name
      */
-    public native final String getName() /*-{
+    public final native String getName() /*-{
         return this.name;
     }-*/;
 
@@ -63,7 +63,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the owner
      * @return this.getthe owner
      */
-    public native final String getOwner() /*-{
+    public final native String getOwner() /*-{
         return this.owner;
     }-*/;
 
@@ -71,7 +71,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the size
      * @return this.getthe size
      */
-    public native final String getSize() /*-{
+    public final native String getSize() /*-{
         return this.size;
     }-*/;
 
@@ -79,7 +79,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the status
      * @return this.getthe status
      */
-    public native final String getStatus() /*-{
+    public final native String getStatus() /*-{
         return this.status;
     }-*/;
 
@@ -87,7 +87,7 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the uri
      * @return this.getthe uri
      */
-    public native final String getUri() /*-{
+    public final native String getUri() /*-{
         return this.uri;
     }-*/;
 
@@ -95,24 +95,24 @@ public class DataDescriptionEJSO extends JavaScriptObject {
      * Returns the objectType
      * @return this.getthe objectType
      */
-    public native final String getObjectType()/*-{
-    	return this.objectType;
+    public final native String getObjectType()/*-{
+        return this.objectType;
     }-*/;
 
     /**
      * Returns the hierarchyLevel
      * @return this.getthe hierarchyLevel
      */
-    public native final String getHierarchyLevel()/*-{
-    	return this.hierarchyLevel;
+    public final native String getHierarchyLevel()/*-{
+        return this.hierarchyLevel;
     }-*/;
 
     /**
      * Returns the id of the parent item
      * @return this.getthe id of the parent item
      */
-   public native final String getParentId()/*-{
-    	return this.parentId;
+   public final native String getParentId()/*-{
+        return this.parentId;
     }-*/;
 
 }

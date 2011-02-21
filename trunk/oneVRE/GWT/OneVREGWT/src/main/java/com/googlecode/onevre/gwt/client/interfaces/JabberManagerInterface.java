@@ -7,12 +7,12 @@ import com.googlecode.onevre.gwt.client.ui.panels.JabberPanel;
 
 public interface JabberManagerInterface {
 
-	public void setJabberManager(JabberManager jabberManager);
+    void setJabberManager(JabberManager jabberManager);
 
-	public void setJabberPanel(VenueState state, JabberPanel jabberPanel);
+    void setJabberPanel(VenueState state, JabberPanel jabberPanel);
 
-	public void addMessage(VenueState state, JabberMessage message);
+    void addMessage(VenueState state, JabberMessage message);
 
-	public void clear(VenueState state);
+    void clear(VenueState state);
 
 }

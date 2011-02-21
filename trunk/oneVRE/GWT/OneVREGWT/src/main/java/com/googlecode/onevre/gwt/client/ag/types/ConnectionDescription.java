@@ -14,19 +14,19 @@ public class ConnectionDescription {
     // The uri of the connection
     private String uri = null;
 
-	public ConnectionDescription (ConnectionDescriptionJSO jso){
-		id = jso.getId();
-		name = jso.getName();
-		description = jso.getDescription();
-		uri = jso.getUri();
-	}
+    public ConnectionDescription(ConnectionDescriptionJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+    }
 
-	public ConnectionDescription (ConnectionDescriptionEJSO jso){
-		id = jso.getId();
-		name = jso.getName();
-		description = jso.getDescription();
-		uri = jso.getUri();
-	}
+    public ConnectionDescription(ConnectionDescriptionEJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+    }
 
     /**
      * Returns the description
@@ -92,9 +92,9 @@ public class ConnectionDescription {
         this.uri = uri;
     }
 
-    public String toString(){
-    	String out = name + "( "+ uri +" )";
-    	return out;
+    public String toString() {
+        String out = name + "( " + uri + " )";
+        return out;
     }
 
 }

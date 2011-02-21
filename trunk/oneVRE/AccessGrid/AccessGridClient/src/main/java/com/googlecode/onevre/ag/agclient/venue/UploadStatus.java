@@ -69,9 +69,9 @@ public class UploadStatus {
      * @param date The date of the message
      */
     public UploadStatus(String fileName, long size, long done) {
-    	this.fileName = fileName;
-    	this.size = size;
-    	this.done = done;
+        this.fileName = fileName;
+        this.size = size;
+        this.done = done;
     }
 
     /**
@@ -121,7 +121,7 @@ public class UploadStatus {
      */
     @XmlElement
     public String getSize() {
-        return ""+size;
+        return "" + size;
     }
 
     /**
@@ -130,8 +130,8 @@ public class UploadStatus {
      */
     @XmlElement
     public String getPercentage() {
-    	float percent = (float)done/(float)size;
-    	return "" + percent;
+        float percent = (float) done / (float) size;
+        return "" + percent;
     }
 
     /**
@@ -140,6 +140,6 @@ public class UploadStatus {
      */
     @XmlElement
     public String getDone() {
-        return ""+done;
+        return "" + done;
     }
 }

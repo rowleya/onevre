@@ -27,118 +27,118 @@ import com.googlecode.onevre.gwt.common.client.ModalPopup;
 
 public class AddDataPanel extends ModalPopup<DockPanel> implements ClickHandler {
 
-	private static String DATE_FORMAT = "EEE, MMM d, yyyy, HH:mm:ss";
+    private static final String DATE_FORMAT = "EEE, MMM d, yyyy, HH:mm:ss";
 
-	FileUpload fileNameInput = new FileUpload();
-	TextArea descriptionInput = new TextArea();
-	DateBox dateInput = new DateBox();
-//	TextBox  = new TextBox();
-	TextBox locationInput = new TextBox();
-	TextBox homeInput = new TextBox();
-	ListBox profileInput = new ListBox();
-	PushButton cancel = new PushButton("Cancel",this);
-	PushButton clear = new PushButton("Clear",this);
-	PushButton ok = new PushButton("Upload Data Item",this);
-	FlexTable profilepanel = new FlexTable();
-//	NamedFrame targetFrame = new NamedFrame("victim");
-	FormPanel form = null;
-	Hidden parent = new Hidden("parentId");
-	Hidden namespace = new Hidden("namespace", Application.getParam("pag_namespace"));
-	Hidden venueUri = new Hidden("venueUri");
-	Hidden expiry = new Hidden("expiry");
-	Hidden description = new Hidden("description");
+    private FileUpload fileNameInput = new FileUpload();
+    private TextArea descriptionInput = new TextArea();
+    private DateBox dateInput = new DateBox();
+//  private TextBox  = new TextBox();
+    private TextBox locationInput = new TextBox();
+    private TextBox homeInput = new TextBox();
+    private ListBox profileInput = new ListBox();
+    private PushButton cancel = new PushButton("Cancel", this);
+    private PushButton clear = new PushButton("Clear", this);
+    private PushButton ok = new PushButton("Upload Data Item", this);
+    private FlexTable profilepanel = new FlexTable();
+//  private NamedFrame targetFrame = new NamedFrame("victim");
+    private FormPanel form = null;
+    private Hidden parent = new Hidden("parentId");
+    private Hidden namespace = new Hidden("namespace", Application.getParam("pag_namespace"));
+    private Hidden venueUri = new Hidden("venueUri");
+    private Hidden expiry = new Hidden("expiry");
+    private Hidden description = new Hidden("description");
 
-	boolean changed = false;
+    private boolean changed = false;
 
-	public boolean hasChanged(){
-		return changed;
-	}
+    public boolean hasChanged() {
+        return changed;
+    }
 
-	public AddDataPanel(String parentId, String venueURI, NamedFrame targetFrame) {
-		super(new DockPanel());
-		DockPanel panel= getWidget();
-		Image img = new Image(Icons.addDocumentIcon);
-		img.setHeight("64px");
+    public AddDataPanel(String parentId, String venueURI, NamedFrame targetFrame) {
+        super(new DockPanel());
+        DockPanel panel = getWidget();
+        Image img = new Image(Icons.addDocumentIcon);
+        img.setHeight("64px");
 
-		parent.setValue(parentId);
-		venueUri.setValue(venueURI);
+        parent.setValue(parentId);
+        venueUri.setValue(venueURI);
 
-		form = new FormPanel(targetFrame);
+        form = new FormPanel(targetFrame);
 
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		form.setWidth("100%");
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+        form.setWidth("100%");
 
-		String baseurl = GWT.getModuleBaseURL();
-		if (baseurl.endsWith("/")){
-			baseurl=baseurl.substring(0,baseurl.length()-1);
-		}
-		form.setAction(baseurl+Application.getParam("pag_dataUploadUrl"));
+        String baseurl = GWT.getModuleBaseURL();
+        if (baseurl.endsWith("/")) {
+            baseurl = baseurl.substring(0, baseurl.length() - 1);
+        }
+        form.setAction(baseurl + Application.getParam("pag_dataUploadUrl"));
 
-		HorizontalPanel hiddenElements = new HorizontalPanel();
-		profilepanel.setWidget(0,0, hiddenElements);
-		hiddenElements.add(parent);
-		hiddenElements.add(namespace);
-		hiddenElements.add(venueUri);
-		hiddenElements.add(expiry);
-		hiddenElements.add(description);
-		//hiddenElements.add(targetFrame);
-//		targetFrame.setVisible(false);
+        HorizontalPanel hiddenElements = new HorizontalPanel();
+        profilepanel.setWidget(0, 0, hiddenElements);
+        hiddenElements.add(parent);
+        hiddenElements.add(namespace);
+        hiddenElements.add(venueUri);
+        hiddenElements.add(expiry);
+        hiddenElements.add(description);
+        //hiddenElements.add(targetFrame);
+//        targetFrame.setVisible(false);
 
 
-		panel.add(img,DockPanel.WEST);
-		panel.setCellVerticalAlignment(img, DockPanel.ALIGN_MIDDLE);
-//		Grid profilepanel = new Grid (3,3);
-		profilepanel.setWidget(1,0, new Image(Icons.fileIcon));
-		profilepanel.setText(1,1, "Name: *");
-		fileNameInput.setName("file");
-		profilepanel.setWidget(1, 2, fileNameInput);
-		profilepanel.getFlexCellFormatter().setColSpan(1,2,2);
-		Image docInfo = new Image(Icons.docInfoIcon);
-		docInfo.setHeight("22px");
-		profilepanel.setWidget(2,0, docInfo);
-		profilepanel.setText(2,1, "Description: *");
-		descriptionInput.setVisibleLines(3);
-		//descriptionInput.setName("description");
-		profilepanel.setWidget(2, 2, descriptionInput);
-		profilepanel.getFlexCellFormatter().setColSpan(2,2,2);
-		form.add(profilepanel);
-		panel.add(form,DockPanel.CENTER);
+        panel.add(img, DockPanel.WEST);
+        panel.setCellVerticalAlignment(img, DockPanel.ALIGN_MIDDLE);
+//        Grid profilepanel = new Grid (3,3);
+        profilepanel.setWidget(1, 0, new Image(Icons.fileIcon));
+        profilepanel.setText(1, 1, "Name: *");
+        fileNameInput.setName("file");
+        profilepanel.setWidget(1, 2, fileNameInput);
+        profilepanel.getFlexCellFormatter().setColSpan(1, 2, 2);
+        Image docInfo = new Image(Icons.docInfoIcon);
+        docInfo.setHeight("22px");
+        profilepanel.setWidget(2, 0, docInfo);
+        profilepanel.setText(2, 1, "Description: *");
+        descriptionInput.setVisibleLines(3);
+        //descriptionInput.setName("description");
+        profilepanel.setWidget(2, 2, descriptionInput);
+        profilepanel.getFlexCellFormatter().setColSpan(2, 2, 2);
+        form.add(profilepanel);
+        panel.add(form, DockPanel.CENTER);
 
-		Image timeout = new Image(Icons.timeoutIcon);
-		timeout.setHeight("22px");
-		profilepanel.setWidget(3,0, timeout);
-		profilepanel.setText(3,1, "expires:");
-		profilepanel.setWidget(3, 2, dateInput);
-		profilepanel.setWidget(3,3,clear);
-		dateInput.setValue(null);
+        Image timeout = new Image(Icons.timeoutIcon);
+        timeout.setHeight("22px");
+        profilepanel.setWidget(3, 0, timeout);
+        profilepanel.setText(3, 1, "expires:");
+        profilepanel.setWidget(3, 2, dateInput);
+        profilepanel.setWidget(3, 3, clear);
+        dateInput.setValue(null);
 
-		DockPanel buttons  = new DockPanel();
-		buttons.add(ok, DockPanel.EAST);
-		buttons.add(cancel, DockPanel.WEST);
-		panel.add(buttons,DockPanel.SOUTH);
+        DockPanel buttons  = new DockPanel();
+        buttons.add(ok, DockPanel.EAST);
+        buttons.add(cancel, DockPanel.WEST);
+        panel.add(buttons, DockPanel.SOUTH);
         panel.setWidth("100%");
-	}
+    }
 
-	public void onClick(ClickEvent event) {
-		if (event.getSource().equals(clear)){
-			dateInput.setValue(null);
-			return;
-		}
-		if (event.getSource().equals(ok)){
-			Date date = dateInput.getValue();
-			String expString = "";
-			if (date!=null){
-				expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
-			}
-			expiry.setValue(expString);
-			description.setValue(descriptionInput.getValue());
-			if (fileNameInput.getFilename().equals("")) {
-				return;
-			}
-			form.submit();
-		}
-		hide();
-	}
+    public void onClick(ClickEvent event) {
+        if (event.getSource().equals(clear)) {
+            dateInput.setValue(null);
+            return;
+        }
+        if (event.getSource().equals(ok)) {
+            Date date = dateInput.getValue();
+            String expString = "";
+            if (date != null) {
+                expString = DateTimeFormat.getFormat(DATE_FORMAT).format(date);
+            }
+            expiry.setValue(expString);
+            description.setValue(descriptionInput.getValue());
+            if (fileNameInput.getFilename().equals("")) {
+                return;
+            }
+            form.submit();
+        }
+        hide();
+    }
 
 }

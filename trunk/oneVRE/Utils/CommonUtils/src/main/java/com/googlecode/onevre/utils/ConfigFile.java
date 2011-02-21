@@ -75,7 +75,7 @@ public class ConfigFile {
             if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
                 key = line.trim().substring(1, line.trim().length() - 1);
                 HashMap<String, String> value = filetree.get(key.trim());
-                if (value==null){
+                if (value == null) {
                     value = new HashMap<String, String>();
                 }
                 line = in.readLine();
@@ -157,11 +157,12 @@ public class ConfigFile {
      * @param defaultValue The default value if the parameter is not provided
      * @return the value of the parameter or the default value if it's unset
      */
-    public static String getParameter(HashMap<String, HashMap<String, String>> config, String section, String parameter, String defaultValue){
+    public static String getParameter(HashMap<String, HashMap<String, String>> config,
+            String section, String parameter, String defaultValue) {
         HashMap<String, String> cfgSection = config.get(section);
-        if (cfgSection != null){
+        if (cfgSection != null) {
             String cfgParameter = cfgSection.get(parameter);
-            if (cfgParameter != null){
+            if (cfgParameter != null) {
                 return cfgParameter;
             }
         }

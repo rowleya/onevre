@@ -20,27 +20,27 @@ import com.googlecode.onevre.utils.Utils;
 
 public class AuthorizationManager extends SoapServable {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
-    String id = Utils.generateID();
+    private String id = Utils.generateID();
 
-    Vector<Role> roles = new Vector<Role>();
+    private  Vector<Role> roles = new Vector<Role>();
 
-    Vector<Role> defaultRoles = new Vector<Role>();
+    private  Vector<Role> defaultRoles = new Vector<Role>();
 
-    Vector<Action> actions = new Vector<Action>();
+    private  Vector<Action> actions = new Vector<Action>();
 
-    Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+    private Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
 
-    Vector<Role> rolesRequired = new Vector<Role>();
+    private Vector<Role> rolesRequired = new Vector<Role>();
 
-    private static String AUTH_POLICY_START = "<AuthorizationPolicy>";
+    private static final String AUTH_POLICY_START = "<AuthorizationPolicy>";
 
-    String parent = null;
+    private  String parent = null;
 
-    PrintWriter securityLog = null;
+    private PrintWriter securityLog = null;
 
-    boolean identificationRequired = false;
+    private boolean identificationRequired = false;
 
     public AuthorizationManager(PrintWriter log) {
         securityLog = log;
@@ -51,49 +51,49 @@ public class AuthorizationManager extends SoapServable {
         )
     public int isAuthorized(
             @SoapParameter("subject") Subject subject,
-            @SoapParameter("action") Action action){
-    	securityLog.println("Authorize Subject : " + subject + " Action : " + action);
+            @SoapParameter("action") Action action) {
+        securityLog.println("Authorize Subject : " + subject + " Action : " + action);
         Vector<Role> roleList = getRolesForAction(action);
-        if (subject==null){
+        if (subject == null) {
             securityLog.println("Authorizing action " + action.getName() + " for unidentified user");
-            if (identificationRequired){
+            if (identificationRequired) {
                 securityLog.println("Rejecting access from unidentified user; id required");
                 return 0;
             }
-            if (roleList.contains(VenueServerDefaults.Everybody)){
+            if (roleList.contains(VenueServerDefaults.Everybody)) {
                 securityLog.println("Accepting access from unidentified user as part of Everybody role");
                 return 1;
             }
-            if (roleList.contains(VenueServerDefaults.VOMSdependent)){
-            	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
-                securityLog.println("Authorizing based on VO attributes: " + voAttributes.toString());
-            	return checkVOMS(voAttributes);
+            if (roleList.contains(VenueServerDefaults.VOMSdependent)) {
+                Vector<VOAttribute> voAtts = new Vector<VOAttribute>();
+                securityLog.println("Authorizing based on VO attributes: " + voAtts.toString());
+                return checkVOMS(voAtts);
             }
             securityLog.println("Rejecting access from unidentified user as part of Everybody role");
             return 0;
         }
         securityLog.println("Authorizing action " + action.getName()
                 + " for subject " + subject.getName());
-        if (roleList.contains(VenueServerDefaults.Everybody)){
+        if (roleList.contains(VenueServerDefaults.Everybody)) {
             securityLog.println("Accepting access from " + subject.getName() + " as part of Everybody role");
             return 1;
         }
-        if (roleList.contains(VenueServerDefaults.VOMSdependent)){
-        	Vector<VOAttribute> subjectAttributes = subject.getVoAttributes();
-        	if (subjectAttributes.isEmpty()) {
-        		subjectAttributes.add(new VOAttribute());
-        	}
-        	securityLog.println("Subject VO attributes: " + subjectAttributes.toString());
+        if (roleList.contains(VenueServerDefaults.VOMSdependent)) {
+            Vector<VOAttribute> subjectAttributes = subject.getVoAttributes();
+            if (subjectAttributes.isEmpty()) {
+                subjectAttributes.add(new VOAttribute());
+            }
+            securityLog.println("Subject VO attributes: " + subjectAttributes.toString());
             securityLog.println("Authorizing based on VO attributes: " + voAttributes.toString());
-        	if (voAttributes.size()==0) {
+            if (voAttributes.size() == 0) {
                 securityLog.println("Accepting access based on VO attributes - no VO attributes required");
-        		return 1;
-        	}
-        	return checkVOMS(subjectAttributes);
+                return 1;
+            }
+            return checkVOMS(subjectAttributes);
         }
 
-        for (Role role:roleList){
-            if (role.hasSubject(subject)){
+        for (Role role : roleList) {
+            if (role.hasSubject(subject)) {
                 securityLog.println("Accepting access from " + subject.getName() + " as part of " + role.getName());
                 return 1;
             }
@@ -103,46 +103,46 @@ public class AuthorizationManager extends SoapServable {
     }
 
     private int checkVOMS(Vector<VOAttribute> subjectAttributes) {
-    	if (subjectAttributes.isEmpty()){
-    		subjectAttributes.add(new VOAttribute());
-    	}
-    	securityLog.println("in checkVOMS: " + voAttributes.toString() + " matches " + subjectAttributes.toString());
-    	for (VOAttribute voAttribute: voAttributes){
-			for (VOAttribute voAtt: subjectAttributes){
-				voAtt.setLogger(securityLog);
-				if (voAtt.matches(voAttribute)){
-					return 1;
-				}
-			}
-		}
-		return 0;
-	}
+        if (subjectAttributes.isEmpty()) {
+            subjectAttributes.add(new VOAttribute());
+        }
+        securityLog.println("in checkVOMS: " + voAttributes.toString() + " matches " + subjectAttributes.toString());
+        for (VOAttribute voAttribute : voAttributes) {
+            for (VOAttribute voAtt : subjectAttributes) {
+                voAtt.setLogger(securityLog);
+                if (voAtt.matches(voAttribute)) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
 
-    public void setVOattributes(Vector<VOAttribute> voAttributes){
-    	if (voAttributes!=null){
-    		this.voAttributes = voAttributes;
-    	}
+    public void setVOattributes(Vector<VOAttribute> voAttributes) {
+        if (voAttributes != null) {
+            this.voAttributes = voAttributes;
+        }
     }
 
 
-	public void addAction(@SoapParameter("action") Action action){
-        if (!actions.contains(action)){
+    public void addAction(@SoapParameter("action") Action action) {
+        if (!actions.contains(action)) {
             actions.add(action);
         }
     }
 
-    public void addAction(@SoapParameter("actionList") Action [] actionList){
-        for (Action action:actionList){
+    public void addAction(@SoapParameter("actionList") Action [] actionList) {
+        for (Action action : actionList) {
             addAction(action);
         }
     }
 
-    public void removeAction(@SoapParameter("action") Action action){
+    public void removeAction(@SoapParameter("action") Action action) {
         actions.remove(action);
     }
 
-    public void addRole(@SoapParameter("role") Role role){
-        if (!roles.contains(role)){
+    public void addRole(@SoapParameter("role") Role role) {
+        if (!roles.contains(role)) {
             roles.add(role);
         }
     }
@@ -150,27 +150,26 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] getActions(){
+    public Action[] getActions() {
         return actions.toArray(new Action[0]);
     }
 
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] listActions(){
+    public Action[] listActions() {
         return getActions();
     }
 
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] getActionsForSubject (
-            @SoapParameter("subject") Subject subject){
+    public Action[] getActionsForSubject(@SoapParameter("subject") Subject subject) {
         Vector<Action> actionList = new Vector<Action>();
-        for (Role role: getRolesForSubject(subject)){
-            for (Action action : actions){
-                if (action.hasRole(role)){
-                    if (!actionList.contains(action)){
+        for (Role role : getRolesForSubject(subject)) {
+            for (Action action : actions) {
+                if (action.hasRole(role)) {
+                    if (!actionList.contains(action)) {
                         actionList.add(action);
                     }
                 }
@@ -182,20 +181,18 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] listActionsForSubject (
-            @SoapParameter("subject") Subject subject){
+    public Action[] listActionsForSubject(@SoapParameter("subject") Subject subject) {
         return getActionsForSubject(subject);
     }
 
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] getActionsForRole (
-            @SoapParameter("role") Role role){
+    public Action[] getActionsForRole(@SoapParameter("role") Role role) {
         Vector<Action> actionList = new Vector<Action>();
-        for (Action action : actions){
-            if (action.hasRole(role)){
-                if (!actionList.contains(action)){
+        for (Action action : actions) {
+            if (action.hasRole(role)) {
+                if (!actionList.contains(action)) {
                     actionList.add(action);
                 }
             }
@@ -206,63 +203,62 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "actionList"
             )
-    public Action[] listActionsForRole (
-            @SoapParameter("role") Role role){
+    public Action[] listActionsForRole(@SoapParameter("role") Role role) {
         return getActionsForRole(role);
     }
 
     @SoapReturn(
             name = "role"
-                )
-    public Role findRole(@SoapParameter("name") String name){
-        for (Role role : roles){
-            if (role.getName().equals(name)){
+            )
+    public Role findRole(@SoapParameter("name") String name) {
+        for (Role role : roles) {
+            if (role.getName().equals(name)) {
                 return role;
             }
         }
         return null;
     }
 
-    public void removeRole(@SoapParameter("role") Role role){
+    public void removeRole(@SoapParameter("role") Role role) {
         roles.remove(role);
     }
 
     @SoapReturn(
             name = "roleList"
             )
-    public Role[] getRoles(){
+    public Role[] getRoles() {
         return roles.toArray(new Role[0]);
     }
 
     @SoapReturn(
             name = "roleList"
             )
-    public Role[] listRoles(){
+    public Role[] listRoles() {
         return getRoles();
     }
 
     public void addRoleToAction(
             @SoapParameter("action") Action action,
-            @SoapParameter("role") Role role){
-        if (!roles.contains(role)){
-            securityLog.println("Couldn't find role: "+ role.getName());
+            @SoapParameter("role") Role role) {
+        if (!roles.contains(role)) {
+            securityLog.println("Couldn't find role: " + role.getName());
             return;
         }
-        if (!actions.contains(action)){
-            securityLog.println("Couldn't find action: "+ action.getName());
+        if (!actions.contains(action)) {
+            securityLog.println("Couldn't find action: " + action.getName());
             addAction(action);
         }
         Action a = findAction(action.getName());
-        if (!a.hasRole(role)){
+        if (!a.hasRole(role)) {
             a.setRoles(role);
-        } else{
-            securityLog.println("Role "+ role.getName() +" already in action " + action.getName());
+        } else {
+            securityLog.println("Role " + role.getName() + " already in action " + action.getName());
         }
     }
 
     public  void addRolesToAction(
             @SoapParameter("role") Role [] roleList,
-            @SoapParameter("action") Action action){
+            @SoapParameter("action") Action action) {
         for (Role role : roleList) {
             addRoleToAction(action, role);
         }
@@ -270,15 +266,15 @@ public class AuthorizationManager extends SoapServable {
 
     public void removeRoleFromAction(
             @SoapParameter("role") Role role,
-            @SoapParameter("action") Action action){
+            @SoapParameter("action") Action action) {
 
         Action a = findAction(action.getName());
-        if (a==null){
+        if (a == null) {
             return;
         }
 
-        Role r=findRole(role.getName());
-        if (r==null){
+        Role r = findRole(role.getName());
+        if (r == null) {
             return;
         }
         a.removeRole(r);
@@ -286,51 +282,51 @@ public class AuthorizationManager extends SoapServable {
 
     public void addSubjectToRole(
             @SoapParameter("subject") Subject subject,
-            @SoapParameter("role") Role role){
-        securityLog.println("Adding Subject: "+ subject.getName() + " to Role: " + role.getName());
-        if (!roles.contains(role)){
+            @SoapParameter("role") Role role) {
+        securityLog.println("Adding Subject: " + subject.getName() + " to Role: " + role.getName());
+        if (!roles.contains(role)) {
             securityLog.println("Couldn't find role: " + role.getName());
             return;
         }
-        if (!role.hasSubject(subject)){
+        if (!role.hasSubject(subject)) {
             role.setSubjects(subject);
         } else {
-            securityLog.println("Subject "+ subject.getName() +" already in Role " + role.getName());
+            securityLog.println("Subject " + subject.getName() + " already in Role " + role.getName());
         }
     }
 
     public void  addSubjectsToRole(
             @SoapParameter("subjectList") Subject [] subjectList,
-            @SoapParameter("role") Role role){
+            @SoapParameter("role") Role role) {
         securityLog.println("Adding Subjects to Role: " + role.getName());
-        if (!roles.contains(role)){
+        if (!roles.contains(role)) {
             securityLog.println("Couldn't find role: " + role.getName());
             return;
         }
-        for (Subject subject: subjectList){
-            if (!role.hasSubject(subject)){
-                securityLog.println("Adding Subject: "+ subject.getName());
+        for (Subject subject : subjectList) {
+            if (!role.hasSubject(subject)) {
+                securityLog.println("Adding Subject: " + subject.getName());
                 role.setSubjects(subject);
             } else {
-                securityLog.println("Subject "+ subject.getName() +" already in Role " + role.getName());
+                securityLog.println("Subject " + subject.getName() + " already in Role " + role.getName());
             }
         }
     }
 
     @SoapReturn(
-            name="subjectList"
+            name = "subjectList"
             )
-    public Subject[] getSubjects(@SoapParameter("role") Role role){
+    public Subject[] getSubjects(@SoapParameter("role") Role role) {
         Vector<Subject> subjectList = new Vector<Subject>();
-        if (role !=null){
+        if (role != null) {
             Role r = findRole(role.getName());
             if (r != null) {
                 subjectList = r.getSubjects();
             }
         } else {
             for (Role r : roles) {
-                for (Subject s : r.getSubjects()){
-                    if (!subjectList.contains(s)){
+                for (Subject s : r.getSubjects()) {
+                    if (!subjectList.contains(s)) {
                         subjectList.add(s);
                     }
                 }
@@ -340,9 +336,9 @@ public class AuthorizationManager extends SoapServable {
     }
 
     @SoapReturn(
-            name="subjectList"
+            name = "subjectList"
             )
-    public Subject[] listSubjects(@SoapParameter("role") Role role){
+    public Subject[] listSubjects(@SoapParameter("role") Role role) {
         return getSubjects(role);
     }
 
@@ -350,10 +346,10 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "roleList"
             )
-    public Role[] getRolesForSubject(@SoapParameter("subject") Subject subject){
+    public Role[] getRolesForSubject(@SoapParameter("subject") Subject subject) {
         Vector<Role> roleList = new Vector<Role>();
-        for (Role role : roles){
-            if (role.hasSubject(subject)){
+        for (Role role : roles) {
+            if (role.hasSubject(subject)) {
                 roleList.add(role);
             }
         }
@@ -363,26 +359,26 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "roleList"
             )
-    public Role[] listtRolesForSubject(@SoapParameter("subject") Subject subject){
+    public Role[] listtRolesForSubject(@SoapParameter("subject") Subject subject) {
         return getRolesForSubject(subject);
     }
 
 
     public void removeSubjectFromRole(
             @SoapParameter("subject") Subject subject,
-            @SoapParameter("role") Role role){
+            @SoapParameter("role") Role role) {
         Role r = findRole(role.getName());
-        if (r!=null){
+        if (r != null) {
             r.removeSubject(subject);
         }
     }
 
     public void removeSubjectsFromRole(
             @SoapParameter("subjectList") Subject[] subjectList,
-            @SoapParameter("role") Role role){
+            @SoapParameter("role") Role role) {
         Role r = findRole(role.getName());
-        if (r!=null){
-            for (Subject subject : subjectList){
+        if (r != null) {
+            for (Subject subject : subjectList) {
                 r.removeSubject(subject);
 
             }
@@ -390,20 +386,23 @@ public class AuthorizationManager extends SoapServable {
 
     }
 
-    public void requireIdentification(@SoapParameter("inputarg") int inputarg){
-        if (inputarg == 0){
-            identificationRequired=false;
+    public void requireIdentification(@SoapParameter("inputarg") int inputarg) {
+        if (inputarg == 0) {
+            identificationRequired = false;
         }
-        identificationRequired=true;
+        identificationRequired = true;
     }
 
     @SoapReturn(name = "outputarg")
     public int isIdentificationRequired() {
-        return identificationRequired?1:0;
+        if (identificationRequired) {
+            return 1;
+        }
+        return 0;
     }
 
-    private Vector<Role> getRolesForAction(Action action){
-        if (actions.contains(action)){
+    private Vector<Role> getRolesForAction(Action action) {
+        if (actions.contains(action)) {
             return actions.get(actions.indexOf(action)).getRoles();
         }
         return new Vector<Role>();
@@ -412,17 +411,17 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "roleList"
             )
-    public Role[] listRolesInAction(@SoapParameter("action") Action action){
-        if (action!=null){
+    public Role[] listRolesInAction(@SoapParameter("action") Action action) {
+        if (action != null) {
             Vector<Role> roleList = getRolesForAction(action);
             return roleList.toArray(new Role[0]);
         }
         return getRoles();
     }
 
-    private Action findAction (String name){
-        for (Action a:actions) {
-            if (a.getName().equals(name)){
+    private Action findAction(String name) {
+        for (Action a : actions) {
+            if (a.getName().equals(name)) {
                 return a;
             }
         }
@@ -432,35 +431,35 @@ public class AuthorizationManager extends SoapServable {
     @SoapReturn(
             name = "argname"
             )
-    public String getPolicy(){
+    public String getPolicy() {
         return toXml();
     }
 
     @SoapReturn(
             name = "argname"
             )
-    public String exportPolicy(){
+    public String exportPolicy() {
         return toXml();
     }
 
     public void importPolicy(
-            @SoapParameter("policy") String policy){
+            @SoapParameter("policy") String policy) {
 
-        if (policy.contains(AUTH_POLICY_START)){
+        if (policy.contains(AUTH_POLICY_START)) {
             policy = policy.substring(policy.indexOf(AUTH_POLICY_START));
         }
         try {
             PolicyParser parser = new PolicyParser(policy);
             parser.parse(parser.getSubElements().firstElement());
-            for (Node node : parser.getSubElements()){
-                if (node.getNodeName().equals(new Role().getSoapType())){
+            for (Node node : parser.getSubElements()) {
+                if (node.getNodeName().equals(new Role().getSoapType())) {
                     Role role = new Role();
                     role.parseXml(parser, node);
                     int roleIndex = roles.indexOf(role);
                     if (roleIndex != -1) {
                         Role oldr = roles.get(roleIndex);
-                        for (Subject subject: role.getSubjects()){
-                            if (!oldr.hasSubject(subject)){
+                        for (Subject subject : role.getSubjects()) {
+                            if (!oldr.hasSubject(subject)) {
                                 oldr.setSubjects(subject);
                             }
                         }
@@ -468,7 +467,7 @@ public class AuthorizationManager extends SoapServable {
                         roles.add(role);
                     }
                 }
-                if (node.getNodeName().equals(new Action().getSoapType())){
+                if (node.getNodeName().equals(new Action().getSoapType())) {
                     Action action = new Action();
                     action.parseXml(parser, node);
                     addAction(action);
@@ -499,13 +498,13 @@ public class AuthorizationManager extends SoapServable {
 
     }
 
-    public String toXml(){
+    public String toXml() {
         String xml = "<?xml version=\"1.0\" ?>\n";
         xml += "<AuthorizationPolicy>";
-        for (Role role: roles){
+        for (Role role : roles) {
             xml += role.toXml();
         }
-        for (Action action: actions){
+        for (Action action : actions) {
             xml += action.toXml();
         }
         xml += "</AuthorizationPolicy>";

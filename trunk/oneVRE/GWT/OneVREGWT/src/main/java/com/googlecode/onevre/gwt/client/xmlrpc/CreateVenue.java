@@ -10,51 +10,51 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.onevre.gwt.client.Application;
 import com.googlecode.onevre.gwt.client.VenueClientController;
 import com.googlecode.onevre.gwt.client.ag.ServerManager;
-import com.googlecode.onevre.gwt.client.ag.UserManager;
 import com.googlecode.onevre.gwt.client.ag.types.ConnectionDescription;
 import com.googlecode.onevre.gwt.client.ag.types.ConnectionDescriptionJSO;
-import com.googlecode.onevre.gwt.client.ag.types.VOAttribute;
 
-public class CreateVenue implements AsyncCallback<String>{
+public class CreateVenue implements AsyncCallback<String> {
 
-	private ServerManager serverManager = null;
+    private ServerManager serverManager = null;
 
-	private String url = null;
+    private String url = null;
 
-	public CreateVenue(ServerManager serverManager){
-		this.serverManager = serverManager;
-	}
+    public CreateVenue(ServerManager serverManager) {
+        this.serverManager = serverManager;
+    }
 
-	public void create(String serverUri, String name, String description, Vector<HashMap<String, String>> voAttr){
-		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
+    public void create(String serverUri, String name, String description, Vector<HashMap<String, String>> voAttr) {
+        XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
                 xmlrpcClient, "createVenue",  new Object[]{serverUri, name, description, voAttr},
                 this);
         request.execute();
-	}
+    }
 
-	public void onFailure(Throwable error) {
-		GWT.log("failed on: " + url , error);
-	}
+    public void onFailure(Throwable error) {
+        GWT.log("failed on: " + url , error);
+    }
 
-	// start venueclientui.entervenue
+    // start venueclientui.entervenue
 
 
-	public void onSuccess(String connectionDescXml) {
-		GWT.log("VS xml: " + connectionDescXml);
-		ConnectionDescription connectionDescription = new ConnectionDescription((ConnectionDescriptionJSO)VenueClientController.getObjectDec(connectionDescXml));
-		Vector<VOAttribute> atts = Application.getUserManager().getLocalUserVoAttributes();
-		GWT.log("Connecting to " + connectionDescription.toString());
-		if (connectionDescription!=null){
-			serverManager.monitorVenue(connectionDescription.getUri());
-		}
-		/*		GWT.log("VS log: " + venueState.toLog());
-		GWT.log("VenueState: " + venueState.toString());
+    public void onSuccess(String connectionDescXml) {
+        GWT.log("VS xml: " + connectionDescXml);
+        ConnectionDescription connectionDescription =
+            new ConnectionDescription((ConnectionDescriptionJSO) VenueClientController.getObjectDec(connectionDescXml));
+        Application.getUserManager().getLocalUserVoAttributes();
+        GWT.log("Connecting to " + connectionDescription.toString());
+        if (connectionDescription != null) {
+            serverManager.monitorVenue(connectionDescription.getUri());
+        }
+/*
+        GWT.log("VS log: " + venueState.toLog());
+        GWT.log("VenueState: " + venueState.toString());
 
-		if (venueState != null) {
-//			serverVenueManager.addVenueState(venueState);
-		}
-			/*
+        if (venueState != null) {
+//            serverVenueManager.addVenueState(venueState);
+        }
+            /*
             var venuelist = venueState.getVenueList();
             var participants = venueState.getClients();
             var data  = venueState.getData();
@@ -81,12 +81,14 @@ public class CreateVenue implements AsyncCallback<String>{
                 }
                 add=true;
             }
-            pag_createDataTree(participants,data,services,applications,this.dataDownloadUrl,this.dataUploadUrl,this.venueClientControllerId,add);
+            pag_createDataTree(participants,data, services, applications,
+                this.dataDownloadUrl, this.dataUploadUrl, this.venueClientControllerId,add);
             if (refresh==null){
                 //pag_xmlRpcClient.call("startApplicationQueue");
             } else {
                 for (var i=0; i<applications.size();i++){
-                    //pag_xmlRpcClient.call("getApplicationParticipants",applications.get(i).getUri(),applications.get(i).getId());
+                    pag_xmlRpcClient.call("getApplicationParticipants",
+                        applications.get(i).getUri(), applications.get(i).getId());
                 }
             }
             return true;
@@ -94,8 +96,8 @@ public class CreateVenue implements AsyncCallback<String>{
             alert("Error entering venue!");
             return false;
         }
-			*/
+            */
 
-	}
+    }
 
 }

@@ -11,40 +11,42 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueServerTypeJSO;
 import com.googlecode.onevre.gwt.common.client.XmlResponse;
 import com.googlecode.onevre.gwt.common.client.XmlResponseHandler;
 
-public class AddTrustedServer implements AsyncCallback<String>{
+public class AddTrustedServer implements AsyncCallback<String> {
 
-	XmlResponseHandler handler = null;
+    private XmlResponseHandler handler = null;
 
-	String server = null;
+    private String server = null;
 
-	public AddTrustedServer(XmlResponseHandler handler) {
-		this.handler = handler;
-	}
+    public AddTrustedServer(XmlResponseHandler handler) {
+        this.handler = handler;
+    }
 
-	public void addTrustedServers(String name, String url){
-		server = name + " (" + url + ")";
-		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
+    public void addTrustedServers(String name, String url) {
+        server = name + " (" + url + ")";
+        XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
                 xmlrpcClient, "addTrustedServer",
                 new Object[]{name, url},
                 this);
         GWT.log("execute setTrustedServers");
         request.execute();
-	}
+    }
 
-	public void onFailure(Throwable error) {
-		//GWT.log("addTrustedServers failed ");
-		handler.handleResponse(new XmlResponse(XmlResponse.ERROR, server, null));
-	}
+    public void onFailure(Throwable error) {
+        //GWT.log("addTrustedServers failed ");
+        handler.handleResponse(new XmlResponse(XmlResponse.ERROR, server, null));
+    }
 
 
-	public void onSuccess(String trustedServerXml) {
-		GWT.log("trustedServerXml: " + trustedServerXml);
-		VenueServerType ts = new VenueServerType((VenueServerTypeJSO)VenueClientController.getObjectDec(trustedServerXml));
-		handler.handleResponse(new XmlResponse(XmlResponse.OK, ts,trustedServerXml));
+    public void onSuccess(String trustedServerXml) {
+        GWT.log("trustedServerXml: " + trustedServerXml);
+        VenueServerType ts = new VenueServerType(
+                (VenueServerTypeJSO) VenueClientController.getObjectDec(trustedServerXml));
+        handler.handleResponse(new XmlResponse(XmlResponse.OK, ts, trustedServerXml));
 
-//		ClientProfile clientProfile = new ClientProfile((ClientProfileJSO)VenueClientController.getObjectDec(clientProfileXml));
-//		VenueClientController.setTrustedServers(clientProfile);
-	}
+//        ClientProfile clientProfile = new ClientProfile(
+//                (ClientProfileJSO) VenueClientController.getObjectDec(clientProfileXml));
+//        VenueClientController.setTrustedServers(clientProfile);
+    }
 
 }

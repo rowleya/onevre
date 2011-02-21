@@ -14,42 +14,44 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueTreeItem;
 import com.googlecode.onevre.gwt.client.ag.types.VenueTreeItemJSO;
 import com.googlecode.onevre.gwt.client.ui.panels.VenueTreePanel;
 
-public class GetConnections implements AsyncCallback<String>{
+public class GetConnections implements AsyncCallback<String> {
 
-	private VenueTreePanel venueTreePanel = null;
+    private VenueTreePanel venueTreePanel = null;
 
-	private String url = null;
+    private String url = null;
 
-	public GetConnections(VenueTreePanel venueTreePanel){
-		this.venueTreePanel = venueTreePanel;
-	}
+    public GetConnections(VenueTreePanel venueTreePanel) {
+        this.venueTreePanel = venueTreePanel;
+    }
 
-	public void getConnections(String url){
-		this.url = url;
-		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
+    public void getConnections(String url) {
+        this.url = url;
+        XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
                 xmlrpcClient, "getVenueTree",  new Object[]{url},
                 this);
         request.execute();
-	}
+    }
 
-	public void onFailure(Throwable error) {
-		GWT.log("failed on: " + url , error);
-	}
+    public void onFailure(Throwable error) {
+        GWT.log("failed on: " + url , error);
+    }
 
-	// start venueclientui.entervenue
+    // start venueclientui.entervenue
 
 
-	public void onSuccess(String venueTreeXml) {
-		VenueServerType venueServerType = venueTreePanel.getVenueServerType();
-		GWT.log("VS xml: " + venueTreeXml);
-		Vector<VenueTreeItem> venueTree = new Vector<VenueTreeItem>();
-		VectorJSO<VenueTreeItemJSO> vtjso = (VectorJSO<VenueTreeItemJSO>)VenueClientController.getObjectDec(venueTreeXml);
-		for (int i = 0; i<vtjso.size(); i++) {
-			VenueTreeItem vti = new VenueTreeItem(vtjso.get(i));
-			venueTree.add(vti);
-		}
-		venueTreePanel.updateTree(venueTree);
-	}
+    public void onSuccess(String venueTreeXml) {
+        VenueServerType venueServerType = venueTreePanel.getVenueServerType();
+        GWT.log("VS xml: " + venueTreeXml);
+        Vector<VenueTreeItem> venueTree = new Vector<VenueTreeItem>();
+        @SuppressWarnings("unchecked")
+        VectorJSO<VenueTreeItemJSO> vtjso =
+            (VectorJSO<VenueTreeItemJSO>) VenueClientController.getObjectDec(venueTreeXml);
+        for (int i = 0; i < vtjso.size(); i++) {
+            VenueTreeItem vti = new VenueTreeItem(vtjso.get(i));
+            venueTree.add(vti);
+        }
+        venueTreePanel.updateTree(venueTree);
+    }
 
 }

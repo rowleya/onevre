@@ -17,8 +17,6 @@ import java.util.Vector;
 import javax.net.ssl.SSLException;
 
 
-
-
 public class GroupClient extends Thread {
 
     public static final int AG_GROUP_MESSAGE_PROTOCOL_VERSION = 1;
@@ -60,7 +58,7 @@ public class GroupClient extends Thread {
             }
             if (!queue.isEmpty()) {
                 eventMessage = queue.removeFirst();
-			} else if (!done) {
+            } else if (!done) {
                 eventMessage = null;
             }
         }
@@ -88,10 +86,10 @@ public class GroupClient extends Thread {
         int length = input.readInt();
         byte[] stringarray = new byte[length];
         input.read(stringarray);
-        return new String(stringarray,"UTF-8");
+        return new String(stringarray, "UTF-8");
     }
 
-    public String getGroupId(){
+    public String getGroupId() {
         return groupId;
     }
 
@@ -111,8 +109,8 @@ public class GroupClient extends Thread {
      * Creates a new Client
      *
      */
-    public GroupClient(Socket socket ) {
-        this.socket=socket;
+    public GroupClient(Socket socket) {
+        this.socket = socket;
         InputStream inputstream;
         try {
             inputstream = socket.getInputStream();
@@ -122,12 +120,12 @@ public class GroupClient extends Thread {
             BufferedOutputStream buffered = new BufferedOutputStream(outputstream);
             output = new DataOutputStream(buffered);
 
-            String firstLine=receiveString(input);
-            int groupIdLength = Integer.parseInt(firstLine.substring(0,2));
-            groupId = firstLine.substring(2,groupIdLength+2);
-            clientId = socket.getInetAddress().getCanonicalHostName()+":"+socket.getLocalPort();
-            int connectionIdLength = Integer.parseInt(firstLine.substring(groupIdLength+2,groupIdLength+4));
-            connectionId = firstLine.substring(groupIdLength+4, groupIdLength+4+connectionIdLength);
+            String firstLine = receiveString(input);
+            int groupIdLength = Integer.parseInt(firstLine.substring(0, 2));
+            groupId = firstLine.substring(2, groupIdLength + 2);
+            clientId = socket.getInetAddress().getCanonicalHostName() + ":" + socket.getLocalPort();
+            int connectionIdLength = Integer.parseInt(firstLine.substring(groupIdLength + 2, groupIdLength + 4));
+            connectionId = firstLine.substring(groupIdLength + 4, groupIdLength + 4 + connectionIdLength);
         } catch (IOException e) {
             e.printStackTrace();
         }

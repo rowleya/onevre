@@ -54,7 +54,7 @@ public class SoapResponseHash implements SoapResponse {
     public SoapResponseHash(String[] fields, Class<?> [] types) {
         for (int i = 0; i < fields.length; i++) {
             this.types.put(fields[i], types[i]);
-            this.arrays.put(fields[i],false);
+            this.arrays.put(fields[i], false);
         }
     }
     /**

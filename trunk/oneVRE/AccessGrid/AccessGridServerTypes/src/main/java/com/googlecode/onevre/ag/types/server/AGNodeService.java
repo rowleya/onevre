@@ -114,8 +114,8 @@ public class AGNodeService extends SoapServable {
     }
 */
 
-    public void setClientBridge(BridgeInterface clientBridge){
-    	this.clientBridge = clientBridge;
+    public void setClientBridge(BridgeInterface clientBridge) {
+        this.clientBridge = clientBridge;
     }
 
     /**
@@ -362,6 +362,7 @@ public class AGNodeService extends SoapServable {
     private HashMap<String, HashMap<String, String>> getDefaultConfig() {
         Vector<String> res = new Vector<String>();
         String videoProducerServices = "";
+        @SuppressWarnings("rawtypes")
         Vector devices =
             SystemConfig.getInstance().detectCaptureDevices();
         for (int i = 0; i < devices.size(); i++) {
@@ -454,7 +455,7 @@ public class AGNodeService extends SoapServable {
      * @return true if sane; false otherwise
      * @throws IOException
      */
-    public boolean sanityCheckConfig(String config) throws IOException{
+    public boolean sanityCheckConfig(String config) throws IOException {
         String configFile = sysNodeConfigDir + config;
 
         HashMap<String, HashMap<String, String>> fileTree = null;
@@ -473,16 +474,16 @@ public class AGNodeService extends SoapServable {
         String[] serviceManagerList = value.split(" ");
         for (int i = 0; i < serviceManagerList.length; i++) {
             HashMap<String, String> sm = fileTree.get(serviceManagerList[i]);
-            if (sm==null){
+            if (sm == null) {
                 return false;
             }
             String url = sm.get("url");
-            if (sm.get("builtin")==null) {
+            if (sm.get("builtin") == null) {
                 return false;
             }
             boolean builtIn = Integer.parseInt(sm.get("builtin")) == 1;
             if (!builtIn) {
-                if (url == null){
+                if (url == null) {
                     return false;
                 }
             }
@@ -494,11 +495,11 @@ public class AGNodeService extends SoapServable {
                 }
                 HashMap<String, String> service = fileTree.get(services[j]);
                 if (service == null) {
-                    System.err.println("no service: '"+ services[j] + "' in node");
+                    System.err.println("no service: '" + services[j] + "' in node");
                     return false;
                 }
                 String packageName = service.get("packageName");
-                if (packageName== null){
+                if (packageName == null) {
                     return false;
                 }
             }
@@ -540,7 +541,7 @@ public class AGNodeService extends SoapServable {
                     "Configuration file does not exist " + configFile);
             }
         } else {
-            if (sanityCheckConfig(config)){
+            if (sanityCheckConfig(config)) {
                 fileTree = ConfigFile.read(configFile);
             } else {
                 fileTree = getDefaultConfig();
@@ -565,11 +566,12 @@ public class AGNodeService extends SoapServable {
             boolean builtIn = Integer.parseInt(sm.get("builtin")) == 1;
             final ServiceManagerInterface serviceManager;
             if (builtIn) {
-            	AGServiceManager agServiceManager = new AGServiceManager();
-                if (clientBridge!=null){
-                	agServiceManager.setClientBridge(clientBridge);
-                } else
-                	throw new BridgeException("clientBridge not set for builtin Servicemanager");
+                AGServiceManager agServiceManager = new AGServiceManager();
+                if (clientBridge != null) {
+                    agServiceManager.setClientBridge(clientBridge);
+                } else {
+                    throw new BridgeException("clientBridge not set for builtin Servicemanager");
+                }
                 serviceManager = agServiceManager;
             } else {
                 serviceManager = (ServiceManagerInterface) new ServiceManager(url);
@@ -587,7 +589,7 @@ public class AGNodeService extends SoapServable {
                 }
                 HashMap<String, String> service = fileTree.get(services[j]);
                 if (service == null) {
-                    throw new IOException("no service: '"+ services[j] + "' in node");
+                    throw new IOException("no service: '" + services[j] + "' in node");
                 }
                 String packageName = service.get("packageName");
                 final AGServicePackageDescription description =
@@ -766,7 +768,7 @@ public class AGNodeService extends SoapServable {
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 try {
-                    if (sanityCheckConfig(files[i])){
+                    if (sanityCheckConfig(files[i])) {
                         configs.add(files[i]);
                     }
                 } catch (IOException e) {
@@ -822,9 +824,9 @@ public class AGNodeService extends SoapServable {
             manager.setStreams(descriptions);
         }
         streams = new Vector<StreamDescription>();
-        for (StreamDescription str:descriptions){
+        for (StreamDescription str : descriptions) {
             streams.add(str);
-        };
+        }
     }
 
     /**

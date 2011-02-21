@@ -51,5 +51,5 @@ public interface SoapResponse {
      * @param field
      * @return flag if array
      */
-    boolean isArray (String field);
+    boolean isArray(String field);
 }

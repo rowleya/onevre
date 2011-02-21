@@ -12,25 +12,25 @@ import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 public class ProfileButton extends ActionButton implements MessageResponseHandler {
 
 
-	public ProfileButton() {
-		setImageUrl("images/userProfile.png");
-		setName("Change User Profie");
-	}
+    public ProfileButton() {
+        setImageUrl("images/userProfile.png");
+        setName("Change User Profie");
+    }
 
-	@Override
-	public void action() {
-		GWT.log("in ProfileButton action");
-		EditClientProfilePanel ep = new EditClientProfilePanel(this);
-		ep.setClientProfile(Application.getUserManager().getLocalUser());
-		ep.show();
-	}
+    @Override
+    public void action() {
+        GWT.log("in ProfileButton action");
+        EditClientProfilePanel ep = new EditClientProfilePanel(this);
+        ep.setClientProfile(Application.getUserManager().getLocalUser());
+        ep.show();
+    }
 
-	public void handleResponse(MessageResponse response) {
-		if (response.getResponseCode()==MessageResponse.OK){
-			ClientProfile clientProfile = ((EditClientProfilePanel)response.getSource()).getClientProfile();
-			Application.getUserManager().setLocalUser(clientProfile);
-			SetClientProfile.setClientProfile();
-		}
-	}
+    public void handleResponse(MessageResponse response) {
+        if (response.getResponseCode() == MessageResponse.OK) {
+            ClientProfile clientProfile = ((EditClientProfilePanel) response.getSource()).getClientProfile();
+            Application.getUserManager().setLocalUser(clientProfile);
+            SetClientProfile.setClientProfile();
+        }
+    }
 
 }

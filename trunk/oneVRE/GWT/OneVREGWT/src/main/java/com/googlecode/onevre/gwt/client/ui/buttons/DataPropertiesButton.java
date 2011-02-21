@@ -15,37 +15,38 @@ import com.googlecode.onevre.gwt.common.client.MessageResponseHandler;
 
 public class DataPropertiesButton extends ActionButton implements ClickHandler, MessageResponseHandler {
 
-	private VenueState venueState = null;
+    private VenueState venueState = null;
 
-	private DataDescription data = null;
+    private DataDescription data = null;
 
-	public DataPropertiesButton(VenueState state, DataDescription data) {
-		this.venueState = state;
-		this.data = data;
-		setImageUrl("images/icons/fileProperties.png");
-		setName("Change Properties for " + data.getName());
-		setImageHeight("20px");
-		getButton().addClickHandler(this);
-	}
+    public DataPropertiesButton(VenueState state, DataDescription data) {
+        this.venueState = state;
+        this.data = data;
+        setImageUrl("images/icons/fileProperties.png");
+        setName("Change Properties for " + data.getName());
+        setImageHeight("20px");
+        getButton().addClickHandler(this);
+    }
 
-	@Override
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    @Override
+    public void action() {
+        MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
-	public void onClick(ClickEvent paramClickEvent) {
-		EditDataDescriptionPanel eddp = new EditDataDescriptionPanel(this);
-		eddp.setDataDescription(data);
-		eddp.show();
-	}
+    public void onClick(ClickEvent paramClickEvent) {
+        EditDataDescriptionPanel eddp = new EditDataDescriptionPanel(this);
+        eddp.setDataDescription(data);
+        eddp.show();
+    }
 
-	public void handleResponse(MessageResponse response) {
-		if (response.getResponseCode() == MessageResponse.OK){
-			DataDescription dataDescription = ((EditDataDescriptionPanel)response.getSource()).getDataDescription();
-			GWT.log("DATA: " + dataDescription.toString());
-			UpdateData.updateData(venueState.getUri(), dataDescription);
-			Application.getDataManager().updateData(venueState, dataDescription);
-		}
-	}
+    public void handleResponse(MessageResponse response) {
+        if (response.getResponseCode() == MessageResponse.OK) {
+            DataDescription dataDescription =
+                ((EditDataDescriptionPanel) response.getSource()).getDataDescription();
+            GWT.log("DATA: " + dataDescription.toString());
+            UpdateData.updateData(venueState.getUri(), dataDescription);
+            Application.getDataManager().updateData(venueState, dataDescription);
+        }
+    }
 
 }

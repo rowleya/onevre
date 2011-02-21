@@ -54,11 +54,11 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 @XmlAccessorType(XmlAccessType.NONE)
 public class DataDescription implements SoapSerializable {
 
-	public static String TYPE_DIR = "Directory";
-    public static String TYPE_FILE = "File";
-    public static String TYPE_COMMON = "Common undefined";
+    public static final String TYPE_DIR = "Directory";
+    public static final String TYPE_FILE = "File";
+    public static final String TYPE_COMMON = "Common undefined";
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private static final String[] SOAP_FIELDS =
         new String[]{"id",
@@ -152,7 +152,7 @@ public class DataDescription implements SoapSerializable {
      * Returns the data type
      * @return the type
      */
-    @XmlElement(name="mimeType")
+    @XmlElement(name = "mimeType")
     public String getType() {
         return type;
     }
@@ -169,7 +169,7 @@ public class DataDescription implements SoapSerializable {
      * Sets the last modified time
      * @param lastModified The last Modified time
      */
-    public void setExpires (String expires) {
+    public void setExpires(String expires) {
         this.expires = expires;
     }
 
@@ -258,8 +258,8 @@ public class DataDescription implements SoapSerializable {
      * @return the objectType
      */
     @XmlElement
-    public String getObjectType(){
-    	return objectType;
+    public String getObjectType() {
+        return objectType;
     }
 
     /**
@@ -267,8 +267,8 @@ public class DataDescription implements SoapSerializable {
      * @return the hierarchyLevel
      */
     @XmlElement
-    public int getHierarchyLevel(){
-    	return hierarchyLevel;
+    public int getHierarchyLevel() {
+        return hierarchyLevel;
     }
 
     /**
@@ -276,10 +276,11 @@ public class DataDescription implements SoapSerializable {
      * @return true if data is a presentation
      */
     @XmlElement
-    public boolean isPresentation(){
-    	if (name.endsWith(".ppt"))
-    		return true;
-    	return false;
+    public boolean isPresentation() {
+        if (name.endsWith(".ppt")) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -287,8 +288,8 @@ public class DataDescription implements SoapSerializable {
      * @return the id of the parent item
      */
     @XmlElement
-    public String getParentId(){
-    	return parentId;
+    public String getParentId() {
+        return parentId;
     }
 
     /**
@@ -323,13 +324,13 @@ public class DataDescription implements SoapSerializable {
         this.name = name;
     }
 
-    public void changeName(String newname){
-    	String oldname = name;
-    	this.name = newname;
-    	log.info(uri);
-    	String newuri = uri.substring(0, uri.indexOf(oldname)) + newname;
-    	log.info(newuri);
-    	uri = newuri;
+    public void changeName(String newname) {
+        String oldname = name;
+        this.name = newname;
+        log.info(uri);
+        String newuri = uri.substring(0, uri.indexOf(oldname)) + newname;
+        log.info(newuri);
+        uri = newuri;
     }
 
     /**
@@ -479,7 +480,7 @@ public class DataDescription implements SoapSerializable {
      * compares two DataDescriptions in [ id ]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         return this.id.equals(((DataDescription)o).id);
     }
 
@@ -487,22 +488,22 @@ public class DataDescription implements SoapSerializable {
     *
     * @see java.lang.Object#hashCode()
     */
-    public int hashCode(){
+    public int hashCode() {
         return id.hashCode();
     }
 
-    public String toString(){
-	    String out = "Id: " +id +"\n";
-	    	out += "Name: "+ name +"\n";
-	    	out += "Description: "+ description +"\n";
-	    	out += "Size: " + size +"\n";
-	    	out += "lastModified: " + lastModified +"\n";
-	    	out += "expires: " + expires +"\n";
-	    	out += "uri: " + uri + "\n";
-	    	out += "type: " + objectType + "\n";
-	    	out += "parentId: " + parentId + "\n";
-	    	out += "hierarchyLevel: " + hierarchyLevel + "\n";
-		return out;
+    public String toString() {
+        String out = "Id: " +id +"\n";
+            out += "Name: "+ name +"\n";
+            out += "Description: "+ description +"\n";
+            out += "Size: " + size +"\n";
+            out += "lastModified: " + lastModified +"\n";
+            out += "expires: " + expires +"\n";
+            out += "uri: " + uri + "\n";
+            out += "type: " + objectType + "\n";
+            out += "parentId: " + parentId + "\n";
+            out += "hierarchyLevel: " + hierarchyLevel + "\n";
+        return out;
     }
 
 }

@@ -50,9 +50,9 @@ import javax.swing.JProgressBar;
  */
 public class ProgressDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final int DIALOG_WIDTH = 400;
+    private static final int DIALOG_WIDTH = 400;
 
     private static final int DIALOG_HEIGHT = 40;
 

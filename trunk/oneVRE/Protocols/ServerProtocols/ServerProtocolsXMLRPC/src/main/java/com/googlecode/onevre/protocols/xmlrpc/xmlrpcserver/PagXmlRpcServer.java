@@ -31,11 +31,9 @@
 
 package com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver;
 
-import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xmlrpc.server.XmlRpcServer;
@@ -52,7 +50,7 @@ import com.googlecode.onevre.utils.Utils;
  */
 public class PagXmlRpcServer {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private XmlRpcServer server = new XmlRpcServer();
 
@@ -92,8 +90,8 @@ public class PagXmlRpcServer {
         thread.start();
     }
 
-    public String handleSyncRequest(HttpServletRequest request){
-    	log.info("in PagXmlRpcServer:handleSyncRequest");
+    public String handleSyncRequest(HttpServletRequest request) {
+        log.info("in PagXmlRpcServer:handleSyncRequest");
         XmlRpcThread thread = new XmlRpcThread(server, request, queue);
         return thread.executeSync();
     }
@@ -129,15 +127,15 @@ public class PagXmlRpcServer {
     }
 /*
     public void addEvent(AgEvent event) {
-    	try {
-			JSONJAXBContext context = new JSONJAXBContext(JSONConfiguration.natural().build(),AgEvent.class);
-			JSONMarshaller marshaller = context.createJSONMarshaller();
+        try {
+            JSONJAXBContext context = new JSONJAXBContext(JSONConfiguration.natural().build(),AgEvent.class);
+            JSONMarshaller marshaller = context.createJSONMarshaller();
             StringWriter writer = new StringWriter();
             marshaller.marshallToJSON(event, writer);
-	        queue.addResponse(writer.toString());
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+            queue.addResponse(writer.toString());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
     }
 */
     /**

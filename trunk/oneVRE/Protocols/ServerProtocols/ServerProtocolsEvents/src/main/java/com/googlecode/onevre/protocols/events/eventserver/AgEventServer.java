@@ -31,6 +31,9 @@
 
 package com.googlecode.onevre.protocols.events.eventserver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.googlecode.onevre.utils.TimeoutListener;
 
 /**
@@ -39,6 +42,8 @@ import com.googlecode.onevre.utils.TimeoutListener;
  * @version 1.0
  */
 public class AgEventServer {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
  //   private XmlRpcServer server = new XmlRpcServer();
 
@@ -50,7 +55,7 @@ public class AgEventServer {
      * Creates a new PagXmlRpcServer
      */
     public AgEventServer() {
-        System.err.println("starting XML_RPC server");
+        log.info("starting XML_RPC server");
 //        Utils.setDefaultSslConnection();
 //        server.setHandlerMapping(mapping);
 /*        XmlRpcServerConfigImpl severConfig =
@@ -88,7 +93,7 @@ public class AgEventServer {
     }
 
     public void addEvent(AgEvent event) {
-	        queue.addResponse(queue.getEventString(event));
+        queue.addResponse(queue.getEventString(event));
     }
 
     /**

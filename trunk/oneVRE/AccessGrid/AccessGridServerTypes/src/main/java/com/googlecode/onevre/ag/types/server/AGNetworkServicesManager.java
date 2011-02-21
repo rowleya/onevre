@@ -26,12 +26,13 @@ public class AGNetworkServicesManager {
      * @param networkServiceDescription a description of the network service to add (AGNetworkServiceDescription).
      *
      */
-    public void registerService (AGNetworkServiceDescription networkServiceDescription) {
-        if (networkServiceDescription==null) {
+    public void registerService(AGNetworkServiceDescription networkServiceDescription) {
+        if (networkServiceDescription == null) {
             throw new RuntimeException("Missing network service parameter, failed to add service.");
         }
-        if (services.containsKey(networkServiceDescription.getUri())){
-            throw new RuntimeException("A service at url " + networkServiceDescription.getUri() + " is already present, failed to add service.");
+        if (services.containsKey(networkServiceDescription.getUri())) {
+            throw new RuntimeException("A service at url " + networkServiceDescription.getUri()
+                    + " is already present, failed to add service.");
         }
         services.put(networkServiceDescription.getUri(), networkServiceDescription);
     }
@@ -43,77 +44,83 @@ public class AGNetworkServicesManager {
      *
      */
     public void unRegisterService(AGNetworkServiceDescription networkServiceDescription) {
-        if (networkServiceDescription==null) {
+        if (networkServiceDescription == null) {
             throw new RuntimeException("Missing network service parameter, failed to remove service.");
         }
-        if (services.remove(networkServiceDescription.getUri())==null){
-            throw new RuntimeException("Service " + networkServiceDescription.getUri() +" is already unregistered");
+        if (services.remove(networkServiceDescription.getUri()) == null) {
+            throw new RuntimeException("Service " + networkServiceDescription.getUri() + " is already unregistered");
         }
     }
 
-    private Vector<AGNetworkServiceDescription> matchInCapabilities(StreamDescription stream, Vector<AGNetworkServiceDescription> services){
+    private Vector<AGNetworkServiceDescription> matchInCapabilities(StreamDescription stream,
+            Vector<AGNetworkServiceDescription> services) {
         Vector<AGNetworkServiceDescription> matchingServices = new Vector<AGNetworkServiceDescription>();
         Vector<Capability> streamProducerCaps = new Vector<Capability>();
-        for (Capability cap : stream.getCapability()){
-            if (cap.getRole().equals(Capability.PRODUCER)){
+        for (Capability cap : stream.getCapability()) {
+            if (cap.getRole().equals(Capability.PRODUCER)) {
                 streamProducerCaps.add(cap);
             }
         }
-        for (AGNetworkServiceDescription service : services){
+        for (AGNetworkServiceDescription service : services) {
             boolean serviceMatch = true;
-            for (Capability streamCap : streamProducerCaps ){
+            for (Capability streamCap : streamProducerCaps) {
                 boolean match = false;
-                for (Capability cap: service.getCapabilities()){
-                    if (cap.getRole().equals(Capability.CONSUMER) && streamCap.matches(cap)){
+                for (Capability cap : service.getCapabilities()) {
+                    if (cap.getRole().equals(Capability.CONSUMER) && streamCap.matches(cap)) {
                         match = true;
                     }
                 }
-                if (!match){
+                if (!match) {
                     serviceMatch = false;
                     break;
                 }
             }
-            if (!matchingServices.contains(service) && serviceMatch){
+            if (!matchingServices.contains(service) && serviceMatch) {
                 matchingServices.add(service);
             }
         }
         return matchingServices;
     }
 
-    private Vector<AGNetworkServiceDescription> matchOutCapabilities(Vector<AGNetworkServiceDescription> services, Vector<Capability> capabilties){
+    private Vector<AGNetworkServiceDescription> matchOutCapabilities(Vector<AGNetworkServiceDescription> services,
+            Vector<Capability> capabilties) {
            Vector<AGNetworkServiceDescription> matchingServices = new Vector<AGNetworkServiceDescription>();
         Vector<Capability> nodeConsumerCaps = new Vector<Capability>();
-        for (Capability cap : capabilties){
-            if (cap.getRole().equals(Capability.CONSUMER)){
+        for (Capability cap : capabilties) {
+            if (cap.getRole().equals(Capability.CONSUMER)) {
                 nodeConsumerCaps.add(cap);
             }
         }
-        for (AGNetworkServiceDescription service : services){
+        for (AGNetworkServiceDescription service : services) {
             boolean serviceMatch = true;
-            for (Capability capability : nodeConsumerCaps){
+            for (Capability capability : nodeConsumerCaps) {
                 boolean match = false;
-                for  (Capability cap: service.getCapabilities()){
-                    if (cap.getRole().equals(Capability.PRODUCER) && capability.matches(cap)){
-                        match=true;
+                for  (Capability cap : service.getCapabilities()) {
+                    if (cap.getRole().equals(Capability.PRODUCER) && capability.matches(cap)) {
+                        match = true;
                     }
                 }
-                if (!match){
+                if (!match) {
                     serviceMatch = false;
                     break;
                 }
             }
-            if (!matchingServices.contains(service) && serviceMatch){
+            if (!matchingServices.contains(service) && serviceMatch) {
                 matchingServices.add(service);
             }
         }
         return matchingServices;
     }
 
-    private HashMap<StreamDescription, Vector<AGNetworkServiceDescription>> Match(Vector<StreamDescription> streamList, Vector<Capability> capabilties){
-        HashMap<StreamDescription, Vector<AGNetworkServiceDescription>> streamServiceList = new HashMap<StreamDescription, Vector<AGNetworkServiceDescription>>();
-        for (StreamDescription stream : streamList){
-            Vector<AGNetworkServiceDescription> matchingServices = matchOutCapabilities(matchInCapabilities(stream, (Vector<AGNetworkServiceDescription>)services.values()), capabilties);
-            if (matchingServices.size()>0){
+    private HashMap<StreamDescription, Vector<AGNetworkServiceDescription>> match(Vector<StreamDescription> streamList,
+            Vector<Capability> capabilties) {
+        HashMap<StreamDescription, Vector<AGNetworkServiceDescription>> streamServiceList =
+            new HashMap<StreamDescription, Vector<AGNetworkServiceDescription>>();
+        for (StreamDescription stream : streamList) {
+            Vector<AGNetworkServiceDescription> matchingServices =
+                matchOutCapabilities(matchInCapabilities(stream,
+                        (Vector<AGNetworkServiceDescription>) services.values()), capabilties);
+            if (matchingServices.size() > 0) {
                 streamServiceList.put(stream, matchingServices);
             }
         }
@@ -130,20 +137,24 @@ public class AGNetworkServicesManager {
      * @return a list of new streams that matches given node capabilities.
      *
      */
-    public HashMap<StreamDescription,String> resolveMismatch(Vector<StreamDescription> streamList, Vector<Capability> nodeCapabilities) {
+    public HashMap<StreamDescription, String> resolveMismatch(Vector<StreamDescription> streamList,
+            Vector<Capability> nodeCapabilities) {
 
-        if (nodeCapabilities==null){
-            throw new RuntimeException("NetworkServicesManager.ResolveMismatch: Capability parameter is missing, can not complete matching");
+        if (nodeCapabilities == null) {
+            throw new RuntimeException("NetworkServicesManager.ResolveMismatch: "
+                    + "Capability parameter is missing, can not complete matching");
         }
-        if (streamList==null){
-            throw new RuntimeException("NetworkServicesManager.ResolveMismatch: Stream list parameter is missing, can not complete matching");
+        if (streamList == null) {
+            throw new RuntimeException("NetworkServicesManager.ResolveMismatch: "
+                    + "Stream list parameter is missing, can not complete matching");
         }
-        HashMap<StreamDescription,String> matchedStreams = new HashMap<StreamDescription, String>();
-        if (services.size() > 0){
-            HashMap<StreamDescription,Vector<AGNetworkServiceDescription>> matchedServices = Match(streamList, nodeCapabilities);
-            for (StreamDescription stream : matchedServices.keySet()){
+        HashMap<StreamDescription, String> matchedStreams = new HashMap<StreamDescription, String>();
+        if (services.size() > 0) {
+            HashMap<StreamDescription, Vector<AGNetworkServiceDescription>> matchedServices =
+                match(streamList, nodeCapabilities);
+            for (StreamDescription stream : matchedServices.keySet()) {
                 Vector<AGNetworkServiceDescription> netServices = matchedServices.get(stream);
-                for (AGNetworkServiceDescription service: netServices){
+                for (AGNetworkServiceDescription service : netServices) {
                     try {
                         AGNetworkService netServiceProxy = new AGNetworkService(service.getUri());
                         StreamDescription outStream = netServiceProxy.transform(stream);

@@ -6,14 +6,14 @@ import com.googlecode.onevre.gwt.common.client.MessageResponse;
 
 public class UploadBridgeButton extends ActionButton {
 
-	public UploadBridgeButton() {
-		setImageUrl("images/uploadbr.png");
-		setName("Upload Bridge");
-	}
+    public UploadBridgeButton() {
+        setImageUrl("images/uploadbr.png");
+        setName("Upload Bridge");
+    }
 
-	@Override
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    @Override
+    public void action() {
+        new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
 }

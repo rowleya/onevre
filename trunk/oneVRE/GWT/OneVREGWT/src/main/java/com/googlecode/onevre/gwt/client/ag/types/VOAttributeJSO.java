@@ -4,24 +4,24 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class VOAttributeJSO extends JavaScriptObject {
 
-	protected VOAttributeJSO(){
+    protected VOAttributeJSO() {
 
-	}
+    }
 
-	public native final String getVo() /*-{
-		return this.getVo();
-	}-*/;
+    public final native String getVo() /*-{
+        return this.getVo();
+    }-*/;
 
-	public native final String getGroup() /*-{
-		return this.getGroup();
-	}-*/;
+    public final native String getGroup() /*-{
+        return this.getGroup();
+    }-*/;
 
-	public native final String getRole() /*-{
-		return this.getRole();
-	}-*/;
+    public final native String getRole() /*-{
+        return this.getRole();
+    }-*/;
 
-	public native final String getCap() /*-{
-		return this.getCap();
-	}-*/;
+    public final native String getCap() /*-{
+        return this.getCap();
+    }-*/;
 
 }

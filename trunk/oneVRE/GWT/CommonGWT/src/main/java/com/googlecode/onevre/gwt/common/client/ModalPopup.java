@@ -32,8 +32,6 @@
 
 package com.googlecode.onevre.gwt.common.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -59,7 +57,7 @@ public class ModalPopup<T extends Widget> extends PopupPanel
 
         int ypos = DOM.getAbsoluteTop(getElement()) + Window.getClientHeight();
         DOM.setStyleAttribute(getElement(), "width", "100%");
-        DOM.setStyleAttribute(getElement(), "height",""+ ypos +"px");
+        DOM.setStyleAttribute(getElement(), "height", "" + ypos + "px");
         DOM.setStyleAttribute(getElement(), "backgroundColor", "#000");
         DOM.setStyleAttribute(getElement(), "opacity", "0.70");
         DOM.setStyleAttribute(getElement(), "filter",  " alpha(opacity=70)");

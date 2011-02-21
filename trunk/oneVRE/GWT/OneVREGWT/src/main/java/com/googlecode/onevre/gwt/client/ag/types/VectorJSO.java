@@ -4,17 +4,17 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class VectorJSO<T extends JavaScriptObject> extends JavaScriptObject {
 
-	protected VectorJSO (){
-	}
+    protected VectorJSO() {
+    }
 
 
-	public native final T get(int i) /*-{
-		return this.get(i);
-	}-*/;
+    public final native T get(int i) /*-{
+        return this.get(i);
+    }-*/;
 
-	public native final int size() /*-{
-		return this.size();
-	}-*/;
+    public final native int size() /*-{
+        return this.size();
+    }-*/;
 
 
 }

@@ -12,23 +12,23 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class AddDirectoryReceiver implements RequestReceiver {
 
-	private VenueState state = null;
+    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
-		DataDescription data = new DataDescription ((DataDescriptionJSO) parameters.get(0));
-		state = Application.getServerManager().getVenuefromSource(source);
-		Application.getDataManager().addDirectory(state, data);
-	}
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
+        DataDescription data = new DataDescription((DataDescriptionJSO) parameters.get(0));
+        state = Application.getServerManager().getVenuefromSource(source);
+        Application.getDataManager().addDirectory(state, data);
+    }
 
-	public void init(String source) {
-		state = Application.getServerManager().getVenuefromSource(source);
-	}
+    public void init(String source) {
+        state = Application.getServerManager().getVenuefromSource(source);
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		DataDescription data = new DataDescription ((DataDescriptionEJSO) eventJSO.getEventObject());
-		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-		Application.getDataManager().addDirectory(state, data);
-	}
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        DataDescription data = new DataDescription((DataDescriptionEJSO) eventJSO.getEventObject());
+        state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+        Application.getDataManager().addDirectory(state, data);
+    }
 
 }

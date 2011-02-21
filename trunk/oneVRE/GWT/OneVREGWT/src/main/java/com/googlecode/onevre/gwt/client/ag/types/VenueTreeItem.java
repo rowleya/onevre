@@ -16,47 +16,47 @@ public class VenueTreeItem extends TreeItem {
 
     private boolean hasDummy = true;
 
-    public Panel getItemPanel(){
-    	HorizontalPanel panel = new HorizontalPanel();
-    	panel.add(new Label(venueName));
-    	MonitorVenueButton mvb = new MonitorVenueButton(venueUrl);
-    	panel.add(mvb.getButton());
-    	panel.setWidth("100%");
-    	panel.setCellHorizontalAlignment(mvb.getButton(), HorizontalPanel.ALIGN_RIGHT);
-    	return panel;
+    public Panel getItemPanel() {
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.add(new Label(venueName));
+        MonitorVenueButton mvb = new MonitorVenueButton(venueUrl);
+        panel.add(mvb.getButton());
+        panel.setWidth("100%");
+        panel.setCellHorizontalAlignment(mvb.getButton(), HorizontalPanel.ALIGN_RIGHT);
+        return panel;
     }
 
     public VenueTreeItem(VenueTreeItemJSO jso) {
-    	super();
-		uniqueId = jso.getId();
-		venueName = jso.getName();
-		venueUrl = jso.getUri();
-		isExpanded = jso.isExpanded();
-		isSelected = jso.isSelected();
+        super();
+        uniqueId = jso.getId();
+        venueName = jso.getName();
+        venueUrl = jso.getUri();
+        isExpanded = jso.isExpanded();
+        isSelected = jso.isSelected();
 
-		if (jso.hasConnections()){
-			VectorJSO<VenueTreeItemJSO> vtijso = jso.getConnections();
-			connections = new Vector<VenueTreeItem>();
-			for (int i = 0; i<vtijso.size(); i++) {
-				connections.add(new VenueTreeItem(vtijso.get(i)));
-			}
-		}
-		this.setWidget(getItemPanel());
-		this.addItem(dummy);
-	}
-
-    public void removeDummy(){
-    	if (hasDummy){
-    		this.removeItem(dummy);
-    		hasDummy=false;
-    	}
+        if (jso.hasConnections()) {
+            VectorJSO<VenueTreeItemJSO> vtijso = jso.getConnections();
+            connections = new Vector<VenueTreeItem>();
+            for (int i = 0; i < vtijso.size(); i++) {
+                connections.add(new VenueTreeItem(vtijso.get(i)));
+            }
+        }
+        this.setWidget(getItemPanel());
+        this.addItem(dummy);
     }
 
-    public boolean hasDummy(){
-    	return hasDummy;
+    public void removeDummy() {
+        if (hasDummy) {
+            this.removeItem(dummy);
+            hasDummy = false;
+        }
     }
 
-	private static synchronized String getUniqueId() {
+    public boolean hasDummy() {
+        return hasDummy;
+    }
+
+    private static synchronized String getUniqueId() {
         treeInstances++;
         return String.valueOf(System.currentTimeMillis())
             + String.valueOf(treeInstances);
@@ -80,19 +80,19 @@ public class VenueTreeItem extends TreeItem {
     private Vector<VenueTreeItem> connections = null;
 
     public boolean hasConnections() {
-    	return (connections != null);
+        return (connections != null);
     }
     public Vector<VenueTreeItem> getConnections() {
-    	return connections;
+        return connections;
     }
 
-	public String getName() {
-		return venueName;
-	}
+    public String getName() {
+        return venueName;
+    }
 
-	public String getVenueUrl() {
-		return venueUrl;
-	}
+    public String getVenueUrl() {
+        return venueUrl;
+    }
 
 
 }

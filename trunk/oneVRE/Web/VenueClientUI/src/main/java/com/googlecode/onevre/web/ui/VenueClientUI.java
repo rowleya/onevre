@@ -50,7 +50,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.parsers.DOMParser;
-import org.ietf.jgss.GSSCredential;
 import org.jivesoftware.smack.XMPPException;
 
 import org.w3c.dom.Document;
@@ -105,7 +104,7 @@ import com.googlecode.onevre.web.servlet.ServicesList;
 public class VenueClientUI implements ApplicationListener, TimeoutListener,
         HttpSessionBindingListener {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The default port for the jabber connection
     private static final int DEFAULT_JABBER_PORT = 5223;
@@ -148,9 +147,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     // The Application Client
     private Vector<EventClient> applicationClients = null;
 
-    private HashMap<String,EventClient> venueEventClients = new HashMap<String,EventClient>();
+    private HashMap<String, EventClient> venueEventClients = new HashMap<String, EventClient>();
 
-    private HashMap<String, Venue> venues = new HashMap<String,Venue>();
+    private HashMap<String, Venue> venues = new HashMap<String, Venue>();
 
     private HashMap<String, VenueState> venueStates = new HashMap<String, VenueState>();
 
@@ -202,7 +201,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         this.currentVenueUri = clientProfile.getHomeVenue();
         this.agEventServer = agEventServer;
         setMyVenues(myVenuesPreference);
-        setTrustedServers(Defaults.trustedServerFile);
+        setTrustedServers(Defaults.getTrustedServerFile());
         try {
             this.venueList = new VenueList();
             venueList.setCurrentVenueUrl(currentVenueUri);
@@ -219,18 +218,18 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param current The current size of the file
      */
     public void setUploadStatus(String venueUri, String filename, long total, long current) {
-    	UploadStatus object = new UploadStatus(filename,total,current);
+        UploadStatus object = new UploadStatus(filename, total, current);
         agEventServer.addEvent(new AgEvent(venueUri, "setUploadStatus", object));
     }
 
-    private String uriFromVenueStateUri(String vsUri){
-    	for (String uri: venueStates.keySet()){
-    		VenueState vs = venueStates.get(uri);
-    		if ((vs!=null) && vsUri.equals(vs.getUri())) {
-    			return uri;
-    		}
-    	}
-    	return null;
+    private String uriFromVenueStateUri(String vsUri) {
+        for (String uri : venueStates.keySet()) {
+            VenueState vs = venueStates.get(uri);
+            if ((vs != null) && vsUri.equals(vs.getUri())) {
+                return uri;
+            }
+        }
+        return null;
     }
 
     /**
@@ -238,8 +237,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      *
      */
     public void showUploadStatus(String venueUri, String filename, long total) {
-    	UploadStatus object = new UploadStatus(filename,total,0);
-    	agEventServer.addEvent(new AgEvent(venueUri,"showUploadStatus", object));
+        UploadStatus object = new UploadStatus(filename, total, 0);
+        agEventServer.addEvent(new AgEvent(venueUri, "showUploadStatus", object));
     }
 
     /**
@@ -255,7 +254,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param message The message to display
      */
     public void displayMessage(String venueUri, String type, String message) {
-        agEventServer.addEvent(new AgEvent(venueUri, "displayMessage", new MessageBox(type,message)));
+        agEventServer.addEvent(new AgEvent(venueUri, "displayMessage", new MessageBox(type, message)));
     }
 
     private void setMyVenues(String myVenuesPreference) {
@@ -271,36 +270,36 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     private VenueServerType getVenueServer(String name, String server) throws SoapException, IOException {
-    	String urlString = "";
-    	if (!server.contains("://")){
-    		urlString = "https://";
-    	}
-    	urlString += server;
-    	URL url = new URL(urlString);
-    	VenueServerType venueServer = new VenueServerType();
-    	venueServer.setName(name);
-    	venueServer.setPortNumber(url.getPort());
-    	if (url.getPath()!=""){
-    		venueServer.setDefaultVenue(url.getPath());
-    	}
-    	venueServer.setProtocol(url.getProtocol());
-    	venueServer.setUrl(url.getHost());
-    	Venue venue = new Venue(venueServer.getDefaultVenueUrl(),isOneVREVenue(venueServer.getDefaultVenueUrl()));
-   		venue.setGSScredential(credential);
-    	String version = venue.getVersion();
-    	if (version!=null) {
-    		venueServer.setVersion(version);
-    	}
-    	VenueState state = venue.getState();
-    	if (state!=null) {
-    		venueServer.setDefaultVenueId(state.getUniqueId());
-    		url= new URL(state.getUri());
-    		log.info("URL Path: " + url.getPath());
-    		venueServer.setDefaultVenue(url.getPath());
-    	}
-    	log.info("Add trusted Server:" + venueServer.toLog());
+        String urlString = "";
+        if (!server.contains("://")) {
+            urlString = "https://";
+        }
+        urlString += server;
+        URL url = new URL(urlString);
+        VenueServerType venueServer = new VenueServerType();
+        venueServer.setName(name);
+        venueServer.setPortNumber(url.getPort());
+        if (url.getPath() != "") {
+            venueServer.setDefaultVenue(url.getPath());
+        }
+        venueServer.setProtocol(url.getProtocol());
+        venueServer.setUrl(url.getHost());
+        Venue venue = new Venue(venueServer.getDefaultVenueUrl(), isOneVREVenue(venueServer.getDefaultVenueUrl()));
+           venue.setGSScredential(credential);
+        String version = venue.getVersion();
+        if (version != null) {
+            venueServer.setVersion(version);
+        }
+        VenueState state = venue.getState();
+        if (state != null) {
+            venueServer.setDefaultVenueId(state.getUniqueId());
+            url = new URL(state.getUri());
+            log.info("URL Path: " + url.getPath());
+            venueServer.setDefaultVenue(url.getPath());
+        }
+        log.info("Add trusted Server:" + venueServer.toLog());
 
-		return venueServer;
+        return venueServer;
     }
 
 
@@ -308,28 +307,28 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         trustedServers.clear();
         DOMParser parser = new DOMParser();
         try {
-			parser.parse(new InputSource(getClass().getResourceAsStream("/" + trustedServersFile)));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            parser.parse(new InputSource(getClass().getResourceAsStream("/" + trustedServersFile)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Document document = parser.getDocument();
         NodeList serverList = document.getElementsByTagName("server");
-        for (int i=0;i < serverList.getLength();i++){
-        	Node serverNode = serverList.item(i);
-        	String server = serverNode.getTextContent();
-        	String name = "";
-        	try {
-        		name = serverNode.getAttributes().getNamedItem("name").getNodeValue();
-        	} catch (NullPointerException e) {
-				name = "";
-			};
-        	try {
-  				VenueServerType venueServer = getVenueServer(name, server);
-	        	log.info("Add trusted Server:" + venueServer.toLog());
-	        	trustedServers.add(venueServer);
-			} catch (Exception e) {
-				log.error("Server : " + name + " = " + server + " is not responding ");
-			}
+        for (int i = 0; i < serverList.getLength(); i++) {
+            Node serverNode = serverList.item(i);
+            String server = serverNode.getTextContent();
+            String name = "";
+            try {
+                name = serverNode.getAttributes().getNamedItem("name").getNodeValue();
+            } catch (NullPointerException e) {
+                name = "";
+            }
+            try {
+                  VenueServerType venueServer = getVenueServer(name, server);
+                log.info("Add trusted Server:" + venueServer.toLog());
+                trustedServers.add(venueServer);
+            } catch (Exception e) {
+                log.error("Server : " + name + " = " + server + " is not responding ");
+            }
         }
     }
 
@@ -357,23 +356,23 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         return myVenuesPreference;
     }
 
-    public void setTrustedServers(Vector<VenueServerType> trServers){
-    	for (VenueServerType server:trServers){
-    		if (!trustedServers.contains(server)){
-    			log.info("Adding trusted Server:" + server);
-    			trustedServers.add(server);
-    		}
-    	}
+    public void setTrustedServers(Vector<VenueServerType> trServers) {
+        for (VenueServerType server : trServers) {
+            if (!trustedServers.contains(server)) {
+                log.info("Adding trusted Server:" + server);
+                trustedServers.add(server);
+            }
+        }
     }
 
 /*    public String getTrustedServersPreference() {
-    	String trustedServersPreference = "";
-    	String sep="";
-    	for (String server : trustedServers){
-    		trustedServersPreference += sep + server;
-    		sep=";";
-    	}
-    	return trustedServersPreference;
+        String trustedServersPreference = "";
+        String sep="";
+        for (String server : trustedServers) {
+            trustedServersPreference += sep + server;
+            sep=";";
+        }
+        return trustedServersPreference;
     }
 */
     /**
@@ -417,8 +416,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     public VenueList removeMyVenue(String url) {
         VenueTreeItem item = myVenues.remove(url);
         if (venueList.getMode() == VenueList.MODE_MY_VENUES) {
-            if (item!=null) {
-            	venueList.removeRoot(item);
+            if (item != null) {
+                venueList.removeRoot(item);
             }
         }
         return venueList;
@@ -462,17 +461,17 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      */
     public VenueState enterVenue(String uri) throws Exception {
         try {
-        	int venueListMode=venueList.getMode();
+            int venueListMode = venueList.getMode();
             exitVenue();
-            applicationClients=new Vector<EventClient>();
-            applicationMonitorPrivateTokens=new HashMap<String, String>();
-            applicationPrivateTokens=new HashMap<String, Vector<String>>();
+            applicationClients = new Vector<EventClient>();
+            applicationMonitorPrivateTokens = new HashMap<String, String>();
+            applicationPrivateTokens = new HashMap<String, Vector<String>>();
             currentVenueUri = uri;
             Venue currentVenue = new Venue(uri, isOneVREVenue(uri));
             currentVenue.setGSScredential(credential);
             venues.put(uri, currentVenue);
             String connectionId = currentVenue.enter(clientProfile);
-            venueConnIds.put(uri,connectionId);
+            venueConnIds.put(uri, connectionId);
             ClientUpdateThread clientUpdateThread = new ClientUpdateThread(currentVenue,
                     connectionId);
             clientUpdateThreads.put(uri, clientUpdateThread);
@@ -484,12 +483,12 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             currentVenueState.setVenueList(venueList);
             setVenueListMode(venueListMode);
 
-            EventClient eventClient = new EventClient(new VenueClientEventListener(currentVenueState,
-                    currentVenueState.getEventLocation(),
-                    this,agEventServer), connectionId,
-                    currentVenueState.getUniqueId());
+            EventClient eventClient = new EventClient(
+                    new VenueClientEventListener(currentVenueState,
+                            currentVenueState.getEventLocation(), this, agEventServer),
+                    connectionId, currentVenueState.getUniqueId());
             venueEventClients.put(uri, eventClient);
-            Defaults.writeLog("Enter Venue: " + currentVenueState.toLog() + "; Client: " + clientProfile.toLog() );
+            Defaults.writeLog("Enter Venue: " + currentVenueState.toLog() + "; Client: " + clientProfile.toLog());
 
             final URI venueuri = new URI(uri);
 
@@ -519,7 +518,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
 //                    System.err.println("Room : " + jabberRoom);
                     try {
                         jabberClient = new JabberClient(jabberHost, jabberPort, true,
-                        	currentVenueState.getUri(),jabberRoom, nickname, agEventServer);
+                            currentVenueState.getUri(), jabberRoom, nickname, agEventServer);
                         jabberClients.put(currentVenueState.getUri(), jabberClient);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -546,56 +545,55 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @throws Exception
      */
     public VenueState monitorVenue(String uri) throws MalformedURLException  {
-        Venue currentVenue = new Venue(uri,isOneVREVenue(uri));
+        Venue currentVenue = new Venue(uri, isOneVREVenue(uri));
         boolean managable = isOneVREVenue(uri);
         log.info("IN MONITOR VENUE");
 
         if (credential != null) {
-        	log.info("Monitor " + credential.getDN() + " : " + credential.getVoAttributes().toString() );
+            log.info("Monitor " + credential.getDN() + " : " + credential.getVoAttributes().toString());
         } else {
-        	log.info("Monitor no credential provided");
+            log.info("Monitor no credential provided");
         }
-       	currentVenue.setGSScredential(credential);
+           currentVenue.setGSScredential(credential);
         /*        String version="";
-		try {
-			version = currentVenue.getVersion();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            version = currentVenue.getVersion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         log.info("VenueServer Version: " + version );
-        if (version.contains("OneVRE")){
-        	currentVenue.setGSScredential(credential);
+        if (version.contains("OneVRE")) {
+            currentVenue.setGSScredential(credential);
         }*/
-        venues.put(uri,currentVenue);
+        venues.put(uri, currentVenue);
         VenueState state = null;
-    	try {
+        try {
             state = currentVenue.getState();
             uri = state.getUri();
-            venues.put(uri,currentVenue);
-            venueStates.put(uri,state);
-            applicationClients=new Vector<EventClient>();
-            applicationMonitorPrivateTokens=new HashMap<String, String>();
-            applicationPrivateTokens=new HashMap<String, Vector<String>>();
+            venues.put(uri, currentVenue);
+            venueStates.put(uri, state);
+            applicationClients = new Vector<EventClient>();
+            applicationMonitorPrivateTokens = new HashMap<String, String>();
+            applicationPrivateTokens = new HashMap<String, Vector<String>>();
             currentVenueUri = uri;
             String connectionId = Utils.generateID();
-            if (managable){
-            	connectionId = currentVenue.monitor(clientProfile);
-            	venueConnIds.put(uri, connectionId);
+            if (managable) {
+                connectionId = currentVenue.monitor(clientProfile);
+                venueConnIds.put(uri, connectionId);
             }
-            log.info("VenueState of "+ uri +" : " +  state);
-            EventClient eventClient = new EventClient(new VenueClientEventListener(state,
-                    state.getEventLocation(),
-                    this,agEventServer), connectionId,
-                    state.getUniqueId());
+            log.info("VenueState of " + uri + " : " +  state);
+            EventClient eventClient = new EventClient(
+                    new VenueClientEventListener(state, state.getEventLocation(), this, agEventServer),
+                    connectionId, state.getUniqueId());
             log.info("eventClient started");
-            venueEventClients.put(uri,eventClient);
+            venueEventClients.put(uri, eventClient);
 
             /*            Venue venue = new Venue(uri);
             String version = venue.getVersion();
 
-            if (version.contains("OneVRE")){
-            	connectionId = venue.monitor(clientProfile);
-            	Vector
+            if (version.contains("OneVRE")) {
+                connectionId = venue.monitor(clientProfile);
+                Vector
             }
             connectionId = currentVenue.enter(clientProfile);
             clientUpdateThread = new ClientUpdateThread(currentVenue,
@@ -640,7 +638,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                     log.info("Room : " + jabberRoom);
                     try {
                         jabberClient = new JabberClient(jabberHost, jabberPort, true,
-                        	jabberState.getUri(),jabberRoom, nickname, agEventServer);
+                            jabberState.getUri(), jabberRoom, nickname, agEventServer);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -649,64 +647,64 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
            jabberThread.start();
            jabberClients.put(uri, jabberClient);
            agEventServer.setListener(this);
-        } catch (SoapException e){
-        	e.printStackTrace();
+        } catch (SoapException e) {
+            e.printStackTrace();
 
         } catch (IOException e) {
-			e.printStackTrace();
-		}
-
-    	catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 //            stopMonitorVenue();
 //            throw e;
         }
-
-    	return state;
+        return state;
     }
 
-    public boolean isOneVREVenue(String venueUri){
-    	for (VenueServerType st : trustedServers){
-    		if (venueUri.startsWith(st.getBaseUrl())){
-    			if (st.getVersion().contains("OneVRE")){
-    				return true;
-    			}
-    			return false;
-    		}
-    	}
-    	return false;
+    public boolean isOneVREVenue(String venueUri) {
+        for (VenueServerType st : trustedServers) {
+            if (venueUri.startsWith(st.getBaseUrl())) {
+                if (st.getVersion().contains("OneVRE")) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 
     public boolean stopMonitoringVenue(String venueUri)  {
-    	String uri = uriFromVenueStateUri(venueUri);
-    	if (uri==null) {
-    		return false;
-    	}
-    	String connId = venueConnIds.get(uri);
-    	EventClient evclient = venueEventClients.remove(uri);
-    	if (evclient!=null){
-    		evclient.close();
-    	}
-    	JabberClient jabber = jabberClients.remove(uri);
-    	if (jabber!=null){
-    		jabber.close();
-    	}
-    	Venue venue = venues.get(uri);
-    	try {
-			venue.exit(connId);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+        String uri = uriFromVenueStateUri(venueUri);
+        if (uri == null) {
+            return false;
+        }
+        String connId = venueConnIds.get(uri);
+        EventClient evclient = venueEventClients.remove(uri);
+        if (evclient != null) {
+            evclient.close();
+        }
+        JabberClient jabber = jabberClients.remove(uri);
+        if (jabber != null) {
+            jabber.close();
+        }
+        Venue venue = venues.get(uri);
+        try {
+            venue.exit(connId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
-    public boolean uploadData(String venueUri,final String parentId, final String filename, final String description,final String expires){
-    	/*    	String uri = uriFromVenueStateUri(venueUri);
+    public boolean uploadData(String venueUri, final String parentId,
+            final String filename, final String description, final String expires) {
 
-    	final String namespace;
+        /*
+        String uri = uriFromVenueStateUri(venueUri);
 
-    	final File file = new File(filename);
+        final String namespace;
+
+        final File file = new File(filename);
         Thread uploader = new Thread() {
             public void run() {
                     Part[] parts = new Part[4];
@@ -718,100 +716,103 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                     System.out.println("Uploading " + parts.length + " files");
 
                     try {
-	                    URL url = new URL(urlString);
-	                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	                    connection.setDoOutput(true);
-	                    Utils.addSslConnection(connection);
-	                    PostMethod filePost = new PostMethod(urlString);
-	                    RequestEntity requestEntity = new MultipartRequestEntity(parts,
-	                            filePost.getParams());
-	                    connection.setRequestMethod("POST");
-	                    connection.addRequestProperty("Content-Type", requestEntity.getContentType());
-	                    connection.addRequestProperty("Content-Length", String.valueOf(requestEntity.getContentLength()));
-	                    connection.addRequestProperty("Cookie","JSESSIONID=" + sessionId);
-	                 //   connection.connect();
-	                    OutputStream os = connection.getOutputStream();
-	                    System.out.println("writing files to "+ connection.getURL());
-	                    requestEntity.writeRequest(os);
-	                    os.flush();
-	                    os.close();
-	                    int response=connection.getResponseCode();
-	                    System.out.println("response :" +connection.getResponseMessage() + "( "+ response+")");
-	                    if(connection != null) {
-	                    	connection.disconnect();
-	                    }
+                        URL url = new URL(urlString);
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setDoOutput(true);
+                        Utils.addSslConnection(connection);
+                        PostMethod filePost = new PostMethod(urlString);
+                        RequestEntity requestEntity = new MultipartRequestEntity(parts,
+                                filePost.getParams());
+                        connection.setRequestMethod("POST");
+                        connection.addRequestProperty("Content-Type", requestEntity.getContentType());
+                        connection.addRequestProperty("Content-Length",
+                                String.valueOf(requestEntity.getContentLength()));
+                        connection.addRequestProperty("Cookie","JSESSIONID=" + sessionId);
+                     //   connection.connect();
+                        OutputStream os = connection.getOutputStream();
+                        System.out.println("writing files to "+ connection.getURL());
+                        requestEntity.writeRequest(os);
+                        os.flush();
+                        os.close();
+                        int response=connection.getResponseCode();
+                        System.out.println("response :" +connection.getResponseMessage() + "( "+ response+")");
+                        if(connection != null) {
+                            connection.disconnect();
+                        }
                     } catch (IOException e) {
-                    	e.printStackTrace();
+                        e.printStackTrace();
                     }
                 }
             }
         };
         uploader.start();
 
-    	try {
-			venue.updateData(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-*/		return true;
+        try {
+            venue.updateData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+*/
+        return true;
     }
 
-    public boolean updateData(String uri, String dataID, String name, String description, String expires){
-    	Venue venue = venues.get(uri);
-    	DataDescription dataItem = new DataDescription();
-    	dataItem.setId(dataID);
-    	Vector<DataDescription> items = venueStates.get(uri).getData();
-    	DataDescription data = items.get(items.indexOf(dataItem));
-    	data.changeName(name);
-    	data.setDescription(description);
-    	data.setExpires(expires);
-    	try {
-			venue.updateData(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+    public boolean updateData(String uri, String dataID, String name, String description, String expires) {
+        Venue venue = venues.get(uri);
+        DataDescription dataItem = new DataDescription();
+        dataItem.setId(dataID);
+        Vector<DataDescription> items = venueStates.get(uri).getData();
+        DataDescription data = items.get(items.indexOf(dataItem));
+        data.changeName(name);
+        data.setDescription(description);
+        data.setExpires(expires);
+        try {
+            venue.updateData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
-	public void updateData(String venueUri, String uri, String fileName, String parentId, String description, String expiry, long fileSize) {
-    	Venue venue = venues.get(venueUri);
-       	try {
-			VenueState venueState = venue.getState();
-			DataDescription data = new DataDescription();
-			boolean found = false;
-			log.info("searching: " + uri +" "+ fileName);
-			for (DataDescription dataDesc: venueState.getData()){
-				log.info("data: " + dataDesc.getId() + " "+ dataDesc.getName() + "\n" +
-						dataDesc.getUri());
-				if (dataDesc.getName().equals(fileName)){
-					data = dataDesc;
-					found = true;
-					break;
-				}
-			}
-			if (!found){
-		    	data.setId(Utils.generateID());
-			}
-			data.setObjectType(DataDescription.TYPE_FILE);
-			data.setName(fileName);
-			data.setParentId(parentId);
-			data.setDescription(description);
-			data.setExpires(expiry);
-			data.setSize(""+fileSize);
-			venue.updateData(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void updateData(String venueUri, String uri, String fileName,
+            String parentId, String description, String expiry, long fileSize) {
+        Venue venue = venues.get(venueUri);
+           try {
+            VenueState venueState = venue.getState();
+            DataDescription data = new DataDescription();
+            boolean found = false;
+            log.info("searching: " + uri + " " + fileName);
+            for (DataDescription dataDesc : venueState.getData()) {
+                log.info("data: " + dataDesc.getId() + " " + dataDesc.getName() + "\n" + dataDesc.getUri());
+                if (dataDesc.getName().equals(fileName)) {
+                    data = dataDesc;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                data.setId(Utils.generateID());
+            }
+            data.setObjectType(DataDescription.TYPE_FILE);
+            data.setName(fileName);
+            data.setParentId(parentId);
+            data.setDescription(description);
+            data.setExpires(expiry);
+            data.setSize("" + fileSize);
+            venue.updateData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
-	public void addDir (String venueUri, String name,  String description, String level, String parentId,  String expiry) throws Exception {
-		Venue venue = venues.get(venueUri);
-		DataDescription data = venue.addDir(name,description,level,parentId);
-//		new DataDescription();
-	}
+    public void addDir(String venueUri, String name,
+            String description, String level, String parentId,  String expiry) throws Exception {
+        Venue venue = venues.get(venueUri);
+        venue.addDir(name, description, level, parentId);
+//        new DataDescription();
+    }
 
 
     /**
@@ -821,10 +822,10 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @throws Exception
      */
     public Vector<ApplicationDescription> startApplicationQueue(String uri) throws Exception {
-        Vector<ApplicationDescription> appdsc=new Vector<ApplicationDescription>();
+        Vector<ApplicationDescription> appdsc = new Vector<ApplicationDescription>();
         try {
-            appdsc=venueStates.get(uri).getApplications();
-            for (int i=0;i<appdsc.size();i++){
+            appdsc = venueStates.get(uri).getApplications();
+            for (int i = 0; i < appdsc.size(); i++) {
                 log.info("Starting application monitoring for " + appdsc.get(i));
                 addApplication(appdsc.get(i));
             }
@@ -835,7 +836,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     public Vector<ApplicationDescription> startApplicationQueue() throws Exception {
-    	return startApplicationQueue(currentVenueUri);
+        return startApplicationQueue(currentVenueUri);
     }
 
 
@@ -845,11 +846,12 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param appId The Application Id
      * @return List of Participants
      */
-    public Vector<AppParticipantDescription> getApplicationParticipants(String appUri, String appId){
+    public Vector<AppParticipantDescription> getApplicationParticipants(String appUri, String appId) {
          Vector<AppParticipantDescription> appPv = new Vector<AppParticipantDescription>();
         try {
             SharedApplication sharedApplication = new SharedApplication(appUri);
-            AppParticipantDescription[] appParticipantDescriptions = sharedApplication.getParticipants(applicationMonitorPrivateTokens.get(appId));
+            AppParticipantDescription[] appParticipantDescriptions =
+                sharedApplication.getParticipants(applicationMonitorPrivateTokens.get(appId));
             for (int i = 0; i < appParticipantDescriptions.length; i++) {
                 appParticipantDescriptions[i].setAppId(appId); // should be there in first place
                 appPv.add(appParticipantDescriptions[i]);
@@ -866,36 +868,37 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return URI to access the data
      * @throws URISyntaxException
      */
-    public URI uploadDataItem(String venueUrl,String parentId, String filename)  throws URISyntaxException {
-    	log.info("Upload file "+ filename +" to "+ venueUrl);
-    	log.info("search in " + venues.toString());
-    	Venue currentVenue = venues.get(venueUrl);
-    	VenueState currentVenueState = venueStates.get(venueUrl);
-    	if (!parentId.equals("-1")){
-    		DataDescription data = new DataDescription();
-    		data.setId(parentId);
-    		Vector<DataDescription> dataDescriptions = currentVenueState.getData();
-    		int parentIndex = dataDescriptions.indexOf(data);
-    		data = dataDescriptions.get(parentIndex);
-    		String fname = data.getUri().replaceFirst(currentVenueState.getDataLocation(),"");
-    		filename = fname +"/"+ filename;
-    		log.info("Parent File Name: " + fname);
-    	}
-    	String connId = venueConnIds.get(venueUrl);
-    	URI u=null;
+    public URI uploadDataItem(String venueUrl, String parentId, String filename) throws URISyntaxException {
+        log.info("Upload file " + filename + " to " + venueUrl);
+        log.info("search in " + venues.toString());
+        Venue currentVenue = venues.get(venueUrl);
+        VenueState currentVenueState = venueStates.get(venueUrl);
+        if (!parentId.equals("-1")) {
+            DataDescription data = new DataDescription();
+            data.setId(parentId);
+            Vector<DataDescription> dataDescriptions = currentVenueState.getData();
+            int parentIndex = dataDescriptions.indexOf(data);
+            data = dataDescriptions.get(parentIndex);
+            String fname = data.getUri().replaceFirst(currentVenueState.getDataLocation(), "");
+            filename = fname + "/" + filename;
+            log.info("Parent File Name: " + fname);
+        }
+        String connId = venueConnIds.get(venueUrl);
+        URI u = null;
         try {
-    		if (connId==null){
-    			connId = currentVenue.enter(clientProfile);
-    			venueConnIds.put(venueUrl, connId);
-    	    	dataConnections.add(connId);
-    		}
-            u=new URI(currentVenue.getUploadDescriptor()+"/"+filename);
+            if (connId == null) {
+                connId = currentVenue.enter(clientProfile);
+                venueConnIds.put(venueUrl, connId);
+                dataConnections.add(connId);
+            }
+            u = new URI(currentVenue.getUploadDescriptor() + "/" + filename);
         } catch (Exception e) {
             e.printStackTrace();
-            u=new URI(currentVenueState.getDataLocation()+"/"+filename);
-            log.info("Using Datalocation: " + u );
+            u = new URI(currentVenueState.getDataLocation() + "/" + filename);
+            log.info("Using Datalocation: " + u);
         }
-        URI uri=new URI(u.getScheme(),currentVenueState.getUniqueId()+":"+connId, u.getHost(),u.getPort(),u.getPath(), u.getQuery(), u.getFragment());
+        URI uri = new URI(u.getScheme(), currentVenueState.getUniqueId() + ":" + connId,
+                u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getFragment());
         return uri;
     }
 
@@ -906,45 +909,46 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * the name (true) or the id (false) of the data item
      * @return the DataDescription of the data item
      */
-    public DataDescription downloadDataItem(String filedesc, boolean isFilename, String venueUrl){
+    public DataDescription downloadDataItem(String filedesc, boolean isFilename, String venueUrl) {
 
-    	Vector<DataDescription> venueData = new Vector<DataDescription>();
-    	String venueId = "";
-    	String connId = null;
-    	Venue venue = venues.get(venueUrl);
-    	VenueState venueState = venueStates.get(venueUrl);
-    	if (venueState != null){
-    		connId = venueConnIds.get(venueUrl);
-    		venueData=venueState.getData();
-    		venueId=venueState.getUniqueId();
-    	}
-        DataDescription dataItem=null;
-        String description=null;
-        log.info("search Item: "+filedesc + " fn: " + isFilename);
-        for (DataDescription item : venueData){
-            if (isFilename){
-            	log.info("testing: "+ item.getName());
-                description=item.getName();
+        Vector<DataDescription> venueData = new Vector<DataDescription>();
+        String venueId = "";
+        String connId = null;
+        Venue venue = venues.get(venueUrl);
+        VenueState venueState = venueStates.get(venueUrl);
+        if (venueState != null) {
+            connId = venueConnIds.get(venueUrl);
+            venueData = venueState.getData();
+            venueId = venueState.getUniqueId();
+        }
+        DataDescription dataItem = null;
+        String description = null;
+        log.info("search Item: " + filedesc + " fn: " + isFilename);
+        for (DataDescription item : venueData) {
+            if (isFilename) {
+                log.info("testing: " + item.getName());
+                description = item.getName();
             } else {
-            	log.info("testing: "+ item.getId());
-                description=item.getId();
+                log.info("testing: " + item.getId());
+                description = item.getId();
             }
             if (description.equals(filedesc)) {
-                dataItem=item;
-                log.info("found: "+ item.getName() + " u: "+ item.getUri());
+                dataItem = item;
+                log.info("found: " + item.getName() + " u: " + item.getUri());
                 break;
             }
         }
         try {
-            URI u= new URI(dataItem.getUri().replaceAll(" ","%20"));
+            URI u = new URI(dataItem.getUri().replaceAll(" ", "%20"));
             log.info("URL:" + u.toString());
-        	if (connId==null) {
-        		// we are talking to an AG3 server rather than an OneVRE server
-        		connId = venue.enter(clientProfile);
-        		venueConnIds.put(venueUrl, connId);
-            	dataConnections.add(connId);
-        	}
-            URI uri=new URI(u.getScheme(),venueId+":"+connId, u.getHost(),u.getPort(),u.getPath(), u.getQuery(), u.getFragment());
+            if (connId == null) {
+                // we are talking to an AG3 server rather than an OneVRE server
+                connId = venue.enter(clientProfile);
+                venueConnIds.put(venueUrl, connId);
+                dataConnections.add(connId);
+            }
+            URI uri = new URI(u.getScheme(), venueId + ":" + connId,
+                    u.getHost(), u.getPort(), u.getPath(), u.getQuery(), u.getFragment());
             dataItem.setUri(uri.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -952,40 +956,40 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         return dataItem;
     }
 
-    public void closeDataConnection(String venueUrl){
-    	String connectionId = venueConnIds.get(venueUrl);
-    	if (dataConnections.contains(connectionId)){
-        	Venue venue = venues.get(venueUrl);
-        	venueConnIds.remove(venueUrl);
-        	dataConnections.remove(connectionId);
-        	try {
-				venue.exit(connectionId);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-    	}
+    public void closeDataConnection(String venueUrl) {
+        String connectionId = venueConnIds.get(venueUrl);
+        if (dataConnections.contains(connectionId)) {
+            Venue venue = venues.get(venueUrl);
+            venueConnIds.remove(venueUrl);
+            dataConnections.remove(connectionId);
+            try {
+                venue.exit(connectionId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
      * deletes a data item from the venue
      * @param dataId the id of the data item
      */
-    public void deleteData(String venueUri, String dataId ) {
+    public void deleteData(String venueUri, String dataId) {
 
-        Vector<DataDescription> venueData=venueStates.get(venueUri).getData();
-        DataDescription dataItem=null;
-        for (int i=0; i<venueData.size();i++){
+        Vector<DataDescription> venueData = venueStates.get(venueUri).getData();
+        DataDescription dataItem = null;
+        for (int i = 0; i < venueData.size(); i++) {
             if (venueData.get(i).getId().equals(dataId)) {
-                dataItem=venueData.get(i);
+                dataItem = venueData.get(i);
                 break;
             }
         }
-        if (dataItem!=null){
-	        try {
-	            venues.get(venueUri).removeData(dataItem);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+        if (dataItem != null) {
+            try {
+                venues.get(venueUri).removeData(dataItem);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -994,15 +998,15 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param applicationId the Id of the application
      * @return the HTML code to be integrated in the ui of the ApplicationMonitor
      */
-/*    public String joinApplication(String applicationId){
+/*    public String joinApplication(String applicationId) {
         System.out.println("In join Application: " + applicationId);
         System.out.println("VS:"+ currentVenueState);
         Vector<ApplicationDescription> appvect=currentVenueState.getApplications();
         ApplicationDescription application=null;
         SharedAppState appState=null;
-        for (int i=0; i<appvect.size(); i++){
-        	log.info("Application ["+i+"]: " + appvect.get(i).getId());
-            if (applicationId.equals(appvect.get(i).getId())){
+        for (int i=0; i<appvect.size(); i++) {
+            log.info("Application ["+i+"]: " + appvect.get(i).getId());
+            if (applicationId.equals(appvect.get(i).getId())) {
                 application=appvect.get(i);
                 break;
             }
@@ -1010,19 +1014,26 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         log.info("join Application: " + application.getId() + " URI:" + application.getUri());
         String privateToken=null;
         try {
-    //		xmlRpcServer.addRequest("ApplicationEvent", new Object[]{application,event});
+    //        xmlRpcServer.addRequest("ApplicationEvent", new Object[]{application,event});
             SharedApplication app=new SharedApplication(application.getUri());
             HashMap<String, String> ids = app.join(clientProfile);
             privateToken = ids.get("privateId");
-//            System.out.println ("private token "+ privateToken);
+            log.debug("private token "+ privateToken);
             HashMap<String, Object> dataChannel= app.getDataChannel(privateToken);
-  //          System.out.println ("DC: " + dataChannel);
-            applicationClients.add(new EventClient(new ApplicationEventListener(application,dataChannel.get("address")+":"+dataChannel.get("port"),xmlRpcServer),ids.get("publicId"),(String)dataChannel.get("channelId")));
-  //          System.out.println("APT: " + applicationPrivateTokens);
+              log.debug("DC: " + dataChannel);
+            applicationClients.add(
+                new EventClient(
+                    new ApplicationEventListener(
+                        application,dataChannel.get("address")+":"+dataChannel.get("port"),xmlRpcServer
+                    ),
+                    ids.get("publicId"),(String)dataChannel.get("channelId")
+                )
+              );
+            log.debug("APT: " + applicationPrivateTokens);
             Vector<String> apt = applicationPrivateTokens.get(application.getId());
-            if (apt==null){
-            	apt=new Vector<String>();
-            	applicationPrivateTokens.put(application.getId(),apt);
+            if (apt == null) {
+                apt=new Vector<String>();
+                applicationPrivateTokens.put(application.getId(),apt);
             }
             apt.add(privateToken);
             appState=app.getState(privateToken);
@@ -1034,7 +1045,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         // start shared application connector
         // register application connector to eventclient
         String venueDataLocation=currentVenueState.getDataLocation();
-        xmlRpcServer.addRequest("eventStartApplication", new Object[]{application,clientProfile,appState,venueDataLocation});
+        xmlRpcServer.addRequest("eventStartApplication",
+            new Object[]{application, clientProfile, appState, venueDataLocation});
         String applicationUI="";
         return applicationUI;
     }
@@ -1044,26 +1056,26 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param venueId the id of the venue to expand
      * @return the VenueTreeItem of the expanded venue
      */
-    public VenueTreeItem expandVenue(String venueId){
+    public VenueTreeItem expandVenue(String venueId) {
         VenueTreeItem venue = venueList.findVenue(venueId);
-    	if (venue != null) {
-	        try {
-	        	venue.setExpanded(true);
-	            if (venue.getConnections()==null){
-	            	venue.setConnections(getConnections(venueId));
-	            } else {
-	            	// workaround for questionable JS in xmlrpcHandler.js method
-	            	// this.expandVenueResponse=function(venueXml)
-	            	VenueTreeItem venuesJs = new VenueTreeItem(venue.getName(),venue.getUri());
-	            	venuesJs.setExpanded(true);
-	            	venuesJs.setId(venue.getId());
-	            	return venuesJs;
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-    	}
-   		return venue;
+        if (venue != null) {
+            try {
+                venue.setExpanded(true);
+                if (venue.getConnections() == null) {
+                    venue.setConnections(getConnections(venueId));
+                } else {
+                    // workaround for questionable JS in xmlrpcHandler.js method
+                    // this.expandVenueResponse=function(venueXml)
+                    VenueTreeItem venuesJs = new VenueTreeItem(venue.getName(), venue.getUri());
+                    venuesJs.setExpanded(true);
+                    venuesJs.setId(venue.getId());
+                    return venuesJs;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+           return venue;
     }
 
     /**
@@ -1092,7 +1104,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param venueId The Id of the venue-subtree to collapse
      * @return The set of venues visited
      */
-    public String collapseVenue(String venueId){
+    public String collapseVenue(String venueId) {
         VenueTreeItem venue = venueList.findVenue(venueId);
         venue.collapse();
         return venueId;
@@ -1104,15 +1116,15 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      */
     public String getPreviousVenues() {
         Iterator<String> iter = previousVenues.iterator();
-        String venues = "";
+        String prevVenues = "";
         while (iter.hasNext()) {
-            venues += "\"" + iter.next() + "\"";
+            prevVenues += "\"" + iter.next() + "\"";
             if (iter.hasNext()) {
-                venues += ", ";
+                prevVenues += ", ";
             }
         }
-        venues += "";
-        return venues;
+        prevVenues += "";
+        return prevVenues;
     }
 
     /**
@@ -1131,17 +1143,22 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * Adds an application to the list of available applications
      * @param application The application description
      */
-    public void addApplication(ApplicationDescription application){
+    public void addApplication(ApplicationDescription application) {
         try {
-            SharedApplication app=new SharedApplication(application.getUri());
-            HashMap<String, String> ids=app.join(null);
-            HashMap<String, Object> dataChannel=app.getDataChannel(ids.get("privateId"));
-            applicationClients.add(new EventClient(new ApplicationEventListener(application,dataChannel.get("address")+":"+dataChannel.get("port"),agEventServer),ids.get("publicId"),(String)dataChannel.get("channelId")));
-            applicationMonitorPrivateTokens.put(application.getId(),ids.get("privateId"));
-            Vector <String> appTokens=new Vector<String>();
+            SharedApplication app = new SharedApplication(application.getUri());
+            HashMap<String, String> ids = app.join(null);
+            HashMap<String, Object> dataChannel = app.getDataChannel(ids.get("privateId"));
+            applicationClients.add(
+                new EventClient(
+                    new ApplicationEventListener(
+                        application, dataChannel.get("address") + ":" + dataChannel.get("port"), agEventServer
+                    ), ids.get("publicId"), (String) dataChannel.get("channelId")
+                )
+            );
+            applicationMonitorPrivateTokens.put(application.getId(), ids.get("privateId"));
+            Vector <String> appTokens = new Vector<String>();
             applicationPrivateTokens.put(application.getId(), appTokens);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1150,19 +1167,19 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * Deletes an application from the list of available applications
      * @param application The application description
      */
-    public void removeApplication(ApplicationDescription application){
+    public void removeApplication(ApplicationDescription application) {
         int i;
         try {
-            SharedApplication app=new SharedApplication(application.getUri());
-            Vector<String> appTokens=applicationPrivateTokens.get(application.getId());
-            for (i=0; i< appTokens.size();i++){
+            SharedApplication app = new SharedApplication(application.getUri());
+            Vector<String> appTokens = applicationPrivateTokens.get(application.getId());
+            for (i = 0; i < appTokens.size(); i++) {
                 app.leave(appTokens.get(i));
             }
             app.leave(applicationMonitorPrivateTokens.get(application.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for (i=0;i<applicationClients.size();i++){
+        for (i = 0; i < applicationClients.size(); i++) {
             if (applicationClients.get(i).getListenerId().equals(application.getId()))
             {
                 applicationClients.get(i).close();
@@ -1187,18 +1204,17 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      */
     public VenueState exitVenue(String venueUrl)  {
         inVenue = false;
-    	ClientUpdateThread clientUpdateThread = clientUpdateThreads.get(venueUrl);
-    	Venue currentVenue = venues.get(venueUrl);
-    	VenueState currentVenueState = venueStates.get(venueUrl);
-    	String connectionId = venueConnIds.get(venueUrl);
-    	EventClient eventClient = venueEventClients.get(venueUrl);
-    	if (clientUpdateThread != null) {
+        ClientUpdateThread clientUpdateThread = clientUpdateThreads.get(venueUrl);
+        Venue currentVenue = venues.get(venueUrl);
+        VenueState currentVenueState = venueStates.get(venueUrl);
+        String connectionId = venueConnIds.get(venueUrl);
+        EventClient eventClient = venueEventClients.get(venueUrl);
+        if (clientUpdateThread != null) {
             clientUpdateThread.close();
         }
         if (currentVenue != null) {
             if (currentVenueState != null) {
-                Defaults.writeLog("Exit Venue: " + currentVenueState.toLog()
-                        + "; Client: " + clientProfile.toLog() );
+                Defaults.writeLog("Exit Venue: " + currentVenueState.toLog() + "; Client: " + clientProfile.toLog());
             }
             if (currentVenueUri != null) {
                 previousVenues.addLast(currentVenueUri);
@@ -1219,7 +1235,6 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String uri = venueUrl;
         currentVenueState = null;
         currentVenue = null;
         currentVenueUri = clientProfile.getHomeVenue();
@@ -1227,9 +1242,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         currentStreams = new StreamDescription[0];
         agEventServer.setListener(null);
         try {
-        	JabberClient jabberClient= jabberClients.get(venueUrl);
-            if (jabberClient != null) {
-                jabberClient.close();
+            JabberClient jc = jabberClients.get(venueUrl);
+            if (jc != null) {
+                jc.close();
             }
         } catch (Exception e) {
             // Do Nothing -
@@ -1238,14 +1253,13 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         try {
             if (eventClient != null) {
                 eventClient.close();
-                for (int i = 0; i < applicationClients.size(); i++) {
-                    SharedApplication app=new SharedApplication(applicationClients.get(i).getListenerUri());
-                    Vector<String> appTokens=applicationPrivateTokens.get(applicationClients.get(i).getListenerId());
-                    for (int j=0; j< appTokens.size();j++){
-                        app.leave(appTokens.get(j));
+                for (EventClient applicationClient : applicationClients) {
+                    SharedApplication app = new SharedApplication(applicationClient.getListenerUri());
+                    for (String appToken : applicationPrivateTokens.get(applicationClient.getListenerId())) {
+                        app.leave(appToken);
                     }
-                    app.leave(applicationMonitorPrivateTokens.get(applicationClients.get(i).getListenerId()));
-                    applicationClients.get(i).close();
+                    app.leave(applicationMonitorPrivateTokens.get(applicationClient.getListenerId()));
+                    applicationClient.close();
                 }
             }
         } catch (Exception e) {
@@ -1260,7 +1274,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     public VenueState exitVenue()  {
-    	return exitVenue(currentVenueUri);
+        return exitVenue(currentVenueUri);
     }
 
     /**
@@ -1300,79 +1314,81 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return The current client's profile
      */
     public Vector<VenueServerType> getTrustedServers() {
-    	log.info("in VenueClientUI.getTrustedServers()");
+        log.info("in VenueClientUI.getTrustedServers()");
         return trustedServers;
     }
 
-    public Vector<VOAttribute> getVoAttributes(){
-    	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
-    	if (credential!=null){
-    		log.info("getting VO attributes for credential:" + credential.getDN() );
-    		voAttributes = credential.getVoAttributes();
-    		for (VOAttribute attr: voAttributes){
-    			log.info("Attribute: "+ attr.toString());
-    		}
-    	} else {
-    		log.info("no credential set");
-    	}
-    	return voAttributes;
+    public Vector<VOAttribute> getVoAttributes() {
+        Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+        if (credential != null) {
+            log.info("getting VO attributes for credential:" + credential.getDN());
+            voAttributes = credential.getVoAttributes();
+            for (VOAttribute attr : voAttributes) {
+                log.info("Attribute: " + attr.toString());
+            }
+        } else {
+            log.info("no credential set");
+        }
+        return voAttributes;
     }
 
-    public VenueServerType addTrustedServer(String name, String url){
-    	VenueServerType venueServer = null;
-    	try {
-			venueServer = getVenueServer(name, url);
-			log.info("Add trusted Server:" + venueServer.toLog());
-		} catch (Exception e) {
-			log.error("Server : " + name + " = " + url + " is not responding ");
-			e.printStackTrace();
-		}
-    	return venueServer;
+    public VenueServerType addTrustedServer(String name, String url) {
+        VenueServerType venueServer = null;
+        try {
+            venueServer = getVenueServer(name, url);
+            log.info("Add trusted Server:" + venueServer.toLog());
+        } catch (Exception e) {
+            log.error("Server : " + name + " = " + url + " is not responding ");
+            e.printStackTrace();
+        }
+        return venueServer;
     }
 
-    public ConnectionDescription createVenue(String serverUri, String name, String description, Vector<HashMap<String, String>> attributes){
-    	log.info("Create New Venue:");
-    	log.info("Server :" + serverUri);
-    	log.info("Name: " + name);
-    	log.info("VOattributes:  " + attributes);
-    	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
-    	for (HashMap<String, String> map : attributes){
-    		voAttributes.add(new VOAttribute(map));
-    	}
-    	ConnectionDescription result = null;
+    public ConnectionDescription createVenue(String serverUri, String name, String description,
+            Vector<HashMap<String, String>> attributes) {
+        log.info("Create New Venue:");
+        log.info("Server :" + serverUri);
+        log.info("Name: " + name);
+        log.info("VOattributes:  " + attributes);
+        Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+        for (HashMap<String, String> map : attributes) {
+            voAttributes.add(new VOAttribute(map));
+        }
+        ConnectionDescription result = null;
 
-		try {
-			URL url = new URL(serverUri);
-	        String serverUrl = url.getProtocol() + "://" + url.getHost()
+        try {
+            URL url = new URL(serverUri);
+            String serverUrl = url.getProtocol() + "://" + url.getHost()
             + ":" + url.getPort() + "/VenueServer";
-	        VenueServer venueServer = new VenueServer(serverUrl);
-	        result = venueServer.createVenues(name, description, clientProfile, voAttributes.toArray(new VOAttribute[]{}));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	return result;
+            VenueServer venueServer = new VenueServer(serverUrl);
+            result = venueServer.createVenues(name, description, clientProfile,
+                    voAttributes.toArray(new VOAttribute[]{}));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public Vector<String> getVenues(String serverUri, Vector<HashMap<String, String>> attributes){
-		Vector <String> urls = new Vector<String>();
-    	try {
-			VenueServer venueServer = new VenueServer(serverUri);
-	    	Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
-	    	for (HashMap<String, String> map : attributes){
-	    		voAttributes.add(new VOAttribute(map));
-	    	}
-			ConnectionDescription [] conns = venueServer.getVenues(voAttributes.toArray(new VOAttribute[0]));
-			for (ConnectionDescription conn: conns){
-				urls.add(conn.getUri());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SoapException e) {
-			e.printStackTrace();
-		}
-		return urls;
+    public Vector<String> getVenues(String serverUri, Vector<HashMap<String, String>> attributes) {
+        Vector <String> urls = new Vector<String>();
+        try {
+            VenueServer venueServer = new VenueServer(serverUri);
+            Vector<VOAttribute> voAttributes = new Vector<VOAttribute>();
+            for (HashMap<String, String> map : attributes) {
+                voAttributes.add(new VOAttribute(map));
+            }
+            ConnectionDescription [] conns = venueServer.getVenues(voAttributes.toArray(new VOAttribute[0]));
+            for (ConnectionDescription conn : conns) {
+                urls.add(conn.getUri());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SoapException e) {
+            e.printStackTrace();
+        }
+        return urls;
     }
 
     /**
@@ -1380,7 +1396,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return The current client's profile
      */
     public ClientProfile getClientProfile() {
-    	log.info("in VenueClientUI.getClientProfile()");
+        log.info("in VenueClientUI.getClientProfile()");
         return clientProfile;
     }
 
@@ -1389,7 +1405,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @param clientProfile The new profile
      */
     public void setClientProfile(ClientProfile clientProfile) {
-        if (!this.clientProfile.getName().equals(clientProfile.getName())){
+        if (!this.clientProfile.getName().equals(clientProfile.getName())) {
             updateJabber = true;
         }
         this.clientProfile = clientProfile;
@@ -1397,19 +1413,19 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
             currentVenueUri = clientProfile.getHomeVenue();
         } else {
             try {
-            	Venue currentVenue = venues.get(currentVenueUri);
+                Venue currentVenue = venues.get(currentVenueUri);
                 currentVenue.updateClientProfile(clientProfile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (updateJabber){
-            	for (JabberClient jabberClient:jabberClients.values()){
-	                try {
-	                    jabberClient.setNickname(clientProfile.getName());
-	                } catch (XMPPException e) {
-	                    e.printStackTrace();
-	                }
-            	}
+            if (updateJabber) {
+                for (JabberClient jabber : jabberClients.values()) {
+                    try {
+                        jabber.setNickname(clientProfile.getName());
+                    } catch (XMPPException e) {
+                        e.printStackTrace();
+                    }
+                }
                 updateJabber = false;
             }
         }
@@ -1428,7 +1444,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      */
     public ClientProfile setClientProfile(String name, String email,
             String phone, String location, String home, String type) {
-        if (!clientProfile.getName().equals(name)){
+        if (!clientProfile.getName().equals(name)) {
             updateJabber = true;
         }
         clientProfile.setName(name);
@@ -1465,7 +1481,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      */
     public void setVenueListMode(int mode) throws IOException, SoapException {
 ///
-    	Vector<VenueTreeItem> roots = new Vector<VenueTreeItem>();
+        Vector<VenueTreeItem> roots = new Vector<VenueTreeItem>();
 
         if (mode == VenueList.MODE_ALL_VENUES) {
             if (currentVenueUri != null) {
@@ -1475,7 +1491,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
                 VenueServer venueServer = new VenueServer(serverUrl);
                 ConnectionDescription[] connections = venueServer.getVenues(null);
                 for (int i = 0; i < connections.length; i++) {
-                	VenueTreeItem item = new VenueTreeItem(connections[i].getName(),
+                    VenueTreeItem item = new VenueTreeItem(connections[i].getName(),
                             connections[i].getUri());
                     roots.add(item);
                     venueList.addVenue(item);
@@ -1504,7 +1520,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         }
 
         if (venueList != null) {
-            venueList.selectMode(mode,roots);
+            venueList.selectMode(mode, roots);
         }
 
 
@@ -1574,12 +1590,12 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     public StreamDescription[] negotiateCapabilities(String cap)
-    	throws IOException, SAXException {
-    	return negotiateCapabilities(cap, currentVenueUri);
+        throws IOException, SAXException {
+        return negotiateCapabilities(cap, currentVenueUri);
     }
 
     public StreamDescription[] negotiateCapabilities(Capability[] cap) {
-    	return negotiateCapabilities(cap, currentVenueUri);
+        return negotiateCapabilities(cap, currentVenueUri);
     }
 
     /**
@@ -1588,9 +1604,9 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return list with StreamDescriptions
      */
     public StreamDescription[] negotiateCapabilities(Capability[] cap, String venueUrl) {
-    	Venue currentVenue = venues.get(venueUrl);
-    	String connectionId = venueConnIds.get(venueUrl);
-    	if (currentVenue != null) {
+        Venue currentVenue = venues.get(venueUrl);
+        String connectionId = venueConnIds.get(venueUrl);
+        if (currentVenue != null) {
             try {
                 StreamDescription[] streams =
                     currentVenue.negotiateCapabilities(
@@ -1616,19 +1632,19 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @return true if the message was sent or false otherwise
      */
     public Boolean sendJabberMessage(String venueUri, String message) {
-    	log.info ("sendJabberMessage("+ venueUri + ", "+ message+")");
-       	log.info ("jabberClients : " + jabberClients);
+        log.info("sendJabberMessage(" + venueUri + ", " + message + ")");
+           log.info("jabberClients : " + jabberClients);
 
-        JabberClient jabberClient = jabberClients.get(venueUri);
-    	if (jabberClient != null) {
-            jabberClient.setMessage(message);
+        JabberClient jabber = jabberClients.get(venueUri);
+        if (jabber != null) {
+            jabber.setMessage(message);
             return true;
         }
         return false;
     }
 
     public Boolean sendJabberMessage(String message) {
-    	if (jabberClient != null) {
+        if (jabberClient != null) {
             jabberClient.setMessage(message);
             return true;
         }
@@ -1678,7 +1694,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * <dl><dt><b>overrides:</b></dt><dd>{@link pag.xmlrpc.TimeoutListener#timedOut()}</dd></dl>
      */
     public void timedOut() {
-    	log.error("Timed out");
+        log.error("Timed out");
         try {
             exitVenue();
         } catch (Exception e) {
@@ -1700,7 +1716,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      *     javax.servlet.http.HttpSessionBindingEvent)
      */
     public void valueBound(HttpSessionBindingEvent event) {
-    	log.info("VenueClientUI Bound to Session");
+        log.info("VenueClientUI Bound to Session");
     }
 
     /**
@@ -1709,7 +1725,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      *     javax.servlet.http.HttpSessionBindingEvent)
      */
     public void valueUnbound(HttpSessionBindingEvent arg0) {
-    	log.info("VenueClientUI Unbound from Session - leaving");
+        log.info("VenueClientUI Unbound from Session - leaving");
         try {
             exitVenue();
         } catch (Exception e) {
@@ -1725,7 +1741,7 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @throws SAXException
      */
     @SuppressWarnings("unchecked")
-	public Vector<BridgeDescription> getNewBridges(String registryUrlsXml)
+    public Vector<BridgeDescription> getNewBridges(String registryUrlsXml)
             throws IOException, SAXException {
         Vector<String> registryUrls = (Vector<String>)
             XMLDeserializer.deserialize(registryUrlsXml);
@@ -1751,20 +1767,20 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
     }
 
     public Vector<VenueTreeItem> getVenueTree(String venueUri) throws  IOException, SoapException {
-    	log.info("in GetVenueTree ( "+ venueUri + ")");
-        Venue venue = new Venue(venueUri,isOneVREVenue(venueUri));
-       	venue.setGSScredential(credential);
+        log.info("in GetVenueTree ( " + venueUri + ")");
+        Venue venue = new Venue(venueUri, isOneVREVenue(venueUri));
+           venue.setGSScredential(credential);
         ConnectionDescription[] connections = venue.getConnections();
         Vector<VenueTreeItem> conns = new Vector<VenueTreeItem>();
         for (ConnectionDescription connection : connections) {
             try {
-            	log.info("found connection: " + connection.toString());
+                log.info("found connection: " + connection.toString());
                 URL url = new URL(new URL(venueUri), connection.getUri());
                 VenueTreeItem item = new VenueTreeItem(
                         connection.getName(), url.toString());
                 conns.add(item);
             } catch (MalformedURLException e) {
-            	log.error("Error parsing "
+                log.error("Error parsing "
                         + connection.getName());
                 e.printStackTrace();
             }
@@ -1780,31 +1796,31 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
      * @throws IOException
      * @throws SoapException
      */
-	private Vector<VenueTreeItem> getConnections(String venueId)
+    private Vector<VenueTreeItem> getConnections(String venueId)
             throws  IOException, SoapException  {
         VenueTreeItem venueTreeItem = venueList.findVenue(venueId);
-        if (venueTreeItem==null){
+        if (venueTreeItem == null) {
 
-        	log.error("no venueTreeItem for Id: "+ venueId + "\n" +venueList.toString());
+            log.error("no venueTreeItem for Id: " + venueId + "\n" + venueList.toString());
 
         }
-        Venue venue = new Venue(venueTreeItem.getUri(),isOneVREVenue(venueTreeItem.getUri()));
+        Venue venue = new Venue(venueTreeItem.getUri(), isOneVREVenue(venueTreeItem.getUri()));
 
         venue.setGSScredential(credential);
         ConnectionDescription[] connections = venue.getConnections();
         Vector<VenueTreeItem> conns = new Vector<VenueTreeItem>();
-        log.info("get connections for id " +venueId);
+        log.info("get connections for id " + venueId);
         for (ConnectionDescription connection : connections) {
             try {
                 URL url = new URL(new URL(venueTreeItem.getUri()),
                         connection.getUri());
-               log.info(connection.getName() +" - " + url.toString());
+               log.info(connection.getName() + " - " + url.toString());
                VenueTreeItem item = new VenueTreeItem(
                         connection.getName(), url.toString());
                 conns.add(item);
                 venueList.addVenue(item);
             } catch (MalformedURLException e) {
-            	log.error("Error parsing "
+                log.error("Error parsing "
                         + connection.getName());
                 e.printStackTrace();
             }
@@ -1814,8 +1830,8 @@ public class VenueClientUI implements ApplicationListener, TimeoutListener,
         return conns;
     }
 
-	public void setCredential(CredentialMappings credentialMappings) {
-		this.credential = credentialMappings;
-	}
+    public void setCredential(CredentialMappings credentialMappings) {
+        this.credential = credentialMappings;
+    }
 
 }

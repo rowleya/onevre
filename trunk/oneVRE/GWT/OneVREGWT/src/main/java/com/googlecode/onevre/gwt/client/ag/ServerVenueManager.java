@@ -12,82 +12,85 @@ import com.googlecode.onevre.gwt.client.xmlrpc.MonitorVenue;
 
 public class ServerVenueManager {
 
-	private Vector<VenueState> states = new Vector<VenueState>();
+    private Vector<VenueState> states = new Vector<VenueState>();
 
-	private ServerVenueManagerInterface ui = null;
+    private ServerVenueManagerInterface ui = null;
 
-	private MonitorVenue monitorVenue = null;
-	private GetMonitoredVenues getMonitoredVenues =  null;
-	private VenueServerType serverType = null;
+    private MonitorVenue monitorVenue = null;
+    private GetMonitoredVenues getMonitoredVenues =  null;
+    private VenueServerType serverType = null;
 
-	public ServerVenueManager(VenueServerType serverType, ServerVenueManagerInterface ui){
-		this.ui=ui;
-		monitorVenue = new MonitorVenue(this);
-		if (!serverType.isManagable()){
-			monitorVenue.monitor(serverType.toUrl());
-		} else {
-			getMonitoredVenues = new GetMonitoredVenues(this);
-			getMonitoredVenues.getVenues(serverType.toServerUrl());
-		}
-		this.serverType = serverType;
-		ui.setServerVenueManager(this);
-	}
+    public ServerVenueManager(VenueServerType serverType, ServerVenueManagerInterface ui) {
+        this.ui = ui;
+        monitorVenue = new MonitorVenue(this);
+        if (!serverType.isManagable()) {
+            monitorVenue.monitor(serverType.toUrl());
+        } else {
+            getMonitoredVenues = new GetMonitoredVenues(this);
+            getMonitoredVenues.getVenues(serverType.toServerUrl());
+        }
+        this.serverType = serverType;
+        ui.setServerVenueManager(this);
+    }
 
-	public void monitorVenue(String url){
-		monitorVenue.monitor(url);
-	}
+    public void monitorVenue(String url) {
+        monitorVenue.monitor(url);
+    }
 
-	public void addVenueState(VenueState state){
-		GWT.log("adding VS " + state.toLog());
-		states.add(state);
-		ui.addVenue(state);
-	}
+    public void addVenueState(VenueState state) {
+        GWT.log("adding VS " + state.toLog());
+        states.add(state);
+        ui.addVenue(state);
+    }
 
-	public Panel getUiPanel() {
-		return ui.getPanel();
-	}
+    public Panel getUiPanel() {
+        return ui.getPanel();
+    }
 
-	public VenueState getState(String source) {
-		GWT.log ("states (searching : " + source + ") :" + states.toString() );
-		for (VenueState venueState: states){
-			if (source.equals(venueState.getUri())){
-				return venueState;
-			}
-		}
-		return null;
-	}
+    public VenueState getState(String source) {
+        GWT.log("states (searching : " + source + ") :" + states.toString());
+        for (VenueState venueState : states) {
+            if (source.equals(venueState.getUri())) {
+                return venueState;
+            }
+        }
+        return null;
+    }
 
-	public void stopMonitoring(VenueState state) {
-		states.remove(state);
-		ui.removeVenue(state);
-		// TODO Auto-generated method stub
+    public void stopMonitoring(VenueState state) {
+        states.remove(state);
+        ui.removeVenue(state);
+    }
 
-	}
+    public VenueServerType getServerType() {
+        return serverType;
+    }
 
-/*	public void setLocalUser(ClientProfile user){
-		this.localUser = user;
-		ui.addLocalUser(user);
-	}
+/*
+    public void setLocalUser(ClientProfile user) {
+        this.localUser = user;
+        ui.addLocalUser(user);
+    }
 
-	public Vector<ClientProfile> getUsers(){
-		return users;
-	}
+    public Vector<ClientProfile> getUsers() {
+        return users;
+    }
 
-	public void deleteUser(ClientProfile user) {
-		users.remove(user);
-		ui.delUser(user);
-	}
+    public void deleteUser(ClientProfile user) {
+        users.remove(user);
+        ui.delUser(user);
+    }
 
-	public void updateUser(ClientProfile user) {
-		int idx = users.indexOf(user);
-		users.remove(user);
-		users.insertElementAt(user, idx);
-		ui.modifyUser(user);
+    public void updateUser(ClientProfile user) {
+        int idx = users.indexOf(user);
+        users.remove(user);
+        users.insertElementAt(user, idx);
+        ui.modifyUser(user);
 
-	}
+    }
 
-	public ClientProfile getLocalUser() {
-		return localUser;
-	}
+    public ClientProfile getLocalUser() {
+        return localUser;
+    }
 */
 }

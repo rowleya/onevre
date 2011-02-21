@@ -52,6 +52,8 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.utils.CountInputStream;
 import com.googlecode.onevre.utils.Utils;
@@ -65,6 +67,8 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public class UploadBridgeTag extends PortletTag {
 
+    private Log log = LogFactory.getLog(this.getClass());
+
     // The size of the buffer
     private static final int BUFFER_SIZE = 8196;
 
@@ -72,13 +76,12 @@ public class UploadBridgeTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTag#doTag()
      */
     @SuppressWarnings("unchecked")
-	public void doTag() {
+    public void doTag() {
         HttpServletRequest request = getRequest();
         File bridgesDir = new File(
-            ((PageContext) getJspContext()).getServletContext().getRealPath(
-                "/bridges/"));
+            ((PageContext) getJspContext()).getServletContext().getRealPath("/bridges/"));
 
-        System.err.println("Content Length = " + request.getContentLength());
+        log.info("Content Length = " + request.getContentLength());
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (isMultipart) {
             // Create a factory for disk-based file items
@@ -116,55 +119,39 @@ public class UploadBridgeTag extends PortletTag {
                         File tempFile = null;
 
                         long size = item.getSize();
-                        ui.showUploadStatus(uri,fileName, size);
+                        ui.showUploadStatus(uri, fileName, size);
                         String error = null;
                         try {
-                            tempFile = File.createTempFile("uploaded", ".jar",
-                                    bridgesDir);
-                            CountInputStream count = new CountInputStream(
-                                    item.getInputStream());
-                            BufferedInputStream input =
-                                new BufferedInputStream(count);
-                            OutputStream output = new BufferedOutputStream(
-                                    new FileOutputStream(tempFile));
+                            tempFile = File.createTempFile("uploaded", ".jar", bridgesDir);
+                            CountInputStream count = new CountInputStream(item.getInputStream());
+                            BufferedInputStream input = new BufferedInputStream(count);
+                            OutputStream output = new BufferedOutputStream(new FileOutputStream(tempFile));
                             byte[] buffer = new byte[BUFFER_SIZE];
                             int bytesRead = 0;
                             while ((bytesRead = input.read(buffer)) != -1) {
                                 output.write(buffer, 0, bytesRead);
-                                ui.setUploadStatus(uri,fileName, size,
-                                    count.getCount());
+                                ui.setUploadStatus(uri, fileName, size, count.getCount());
                             }
                             output.close();
-
-                            ui.setUploadStatus(uri,fileName, size, size);
-
+                            ui.setUploadStatus(uri, fileName, size, size);
                             JarFile jar = new JarFile(tempFile);
                             Enumeration<JarEntry> entries = jar.entries();
                             String bridgeType = null;
                             CodeSigner signer = null;
                             while (entries.hasMoreElements()) {
                                 JarEntry entry = entries.nextElement();
-                                if (!entry.getName().startsWith("META-INF")
-                                        && !entry.isDirectory()) {
+                                if (!entry.getName().startsWith("META-INF") && !entry.isDirectory()) {
                                     Utils.readEntry(jar, entry);
-                                    CodeSigner[] signers =
-                                        entry.getCodeSigners();
-                                    if ((signers == null)
-                                            || signers.length != 1) {
+                                    CodeSigner[] signers = entry.getCodeSigners();
+                                    if ((signers == null) || signers.length != 1) {
                                         jar.close();
-                                        throw new Exception(
-                                            "Bridge jars must be signed by one"
-                                                + " certificate");
+                                        throw new Exception("Bridge jars must be signed by one certificate");
                                     }
                                     if (signer == null) {
                                         signer = signers[0];
-                                    } else if (!signers[0].getSignerCertPath().
-                                            equals(
-                                                signer.getSignerCertPath())) {
+                                    } else if (!signers[0].getSignerCertPath().equals(signer.getSignerCertPath())) {
                                         jar.close();
-                                        throw new Exception(
-                                            "Bridge jars must be signed by one"
-                                                + " certificate");
+                                        throw new Exception("Bridge jars must be signed by one certificate");
                                     }
                                     String name = entry.getName();
                                     if (name.endsWith("/BridgeClientImpl.class")) {
@@ -174,52 +161,38 @@ public class UploadBridgeTag extends PortletTag {
                             }
                             jar.close();
                             if (bridgeType == null) {
-                                throw new Exception("Bridge jars must contain"
-                                        + "BridgeClientImpl.class in "
+                                throw new Exception("Bridge jars must contain BridgeClientImpl.class in "
                                         + "subpackage of com.googlecode.onevre.ag.agbridge.");
                             }
-
                             File newFile = new File(bridgesDir, fileName);
-
                             if (newFile.exists()) {
-
-                                // Remove the file if the certificate is
-                                // the same
+                                // Remove the file if the certificate is the same
                                 JarFile oldJar = new JarFile(newFile);
-                                JarEntry oldclass = oldJar.getJarEntry(
-                                        bridgeType);
+                                JarEntry oldclass = oldJar.getJarEntry(bridgeType);
                                 Utils.readEntry(oldJar, oldclass);
-                                CodeSigner[] oldSigners =
-                                    oldclass.getCodeSigners();
+                                CodeSigner[] oldSigners = oldclass.getCodeSigners();
                                 oldJar.close();
                                 if (oldSigners == null) {
-                                    throw new Exception(
-                                            "Old bridge was not signed!");
+                                    throw new Exception("Old bridge was not signed!");
                                 }
                                 String oldDn = ((X509Certificate)
-                                        oldSigners[0].getSignerCertPath().
-                                        getCertificates().get(0)).
+                                        oldSigners[0].getSignerCertPath().getCertificates().get(0)).
                                         getSubjectX500Principal().getName();
                                 String newDn = ((X509Certificate)
-                                        signer.getSignerCertPath().
-                                        getCertificates().get(0)).
+                                        signer.getSignerCertPath().getCertificates().get(0)).
                                         getSubjectX500Principal().getName();
                                 if (oldDn.equals(newDn)) {
                                     if (!newFile.delete()) {
-                                        throw new Exception(
-                                                "Could not remove old bridge");
+                                        throw new Exception("Could not remove old bridge");
                                     }
                                 } else {
-                                    throw new Exception("A bridge can only be "
-                                            + "replaced with one signed by the "
+                                    throw new Exception("A bridge can only be replaced with one signed by the "
                                             + "same certificate");
                                 }
                             }
-
                             // Move the upload directory to the service one
                             if (!tempFile.renameTo(newFile)) {
-                                throw new Exception(
-                                        "Could not rename jar");
+                                throw new Exception("Could not rename jar");
                             }
 
                         } catch (Exception e) {
@@ -229,10 +202,9 @@ public class UploadBridgeTag extends PortletTag {
 
                         if (error != null) {
                             //tempFile.delete();
-                            ui.displayMessage(uri,"error", "Error uploading bridge: "
-                                    + error);
+                            ui.displayMessage(uri, "error", "Error uploading bridge: " + error);
                         } else {
-                            ui.displayMessage(uri,"success", "Bridge uploaded successfully");
+                            ui.displayMessage(uri, "success", "Bridge uploaded successfully");
                         }
                         ui.hideUploadStatus(uri);
                     }

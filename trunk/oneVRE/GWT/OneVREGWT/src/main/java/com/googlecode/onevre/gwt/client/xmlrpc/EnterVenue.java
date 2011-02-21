@@ -8,30 +8,30 @@ import com.googlecode.onevre.gwt.client.VenueClientController;
 import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 import com.googlecode.onevre.gwt.client.ag.types.VenueStateJSO;
 
-public class EnterVenue implements AsyncCallback<String>{
+public class EnterVenue implements AsyncCallback<String> {
 
-	public void enter(String url){
-		XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
+    public void enter(String url) {
+        XmlRpcClient xmlrpcClient = Application.getXmlRpcClient();
         XmlRpcRequest<String> request = new XmlRpcRequest<String>(
                 xmlrpcClient, "enterVenue",  new Object[]{url},
                 new EnterVenue());
         request.execute();
-	}
+    }
 
-	public void onFailure(Throwable paramThrowable) {
-		// TODO Auto-generated method stub
+    public void onFailure(Throwable paramThrowable) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	// start venueclientui.entervenue
+    // start venueclientui.entervenue
 
 
-	public void onSuccess(String venueStateXml) {
-		VenueState venueState = new VenueState((VenueStateJSO)VenueClientController.getObjectDec(venueStateXml));
+    public void onSuccess(String venueStateXml) {
+        VenueState venueState = new VenueState((VenueStateJSO) VenueClientController.getObjectDec(venueStateXml));
 
-		// when VenueclientUI answers
+        // when VenueclientUI answers
 
-		if (venueState != null) {
+        if (venueState != null) {
 /*
             var venuelist = venueState.getVenueList();
             var participants = venueState.getClients();
@@ -59,12 +59,14 @@ public class EnterVenue implements AsyncCallback<String>{
                 }
                 add=true;
             }
-            pag_createDataTree(participants,data,services,applications,this.dataDownloadUrl,this.dataUploadUrl,this.venueClientControllerId,add);
+            pag_createDataTree(participants, data, services, applications,
+                this.dataDownloadUrl, this.dataUploadUrl, this.venueClientControllerId,add);
             if (refresh==null){
                 //pag_xmlRpcClient.call("startApplicationQueue");
             } else {
                 for (var i=0; i<applications.size();i++){
-                    //pag_xmlRpcClient.call("getApplicationParticipants",applications.get(i).getUri(),applications.get(i).getId());
+                    pag_xmlRpcClient.call("getApplicationParticipants", applications.get(i).getUri(),
+                        applications.get(i).getId());
                 }
             }
             return true;
@@ -74,6 +76,6 @@ public class EnterVenue implements AsyncCallback<String>{
         }
 
 
-	}
+    }
 
 }

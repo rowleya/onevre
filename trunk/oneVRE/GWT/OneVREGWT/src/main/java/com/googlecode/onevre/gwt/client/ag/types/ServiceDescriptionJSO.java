@@ -4,14 +4,14 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class ServiceDescriptionJSO extends JavaScriptObject {
 
-	protected ServiceDescriptionJSO (){
-	}
+    protected ServiceDescriptionJSO() {
+    }
 
     /**
      * Returns the description
      * @return this.getthe description
      */
-    public native final String getDescription() /*-{
+    public final native String getDescription() /*-{
         return this.getDescription();
     }-*/;
 
@@ -19,7 +19,7 @@ public class ServiceDescriptionJSO extends JavaScriptObject {
      * Returns the id
      * @return this.getthe id
      */
-    public native final String getId() /*-{
+    public final native String getId() /*-{
         return this.getId();
     }-*/;
 
@@ -27,7 +27,7 @@ public class ServiceDescriptionJSO extends JavaScriptObject {
      * Returns the mime type
      * @return this.getthe mime type
      */
-    public native final String getMimeType() /*-{
+    public final native String getMimeType() /*-{
         return this.getMimeType();
     }-*/;
 
@@ -35,7 +35,7 @@ public class ServiceDescriptionJSO extends JavaScriptObject {
      * Returns the name
      * @return this.getthe name
      */
-    public native final String getName() /*-{
+    public final native String getName() /*-{
         return this.getName();
     }-*/;
 
@@ -43,7 +43,7 @@ public class ServiceDescriptionJSO extends JavaScriptObject {
      * Returns the uri
      * @return this.gethe uri
      */
-    public native final String getUri() /*-{
+    public final native String getUri() /*-{
         return this.getUri();
     }-*/;
 

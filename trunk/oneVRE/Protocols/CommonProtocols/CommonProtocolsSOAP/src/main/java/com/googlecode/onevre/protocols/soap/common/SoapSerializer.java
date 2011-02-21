@@ -73,7 +73,7 @@ public class SoapSerializer {
 
     // The start of the SOAP envelope
     @SuppressWarnings("unused")
-	private static final String START_SOAP_ENVELOPE = "<?xml "
+    private static final String START_SOAP_ENVELOPE = "<?xml "
         + "version=\"1.0\" encoding=\"UTF-8\"?>\n"
         + "<SOAP-ENV:Envelope "
         + "xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -153,7 +153,7 @@ public class SoapSerializer {
     }
 
     @SuppressWarnings("unchecked")
-	private String getParameterString(String nameSpace, String name,
+    private String getParameterString(String nameSpace, String name,
             Object value, Object type) throws NoSuchMethodException,
             IllegalAccessException, InvocationTargetException {
         String message = "";
@@ -179,7 +179,7 @@ public class SoapSerializer {
                     values.add(Array.get(value, i));
                 }
             } else {
-                values = (Vector) value;
+                values = (Vector<Object>) value;
             }
             for (int j = 0; j < values.size(); j++) {
                 Object val = values.get(j);

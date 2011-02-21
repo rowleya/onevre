@@ -130,7 +130,7 @@ public class VenueList {
      */
     @XmlElement
     public VenueTreeItem getVenue(String id) {
-    	return venues.get(id);
+        return venues.get(id);
     }
 
     /**
@@ -139,23 +139,23 @@ public class VenueList {
      * @return A VenueTreeItem with the given id, or null if there is none
      */
     public VenueTreeItem findVenue(String venueId) {
-    	VenueTreeItem item = venues.get(venueId);
-    	if (item!=null) {
-    		return item;
-    	}
-    	for (VenueTreeItem vti: venues.values()){
-    		item = vti.findVenueTreeItem(venueId);
-    		if (item!=null) {
-        		return item;
-        	}
-    	}
-    	for (VenueTreeItem vti:roots){
-    		item = vti.findVenueTreeItem(venueId);
-    		if (item!=null) {
-        		return item;
-        	}
-    	}
-    	return null;
+        VenueTreeItem item = venues.get(venueId);
+        if (item != null) {
+            return item;
+        }
+        for (VenueTreeItem vti : venues.values()) {
+            item = vti.findVenueTreeItem(venueId);
+            if (item != null) {
+                return item;
+            }
+        }
+        for (VenueTreeItem vti : roots) {
+            item = vti.findVenueTreeItem(venueId);
+            if (item != null) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /**
@@ -234,26 +234,26 @@ public class VenueList {
      * @throws IOException
      * @throws SoapException
      */
-	public void selectMode(int mode, Vector<VenueTreeItem> roots) throws IOException, SoapException {
+    public void selectMode(int mode, Vector<VenueTreeItem> roots) throws IOException, SoapException {
         this.mode = mode;
         this.roots = roots;
         this.venues.clear();
-        for (VenueTreeItem venue: roots){
-        	this.venues.put(venue.getId(), venue);
+        for (VenueTreeItem venue : roots) {
+            this.venues.put(venue.getId(), venue);
         }
     }
 
     @XmlElement
-	public int getMode(){
-		return mode;
-	}
+    public int getMode() {
+        return mode;
+    }
 
-	public void addVenue(VenueTreeItem venue){
-		 venues.put(venue.getId(), venue);
-	}
+    public void addVenue(VenueTreeItem venue) {
+         venues.put(venue.getId(), venue);
+    }
 
-    public boolean removeVenue(String venueId){
-    	return (venues.remove(venueId)!=null);
+    public boolean removeVenue(String venueId) {
+        return (venues.remove(venueId) != null);
     }
 
 
@@ -275,12 +275,12 @@ public class VenueList {
     }
 
     public void addRoot(VenueTreeItem root) {
-    	roots.add(root);
+        roots.add(root);
         Collections.sort(roots);
-	}
+    }
 
-    public boolean removeRoot(VenueTreeItem root){
-    	return roots.remove(root);
+    public boolean removeRoot(VenueTreeItem root) {
+        return roots.remove(root);
     }
 
     /**
@@ -317,12 +317,12 @@ public class VenueList {
         return horizontalScrollPosition;
     }
 
-    public String toString(){
-    	String out = "";
-    	for (String id:venues.keySet()) {
-    		out += "\nID: " + id +" - " + venues.get(id).toString("");
-    	}
-    	return out;
+    public String toString() {
+        String out = "";
+        for (String id : venues.keySet()) {
+            out += "\nID: " + id + " - " + venues.get(id).toString("");
+        }
+        return out;
     }
 
 

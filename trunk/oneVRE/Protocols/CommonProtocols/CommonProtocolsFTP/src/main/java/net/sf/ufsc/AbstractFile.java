@@ -34,107 +34,94 @@ import org.apache.commons.logging.LogFactory;
  * @author Paul Ferraro
  *
  */
-public abstract class AbstractFile implements File
-{
-	protected Log logger = LogFactory.getLog(this.getClass());
-	protected URI uri;
+public abstract class AbstractFile implements File {
+    protected Log logger = LogFactory.getLog(this.getClass());
+    protected URI uri;
 
-	protected AbstractFile(URI uri)
-	{
-		this.uri = uri;
-	}
+    protected AbstractFile(URI uri) {
+        this.uri = uri;
+    }
 
-	/**
-	 * @see net.sf.ufsc.File#getFile(java.lang.String)
-	 */
-	public File getFile(String path) throws IOException
-	{
-		return this.getFile(this.uri.resolve(path));
-	}
+    /**
+     * @see net.sf.ufsc.File#getFile(java.lang.String)
+     */
+    public File getFile(String path) throws IOException {
+        return this.getFile(this.uri.resolve(path));
+    }
 
-	/**
-	 * @see net.sf.ufsc.File#getParent()
-	 */
-	public File getParent() throws IOException
-	{
-		return this.getFile(this.uri.resolve("..")); //$NON-NLS-1$
-	}
+    /**
+     * @see net.sf.ufsc.File#getParent()
+     */
+    public File getParent() throws IOException {
+        return this.getFile(this.uri.resolve("..")); //$NON-NLS-1$
+    }
 
-	/**
-	 * @see net.sf.ufsc.File#getURI()
-	 */
-	public URI getURI()
-	{
-		return this.uri;
-	}
+    /**
+     * @see net.sf.ufsc.File#getURI()
+     */
+    public URI getURI() {
+        return this.uri;
+    }
 
-	protected abstract File getFile(URI uri) throws IOException;
+    protected abstract File getFile(URI uri) throws IOException;
 
-	/**
-	 * @see net.sf.ufsc.File#mkdir()
-	 */
-	public boolean mkdir() throws IOException
-	{
-		File parent = this.getParent();
+    /**
+     * @see net.sf.ufsc.File#mkdir()
+     */
+    public boolean mkdir() throws IOException {
+        File parent = this.getParent();
 
-		if ((parent != null) && !parent.exists())
-		{
-			parent.mkdir();
-		}
+        if ((parent != null) && !parent.exists()) {
+            parent.mkdir();
+        }
 
-		return this.makeDirectory();
-	}
+        return this.makeDirectory();
+    }
 
-	protected abstract boolean makeDirectory() throws IOException;
+    protected abstract boolean makeDirectory() throws IOException;
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object object)
-	{
-		return this.uri.equals(((File) object).getURI());
-	}
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object object) {
+        return this.uri.equals(((File) object).getURI());
+    }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		return this.uri.hashCode();
-	}
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return this.uri.hashCode();
+    }
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return this.uri.toString();
-	}
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return this.uri.toString();
+    }
 
-	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(File file)
-	{
-		return this.uri.compareTo(file.getURI());
-	}
+    /**
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    public int compareTo(File file) {
+        return this.uri.compareTo(file.getURI());
+    }
 
-	/**
-	 * @see net.sf.ufsc.File#getReader()
-	 */
-	public Reader getReader() throws IOException
-	{
-		return new InputStreamReader(this.getInputStream());
-	}
+    /**
+     * @see net.sf.ufsc.File#getReader()
+     */
+    public Reader getReader() throws IOException {
+        return new InputStreamReader(this.getInputStream());
+    }
 
-	/**
-	 * @see net.sf.ufsc.File#getWriter(boolean)
-	 */
-	public Writer getWriter(boolean append) throws IOException
-	{
-		return new OutputStreamWriter(this.getOutputStream(append));
-	}
+    /**
+     * @see net.sf.ufsc.File#getWriter(boolean)
+     */
+    public Writer getWriter(boolean append) throws IOException {
+        return new OutputStreamWriter(this.getOutputStream(append));
+    }
 }

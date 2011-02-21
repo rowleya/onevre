@@ -140,8 +140,8 @@ public class AGSharedApplicationManager extends SoapServable {
      * @param venueFilename name of the file in the venue
      * @param applicationUrl URL of the application
      */
-    public void downloadData(String venueFilename,String applicationUrl){
-        venueClient.downloadData(venueFilename,applicationUrl);
+    public void downloadData(String venueFilename, String applicationUrl) {
+        venueClient.downloadData(venueFilename, applicationUrl);
     }
 
     /**
@@ -243,7 +243,7 @@ public class AGSharedApplicationManager extends SoapServable {
     public String startApplication(
             ApplicationDescription applicationDescription,
             SharedAppState appState, String namespace,
-            String dataDownloadUrl,String sessionId) throws IOException{
+            String dataDownloadUrl, String sessionId) throws IOException {
         String applicationUrl = null;
         String mimeType = applicationDescription.getMimeType();
         System.out.println("MimeType:" + mimeType);
@@ -278,12 +278,13 @@ public class AGSharedApplicationManager extends SoapServable {
      * @param eventDescription Event to distribute
      */
     public void distributeEvent(ApplicationDescription applicationDescription,
-            EventDescription eventDescription){
-        System.err.println("Application: " + applicationDescription.getName() + " Event: " + eventDescription.getEventType());
+            EventDescription eventDescription) {
+        System.err.println("Application: " + applicationDescription.getName()
+                + " Event: " + eventDescription.getEventType());
         Vector<String> urls = runningApplications.get(
                 applicationDescription.getId());
         if (urls != null) {
-            for (int i = 0; i < urls.size(); i++){
+            for (int i = 0; i < urls.size(); i++) {
                 AGSharedApplication sha;
                 try {
                     sha = new AGSharedApplication(urls.get(i));

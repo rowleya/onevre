@@ -9,55 +9,54 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.googlecode.onevre.gwt.client.ui.ActionButton;
 
 public class ButtonPanel implements ClickHandler {
 
     private static final int ICON_SIZE = 16;
     private static final int SPACER_SIZE = 4;
 
-    public static HorizontalAlignmentConstant LEFT = HorizontalPanel.ALIGN_LEFT;
-    public static HorizontalAlignmentConstant RIGHT = HorizontalPanel.ALIGN_RIGHT;
+    public static final HorizontalAlignmentConstant LEFT = HorizontalPanel.ALIGN_LEFT;
+    public static final HorizontalAlignmentConstant RIGHT = HorizontalPanel.ALIGN_RIGHT;
 
     private HorizontalPanel panel = new HorizontalPanel();
 
     private HashMap<PushButton, ActionButton> buttons =
         new HashMap<PushButton, ActionButton>();
 
-    public ButtonPanel(String id, HorizontalAlignmentConstant align){
+    public ButtonPanel(String id, HorizontalAlignmentConstant align) {
         panel.setHorizontalAlignment(align);
    }
 
-    public void addButton(ActionButton butt){
-    	addButton(butt, ICON_SIZE, ICON_SIZE);
+    public void addButton(ActionButton butt) {
+        addButton(butt, ICON_SIZE, ICON_SIZE);
     }
 
-    public void addButton(ActionButton butt , int height , int width){
-	    PushButton button = butt.getButton();
-	    button.setWidth(width +"px");
-	    button.setHeight(height + "px");
-	    panel.add(button);
-	    buttons.put(button, butt);
-	    button.addClickHandler(this);
+    public void addButton(ActionButton butt , int height , int width) {
+        PushButton button = butt.getButton();
+        button.setWidth(width + "px");
+        button.setHeight(height + "px");
+        panel.add(button);
+        buttons.put(button, butt);
+        button.addClickHandler(this);
     }
 
-	public void onClick(ClickEvent event) {
-		buttons.get(event.getSource()).onClick();
-	}
+    public void onClick(ClickEvent event) {
+        buttons.get(event.getSource()).onClick();
+    }
 
-	public Panel getPanel(){
-		return panel;
-	}
+    public Panel getPanel() {
+        return panel;
+    }
 
-	public void addSpacer() {
-		addSpacer(SPACER_SIZE);
-	}
+    public void addSpacer() {
+        addSpacer(SPACER_SIZE);
+    }
 
-	public void addSpacer(int size) {
-		SimplePanel p = new SimplePanel();
-	    p.setWidth(size +"px");
-	    p.setHeight(ICON_SIZE + "px");
-		panel.add(p);
-	}
+    public void addSpacer(int size) {
+        SimplePanel p = new SimplePanel();
+        p.setWidth(size + "px");
+        p.setHeight(ICON_SIZE + "px");
+        panel.add(p);
+    }
 
 }

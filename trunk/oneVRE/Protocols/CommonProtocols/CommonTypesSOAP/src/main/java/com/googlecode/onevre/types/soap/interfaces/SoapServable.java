@@ -54,8 +54,8 @@ import com.googlecode.onevre.types.soap.exceptions.SoapException;
 public abstract class SoapServable {
 
     // A map of the method names to the result names
-    private static final HashMap<String, HashMap<String,Class<?>>> METHOD_PARAMETERS =
-        new HashMap<String, HashMap<String,Class<?>>>();
+    private static final HashMap<String, HashMap<String, Class<?>>> METHOD_PARAMETERS =
+        new HashMap<String, HashMap<String, Class<?>>>();
 
     /**
      * adds a method to the METHOD_PARAMETERS map
@@ -63,11 +63,11 @@ public abstract class SoapServable {
      * @param parameter the parameter name in the SOAP call
      * @param type the java type
      */
-    private static void ADD_METHOD(String method, String parameter, Class<?> type){
+    private static void addMethod(String method, String parameter, Class<?> type) {
         HashMap<String, Class<?>> methodMap = METHOD_PARAMETERS.get(method);
-        if (methodMap==null){
+        if (methodMap == null) {
             methodMap = new HashMap<String, Class<?>>();
-            METHOD_PARAMETERS.put(method,methodMap);
+            METHOD_PARAMETERS.put(method, methodMap);
         }
         methodMap.put(parameter, type);
     }
@@ -119,9 +119,9 @@ public abstract class SoapServable {
      * @param method The name of the method
      * @return The name to give the parameter in the soap response
      */
-    public String getResultParameterName(Method method){
+    public String getResultParameterName(Method method) {
         SoapReturn returns = method.getAnnotation(SoapReturn.class);
-        if (returns != null){
+        if (returns != null) {
             return returns.name();
         }
         return null;
@@ -133,28 +133,28 @@ public abstract class SoapServable {
      * @param i The index of the parameter
      * @return The soap parameter name of the parameter
      */
-    public String getParameterName(Method method, int i){
-    	Method meth=method;
+    public String getParameterName(Method method, int i) {
+        Method meth = method;
         Annotation[][] annotations = null;
         Class<?> cls = method.getDeclaringClass();
-        while (cls != null){
-        	System.out.println("trying Method " + meth + " from Class " + cls);
-        	if (meth!=null){
-        		annotations=meth.getParameterAnnotations();
-                for (Annotation annotation:annotations[i]){
-                    if (annotation.annotationType().equals(SoapParameter.class)){
-                        return ((SoapParameter)annotation).value();
+        while (cls != null) {
+            System.out.println("trying Method " + meth + " from Class " + cls);
+            if (meth != null) {
+                annotations = meth.getParameterAnnotations();
+                for (Annotation annotation : annotations[i]) {
+                    if (annotation.annotationType().equals(SoapParameter.class)) {
+                        return ((SoapParameter) annotation).value();
                     }
                 }
-        	}
-    		cls = cls.getSuperclass();
-    		if (cls!=null){
-    			try {
-					meth = cls.getDeclaredMethod(method.getName(), method.getParameterTypes());
-				} catch (Exception e) {
-					// do nothing
-				}
-    		}
+            }
+            cls = cls.getSuperclass();
+            if (cls != null) {
+                try {
+                    meth = cls.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                } catch (Exception e) {
+                    // do nothing
+                }
+            }
         }
         return null;
     }
@@ -167,22 +167,22 @@ public abstract class SoapServable {
      */
     public String getResultParameterType(Method method) throws SoapException {
 
-    	SoapReturn returns = method.getAnnotation(SoapReturn.class);
-        if (returns==null) {
+        SoapReturn returns = method.getAnnotation(SoapReturn.class);
+        if (returns == null) {
             throw new SoapException("Soap Return Type of " + method.getName() + "not specified");
         }
         String returnType =  returns.type();
-        if (returnType.equals("n/a")){
+        if (returnType.equals("n/a")) {
             Class<?> methodReturnType = method.getReturnType();
-            if (methodReturnType.isArray()){
-                methodReturnType=methodReturnType.getComponentType();
+            if (methodReturnType.isArray()) {
+                methodReturnType = methodReturnType.getComponentType();
             }
-            if (methodReturnType.equals(Vector.class)){
-                Type t=method.getGenericReturnType();
-                methodReturnType =(Class<?>)((ParameterizedType)t).getActualTypeArguments()[0];
+            if (methodReturnType.equals(Vector.class)) {
+                Type t = method.getGenericReturnType();
+                methodReturnType = (Class<?>) ((ParameterizedType) t).getActualTypeArguments()[0];
             }
             returnType = SOAP_TYPES.get(methodReturnType);
-            if (returnType==null)  {
+            if (returnType == null)  {
                 try {
                     Object object = methodReturnType.newInstance();
                     if (object instanceof SoapSerializable) {
@@ -197,19 +197,19 @@ public abstract class SoapServable {
         return returnType;
     }
 
-    private HashMap<String, Class<?>> register_method(String method) {
+    private HashMap<String, Class<?>> registerMethod(String method) {
         Method[] methods = getClass().getMethods();
-        for (Method m : methods){
-            if (m.getName().equals(method)){
+        for (Method m : methods) {
+            if (m.getName().equals(method)) {
                 Type [] types = m.getGenericParameterTypes();
                 Class<?> [] classes = m.getParameterTypes();
                 for (int i = 0; i < classes.length; i++) {
                     Class<?> cls = classes[i];
                     if (cls.isArray()) {
-                        cls=cls.getComponentType();
+                        cls = cls.getComponentType();
                     }
-                    if (!cls.equals(Vector.class)){
-                        ADD_METHOD (method,((TypeVariable<?>)types[i]).getName(),cls);
+                    if (!cls.equals(Vector.class)) {
+                        addMethod(method, ((TypeVariable<?>) types[i]).getName(), cls);
                     }
                 }
             }
@@ -225,16 +225,16 @@ public abstract class SoapServable {
      * @throws SoapException
      */
     public Class<?> getParameterType(String method, String parameterName) throws SoapException {
-        HashMap<String,Class<?>> params = METHOD_PARAMETERS.get(method);
-        if (params==null) {
-            params = register_method(method);
+        HashMap<String, Class<?>> params = METHOD_PARAMETERS.get(method);
+        if (params == null) {
+            params = registerMethod(method);
             if (params == null) {
-                throw new SoapException("method " + method + " not registered" );
+                throw new SoapException("method " + method + " not registered");
             }
         }
         Class<?> type = params.get(parameterName);
-        if (type==null) {
-            throw new SoapException("parameter " + parameterName + "not registered for method " + method + " not registered" );
+        if (type == null) {
+            throw new SoapException("parameter " + parameterName + "not registered for method " + method);
         }
         return type;
     }

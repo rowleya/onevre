@@ -41,6 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.ag.types.service.AGServicePackageDescription;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
@@ -54,6 +56,8 @@ import com.googlecode.onevre.web.servlet.tags.PortletTag;
  * @version 1.0
  */
 public class GetServicesTag extends PortletTag {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private String var = null;
 
@@ -70,8 +74,7 @@ public class GetServicesTag extends PortletTag {
             HashMap<String, AGServicePackageDescription> services,
             String baseUrl)
             throws IOException {
-        System.err.println("Searching " + dir.getAbsolutePath()
-                + " for services");
+        log.info("Searching " + dir.getAbsolutePath() + " for services");
         File[] listing = dir.listFiles();
         for (int i = 0; i < listing.length; i++) {
             if (listing[i].isDirectory()) {
@@ -93,7 +96,7 @@ public class GetServicesTag extends PortletTag {
                     svc.setPackageName(dir.getName());
 
                     String launchClass = description.get("class");
-                    if (launchClass==null){
+                    if (launchClass == null) {
                         launchClass = serviceName.substring(0, 1).toLowerCase()
                         + serviceName.substring(1) + "." + serviceName;
                     }
@@ -123,7 +126,7 @@ public class GetServicesTag extends PortletTag {
         url += request.getContextPath()
             + "/jsp/findJarForService.jsp?serviceName=";
         services = searchForServices(dir, services, url);
-        System.err.println("Services = " + services.toString());
+        log.info("Services = " + services.toString());
         getJspContext().setAttribute(var,
                 StringEscapeUtils.escapeXml(
                         XMLSerializer.serialize(services)));

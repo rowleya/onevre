@@ -81,11 +81,11 @@ public class XMLDeserializer extends DefaultHandler {
     private XMLDeserializer(String xml) throws IOException, SAXException {
         parser.setContentHandler(this);
         try {
-        	parser.parse(new InputSource(new StringReader(xml)));
+            parser.parse(new InputSource(new StringReader(xml)));
         } catch (SAXParseException e) {
-        	System.err.println("Parsing  |" + xml + "|" );
-        	e.printStackTrace();
-        	throw e;
+            System.err.println("Parsing  |" + xml + "|");
+            e.printStackTrace();
+            throw e;
         }
 
     }
@@ -223,7 +223,7 @@ public class XMLDeserializer extends DefaultHandler {
      *     java.lang.String, java.lang.String)
      */
     @SuppressWarnings("unchecked")
-	public void endElement(String namespaceURI, String localName,
+    public void endElement(String namespaceURI, String localName,
             String qualifiedName) throws SAXException {
         if (!localName.equals("element")) {
             Object object = currentObject.removeLast();
@@ -238,7 +238,7 @@ public class XMLDeserializer extends DefaultHandler {
                 if (superClass.isArray()) {
                     int index = currentIndex.removeLast().intValue();
                     Array.set(superObject, index, object);
-                    if (Array.getLength(superObject) > index + 1){
+                    if (Array.getLength(superObject) > index + 1) {
                         currentIndex.addLast(new Integer(index + 1));
                     }
                 } else if (Collection.class.isAssignableFrom(superClass)) {
@@ -284,7 +284,7 @@ public class XMLDeserializer extends DefaultHandler {
             Object key = currentKey.removeLast();
             Object value = currentValue.removeLast();
             Object map = currentObject.getLast();
-            ((Map) map).put(key, value);
+            ((Map<Object, Object>) map).put(key, value);
         }
     }
 }

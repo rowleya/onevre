@@ -33,8 +33,8 @@ public class AGStreamDescriptionList {
      * Add a stream to the list, only if it doesn't already exist
      * @param stream A stream description
      */
-    public void addStream(StreamDescription stream){
-        if (streams.containsKey(stream)){
+    public void addStream(StreamDescription stream) {
+        if (streams.containsKey(stream)) {
             throw new RuntimeException("AddStream: Stream already present.");
         }
         streams.put(stream, new Vector<String>());
@@ -47,8 +47,8 @@ public class AGStreamDescriptionList {
      *
      */
 
-    public void removeStream(StreamDescription stream){
-        if (streams.remove(stream) == null){
+    public void removeStream(StreamDescription stream) {
+        if (streams.remove(stream) == null) {
             throw new RuntimeException("RemoveStream: Stream not found.");
         }
     }
@@ -61,10 +61,10 @@ public class AGStreamDescriptionList {
      *
      */
 
-    public void addStreamProducer(String producingUser, StreamDescription stream){
+    public void addStreamProducer(String producingUser, StreamDescription stream) {
         Vector<String> producers = streams.get(stream);
-        if (producers==null){
-            producers=new Vector<String>();
+        if (producers == null) {
+            producers = new Vector<String>();
             streams.put(stream, producers);
         }
         producers.add(producingUser);
@@ -81,11 +81,11 @@ public class AGStreamDescriptionList {
      *
      */
 
-    public StreamDescription removeStreamProducer(String producingUser, StreamDescription stream){
+    public StreamDescription removeStreamProducer(String producingUser, StreamDescription stream) {
         Vector<String> producers = streams.get(stream);
-        if (producers!=null){
+        if (producers != null) {
             producers.remove(producingUser);
-            if ((!stream.getStatic()) && (producers.size()==0)){
+            if ((!stream.getStatic()) && (producers.size() == 0)) {
                 streams.remove(stream);
                 return stream;
             }
@@ -102,11 +102,11 @@ public class AGStreamDescriptionList {
      * @return The list of the streams which have been removed from the Venue
      */
 
-    public Vector<StreamDescription> removeProducer (String producingUser){
+    public Vector<StreamDescription> removeProducer(String producingUser) {
         Vector<StreamDescription> removedStreams = new Vector<StreamDescription>();
-        for (StreamDescription stream : streams.keySet()){
+        for (StreamDescription stream : streams.keySet()) {
             StreamDescription removedStream = removeStreamProducer(producingUser, stream);
-            if (removedStream != null){
+            if (removedStream != null) {
                 removedStreams.add(removedStream);
             }
         }
@@ -117,9 +117,9 @@ public class AGStreamDescriptionList {
      * Get the list of streams, without producing user info
      * @return The list of stream descriptions.
      */
-    public Vector<StreamDescription> getStreams(){
+    public Vector<StreamDescription> getStreams() {
         Vector<StreamDescription> streamDescriptions = new Vector<StreamDescription>();
-        for (StreamDescription stream : streams.keySet()){
+        for (StreamDescription stream : streams.keySet()) {
             streamDescriptions.add(stream);
         }
         return streamDescriptions;
@@ -131,17 +131,17 @@ public class AGStreamDescriptionList {
      *
      * @return The list of stream descriptions for the static streams in this Venue.
      */
-    public Vector<StreamDescription> getStaticStreams(){
+    public Vector<StreamDescription> getStaticStreams() {
         Vector<StreamDescription> staticStreams = new Vector<StreamDescription>();
-        for (StreamDescription stream : streams.keySet()){
-            if (stream.getStatic()){
+        for (StreamDescription stream : streams.keySet()) {
+            if (stream.getStatic()) {
                 staticStreams.add(stream);
             }
         }
         return staticStreams;
     }
 
-    public String toString(){
+    public String toString() {
         return streams.toString();
     }
 

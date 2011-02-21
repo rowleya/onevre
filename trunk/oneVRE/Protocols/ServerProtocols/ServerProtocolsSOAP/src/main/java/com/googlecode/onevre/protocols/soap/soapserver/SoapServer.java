@@ -56,7 +56,7 @@ public class SoapServer {
 
     private ServletHolder holder = null;
 
-    private SoapServerClient soapServerClient=null;
+    private SoapServerClient soapServerClient = null;
 
  //   private HashMap<String, SoapServable> objects =
  //       new HashMap<String, SoapServable>();
@@ -101,7 +101,7 @@ public class SoapServer {
         soapServerClient = new SoapServerClient();
 
         holder = new ServletHolder(soapServerClient);
-        context.addServlet(holder,"/*");
+        context.addServlet(holder, "/*");
         context.setContextPath("/");
         server = new Server();
         Connector connector = null;
@@ -166,7 +166,7 @@ public class SoapServer {
      * Stops the server
      */
     public void end() {
-    	try {
+        try {
             server.stop();
         } catch (Exception e) {
             // Do Nothing

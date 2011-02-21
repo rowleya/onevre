@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-
-import com.googlecode.onevre.ag.agbridge.BridgeClientCreator;
 import com.googlecode.onevre.ag.interfaces.BridgeInterface;
 import com.googlecode.onevre.ag.interfaces.ServiceManagerInterface;
 import com.googlecode.onevre.ag.types.BridgeDescription;
@@ -113,8 +111,8 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
         name = Utils.getLocalHostAddress();
     }
 
-    public void setClientBridge(BridgeInterface clientBridge){
-    	this.clientBridge = clientBridge;
+    public void setClientBridge(BridgeInterface clientBridge) {
+        this.clientBridge = clientBridge;
     }
 
     /**
@@ -127,10 +125,12 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
 
     /**
      * Invalidates the bridges causing them to be reloaded
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#setPointOfReference(java.lang.String)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#setPointOfReference(java.lang.String)}</dd>
+     * </dl>
      * @param url The url of the point of reference server
      */
-    public void setPointOfReference(String url) throws IOException{
+    public void setPointOfReference(String url) throws IOException {
         if ((pointOfReferenceUrl == null) || !pointOfReferenceUrl.equals(url)) {
             this.pointOfReferenceUrl = url;
             clientBridge.setPointOfReferenceUrl(url);
@@ -139,7 +139,8 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
 
     /**
      * add a Service
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#addService(ag3.interfaces.types.AGServicePackageDescription, java.util.Vector, ag3.interfaces.types.ClientProfile)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#addService(ag3.interfaces.types.AGServicePackageDescription, java.util.Vector, ag3.interfaces.types.ClientProfile)}</dd></dl>
      * @param servicePackage the service package to register
      * @param configuration The configuration of the client
      * @param profile the client profile
@@ -266,7 +267,7 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
      * @throws IOException
      */
     public void removeServices() throws IOException {
-        for (AGServiceDescription serviceDescription : serviceDescriptions.values()){
+        for (AGServiceDescription serviceDescription : serviceDescriptions.values()) {
             removeService(serviceDescription);
         }
     }
@@ -297,7 +298,7 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
      * @throws IOException
      */
     public void stopServices() throws IOException {
-        for (AGService service : services.values()){
+        for (AGService service : services.values()) {
             service.stop();
         }
     }
@@ -350,7 +351,7 @@ public class AGServiceManager extends SoapServable implements ServiceManagerInte
             try {
                 clientBridge.joinBridge(bridgeDescription);
             } catch (Exception e) {
-            	e.printStackTrace();
+                e.printStackTrace();
                 throw new IOException(e.getMessage());
             }
             this.bridge = bridgeDescription;

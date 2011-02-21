@@ -52,9 +52,9 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public abstract class PortletTag extends SimpleTagSupport {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
-	// The namespace
+    // The namespace
     private String namespace = null;
 
     /**
@@ -78,7 +78,7 @@ public abstract class PortletTag extends SimpleTagSupport {
      * @return The venue client ui
      */
     protected VenueClientUI getVenueClientUI() {
-//    	System.out.println("VenueClientUI namespace = " + namespace );
+        log.debug("VenueClientUI namespace = " + namespace);
         return (VenueClientUI) getJspContext().getAttribute(
                 namespace + PagPortlet.VENUECLIENT_UI_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);
@@ -98,14 +98,14 @@ public abstract class PortletTag extends SimpleTagSupport {
      * @return The XmlRpcServer
      */
     protected PagXmlRpcServer getXmlRpcServer() {
-//    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE);
+        log.debug("GETTING PagXmlRpcServer :" + namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE);
         return (PagXmlRpcServer) getJspContext().getAttribute(
                 namespace + PagPortlet.XMLRPC_SERVER_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);
     }
 
     protected AgEventServer getAgEventServer() {
-//    	log.info("GETTING PagXmlRpcServer :" + namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE);
+        log.debug("GETTING PagXmlRpcServer :" + namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE);
         return (AgEventServer) getJspContext().getAttribute(
                 namespace + PagPortlet.AGEVENT_SERVER_ATTRIBUTE,
                 PageContext.SESSION_SCOPE);

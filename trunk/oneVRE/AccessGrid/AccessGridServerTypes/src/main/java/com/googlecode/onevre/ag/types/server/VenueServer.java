@@ -71,7 +71,7 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  */
 public class VenueServer {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private static final String VENUESERVER_NS =
         "http://www.accessgrid.org/v3.0/venueserver";
@@ -102,6 +102,7 @@ public class VenueServer {
      */
     public VenueServer(String serverUrl) throws MalformedURLException {
         this.soapRequest = new SoapRequest(serverUrl);
+        log.info("Setting up VenueServer on " + serverUrl);
     }
 
     /**
@@ -111,7 +112,7 @@ public class VenueServer {
      * @throws SoapException
      */
     @SoapReturn(
-            name="connectionDescriptionList"
+            name = "connectionDescriptionList"
         )
     public ConnectionDescription[] getVenues(@SoapParameter("voAttributes")VOAttribute[] voAttributes)
             throws IOException, SoapException {
@@ -126,24 +127,24 @@ public class VenueServer {
                     new boolean[]{true}));
         Object connections = result.get("connectionDescriptionList");
  //       log.info("getVenues returned: " + connections.getClass().getComponentType());
-        if (connections==null){
-        	return new ConnectionDescription[0];
+        if (connections == null) {
+            return new ConnectionDescription[0];
         }
-        if ((connections != null) && ConnectionDescription.class.equals(connections.getClass().getComponentType())){
-            return (ConnectionDescription[])connections;
+        if ((connections != null) && ConnectionDescription.class.equals(connections.getClass().getComponentType())) {
+            return (ConnectionDescription[]) connections;
         }
         throw new SoapException("Return type not correct");
     }
 
     @SoapReturn(
-            name="connection"
+            name = "connection"
         )
     public ConnectionDescription createVenues(
-    		@SoapParameter("name") String name,
-    		@SoapParameter("description") String description,
-    		@SoapParameter("creator") ClientProfile creator,
-    		@SoapParameter("voAttributes")VOAttribute[] voAttributes
-		) throws IOException, SoapException {
+            @SoapParameter("name") String name,
+            @SoapParameter("description") String description,
+            @SoapParameter("creator") ClientProfile creator,
+            @SoapParameter("voAttributes")VOAttribute[] voAttributes
+        ) throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(VENUESERVER_NS,
                 "CreateVenues", "CreateVenuesRequest",
                 new String[]{"name", "description", "creator", "voAttributes"},
@@ -153,10 +154,10 @@ public class VenueServer {
                     new String[]{VENUESERVER_NS + "/connection"},
                     new Class[]{ConnectionDescription.class}));
         Object connection = result.get("connection");
-        if ((connection != null) && ConnectionDescription.class.equals(connection.getClass())){
-            return (ConnectionDescription)connection;
+        if ((connection != null) && ConnectionDescription.class.equals(connection.getClass())) {
+            return (ConnectionDescription) connection;
         }
         throw new SoapException("Return type not correct");
-	}
+    }
 
 }
