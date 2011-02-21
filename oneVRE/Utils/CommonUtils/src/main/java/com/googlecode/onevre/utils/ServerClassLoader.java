@@ -41,6 +41,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.googlecode.onevre.security.AcceptAllHostnameVerifier;
 import com.googlecode.onevre.security.AcceptAllTrustManager;
 import com.googlecode.onevre.web.common.Defaults;
@@ -55,6 +58,8 @@ import com.googlecode.onevre.web.common.Defaults;
  * @version 1.0
  */
 public class ServerClassLoader extends SecureClassLoader {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private static final int BUFFER_SIZE = 4096;
 
@@ -100,7 +105,7 @@ public class ServerClassLoader extends SecureClassLoader {
                     String version = reader.readLine();
                     reader.close();
                     versionCorrect = Defaults.PAG_VERSION.equals(version);
-                    System.err.println(version + " == " + Defaults.PAG_VERSION + " = " + versionCorrect);
+                    log.info(version + " == " + Defaults.PAG_VERSION + " = " + versionCorrect);
                 } catch (IOException e) {
                     // Do Nothing
                 }
@@ -144,13 +149,13 @@ public class ServerClassLoader extends SecureClassLoader {
         this.remoteServer = remoteServer;
     }
 
-    private void addSslConnection(URLConnection connection){
-        if (connection instanceof HttpsURLConnection){
+    private void addSslConnection(URLConnection connection) {
+        if (connection instanceof HttpsURLConnection) {
             try {
                 SSLContext sslContext = SSLContext.getInstance("SSL");
                 sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
-                ((HttpsURLConnection)connection).setSSLSocketFactory(sslContext.getSocketFactory());
-                ((HttpsURLConnection)connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
+                ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
+                ((HttpsURLConnection) connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -208,9 +213,9 @@ public class ServerClassLoader extends SecureClassLoader {
      */
     protected String findLibrary(String libname) {
         try {
-            String name = System.mapLibraryName(libname+"-"+System.getProperty("os.arch"));
+            String name = System.mapLibraryName(libname + "-" + System.getProperty("os.arch"));
             URL url = getResourceURL(name);
-            System.err.println("Loading "+ name + " from " + url );
+            log.info("Loading " + name + " from " + url);
             if (url != null) {
                 File jar = cachedJars.get(url);
                 JarFile jarFile = new JarFile(jar);
@@ -365,7 +370,7 @@ public class ServerClassLoader extends SecureClassLoader {
                 } else {
                     jar.setLastModified(System.currentTimeMillis());
                 }
-            } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND){
+            } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                 return getRemoteResource(name);
             } else {
                 throw new IOException("Connection Error: "

@@ -4,11 +4,15 @@ import com.googlecode.onevre.gwt.client.interfaces.ApplicationManagerInterface;
 
 public class ApplicationManager {
 
-	private ApplicationManagerInterface ui = null;
+    private ApplicationManagerInterface ui = null;
 
-	public ApplicationManager(ApplicationManagerInterface ui) {
-		this.ui = ui;
-		ui.setApplicationManager(this);
-	}
+    public ApplicationManager(ApplicationManagerInterface ui) {
+        this.ui = ui;
+        ui.setApplicationManager(this);
+    }
+
+    public ApplicationManagerInterface getUI() {
+        return ui;
+    }
 
 }

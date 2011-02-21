@@ -33,6 +33,7 @@ package com.googlecode.onevre.web.common;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.ObjectInputStream.GetField;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.Date;
@@ -48,39 +49,43 @@ public class Defaults {
     /**
      * file to log usage data (set in Portlet.xml)
      */
-    public static String pagLogFile = "logs/pag-usage.log";
+    private static String pagLogFile = "logs/pag-usage.log";
 
     /**
      * file to log usage data (set in Portlet.xml)
      */
-    public static String trustedServerFile = "trustedServers.xml";
+    private static String trustedServerFile = "trustedServers.xml";
 
 
     /**
      * @param pagLogFile file to log usage data
      */
-    public static void setLogFile(String pagLogFile){
-        Defaults.pagLogFile=pagLogFile;
+    public static void setLogFile(String pagLogFile) {
+        Defaults.pagLogFile = pagLogFile;
     }
-    public static void setTrustedServerFile(String trustedServerFile){
-        Defaults.trustedServerFile=trustedServerFile;
+    public static void setTrustedServerFile(String trustedServerFile) {
+        Defaults.trustedServerFile = trustedServerFile;
+    }
+
+    public static String getTrustedServerFile() {
+        return trustedServerFile;
     }
 
     /**
      * Writes an entry into the PAG log file
      * @param entry the entry to write
      */
-    public static void writeLog(String entry){
-        File logFile=new File(Defaults.pagLogFile);
+    public static void writeLog(String entry) {
+        File logFile = new File(Defaults.pagLogFile);
         try {
             if (logFile.getParentFile() != null) {
                 logFile.getParentFile().mkdirs();
             }
             logFile.createNewFile();
             PrintWriter log = new PrintWriter(new FileWriter(Defaults.pagLogFile, true));
-            log.println("["+DateFormat.getDateTimeInstance().format(new Date())+ "] " + entry);
+            log.println("[" + DateFormat.getDateTimeInstance().format(new Date()) + "] " + entry);
             log.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     };
@@ -88,31 +93,34 @@ public class Defaults {
     /**
      * default image for a Personal node
      */
-    public static String PAG_USER_PARTICIPANT_IMG = "defaultParticipant.png";
+    public static final String PAG_USER_PARTICIPANT_IMG = "defaultParticipant.png";
 
     /**
      * default image for a Group node
      */
-    public static String PAG_USER_NODE_IMG="defaultNode.png";
+    public static final String PAG_USER_NODE_IMG = "defaultNode.png";
 
     /**
      * default home venue if not set in portlet.xml
      */
-    public static String PAG_HOME_VENUE="https://kuipers.ag.manchester.ac.uk:8000/Venues/default";
+    public static final String PAG_HOME_VENUE = "https://kuipers.ag.manchester.ac.uk:8000/Venues/default";
 
     /**
      * default home venue if not set in portlet.xml
      */
-    public static String LOWBAG_BRIDGE_SERVER="rosie.rcs.manchester.ac.uk";
+    public static final String LOWBAG_BRIDGE_SERVER = "rosie.rcs.manchester.ac.uk";
 
     /**
      * default node type
      */
-    public static String PAG_NODE_TYPE="user";
+    public static final String PAG_NODE_TYPE = "user";
 
     /**
      * PAG Version to be checked on download of services
      */
-    public static final String PAG_VERSION="1.1";
+    public static final String PAG_VERSION = "1.1";
+
+    private Defaults() {
+    }
 
 }

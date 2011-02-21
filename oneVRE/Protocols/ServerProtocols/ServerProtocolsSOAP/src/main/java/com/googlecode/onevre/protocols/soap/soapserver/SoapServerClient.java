@@ -66,7 +66,7 @@ import com.googlecode.onevre.types.soap.interfaces.SoapServable;
  */
 public class SoapServerClient extends HttpServlet {
 
-	Log log = LogFactory.getLog("SoapServerClient");
+    private Log log = LogFactory.getLog("SoapServerClient");
 
     private static final long serialVersionUID = 1L;
 
@@ -128,73 +128,73 @@ public class SoapServerClient extends HttpServlet {
         SoapObject requestObject = parser.parse(request);
 
         String name = requestObject.getName();
-        String methodName = name.substring(0,1).toLowerCase()+name.substring(1);
+        String methodName = name.substring(0, 1).toLowerCase() + name.substring(1);
         String methodNameSpace = requestObject.getNameSpace();
 
         SoapDeserializer deserializer = new SoapDeserializer();
 
         Vector<Method> methodCandidates = new Vector<Method>();
         Method idealMethod = null;
-        for (Method m:object.getClass().getMethods()){
-        	log.info ("Class Method: " + m.getName() + " methodName: "+ methodName );
-            if (m.getName().equals(methodName) || methodName.equals(m.getName()+REQUEST_POSTFIX)){
-                int i=0;
+        for (Method m : object.getClass().getMethods()) {
+            log.info("Class Method: " + m.getName() + " methodName: " + methodName);
+            if (m.getName().equals(methodName) || methodName.equals(m.getName() + REQUEST_POSTFIX)) {
+                int i = 0;
                 Vector<String> paramNames =  requestObject.getSubObjectNames();
                 Type[] methodParams = m.getGenericParameterTypes();
                 for (int j = 0; j < methodParams.length; j++) {
                     String methodParam = object.getParameterName(m, j);
-                    if (i >= paramNames.size()){
+                    if (i >= paramNames.size()) {
                         break;
                     }
-                    log.info("ParamName[" + j+"]: " + paramNames.get(i) + " in Method: "+methodParam);
+                    log.info("ParamName[" + j + "]: " + paramNames.get(i) + " in Method: " + methodParam);
                     if (paramNames.get(i).equalsIgnoreCase(methodParam)) {
                         String soapType = requestObject.getSubObject(paramNames.get(i)).firstElement().getSoapType();
-                        if (soapType!=null) {
-                            Class<?> cls = (Class<?>)methodParams[j];
-                            log.info("Paramtype ["+ j + "]: " + soapType + " in Method: " + cls);
+                        if (soapType != null) {
+                            Class<?> cls = (Class<?>) methodParams[j];
+                            log.info("Paramtype [" + j + "]: " + soapType + " in Method: " + cls);
                             if (cls.equals(Vector.class)) {
                                 break;
                             }
-                            if (cls.isArray()){
-                                cls=cls.getComponentType();
+                            if (cls.isArray()) {
+                                cls = cls.getComponentType();
                             }
-                            if (!SoapDeserializer.getJavaType(soapType).equals(cls)){
+                            if (!SoapDeserializer.getJavaType(soapType).equals(cls)) {
                                 break;
-                            };
+                            }
                         }
                         i++;
                     }
                 }
-                if (i!=paramNames.size()){
+                if (i != paramNames.size()) {
                     continue;
                 }
-                if (paramNames.size()==methodParams.length){
-                    idealMethod=m;
+                if (paramNames.size() == methodParams.length) {
+                    idealMethod = m;
                     break;
                 }
                 methodCandidates.add(m);
             }
         }
-        if (idealMethod==null){
+        if (idealMethod == null) {
             idealMethod = methodCandidates.firstElement();
         }
         Class<?>[] argTypes = idealMethod.getParameterTypes();
         Object[] arguments = new Object[argTypes.length];
         Type[] methodParams = idealMethod.getGenericParameterTypes();
-        int i=0;
+        int i = 0;
         for (int j = 0; j < methodParams.length; j++) {
             String methodParam = object.getParameterName(idealMethod, j);
             Vector<String> paramNames =  requestObject.getSubObjectNames();
             Object obj = null;
-            int nparams=paramNames.size();
-            if ((i<nparams) && paramNames.get(i).equalsIgnoreCase(methodParam)) {
+            int nparams = paramNames.size();
+            if ((i < nparams) && paramNames.get(i).equalsIgnoreCase(methodParam)) {
                 Vector<SoapObject> soapObjectVector = requestObject.getSubObject(paramNames.get(i));
-                Class<?> cls = (Class<?>)methodParams[j];
-                if (cls.isArray()){
-                    cls=cls.getComponentType();
+                Class<?> cls = (Class<?>) methodParams[j];
+                if (cls.isArray()) {
+                    cls = cls.getComponentType();
                     String soapType = SoapDeserializer.getSoapType(cls);
                     obj = Array.newInstance(cls, soapObjectVector.size());
-                    for (int k=0; k<soapObjectVector.size();k++){
+                    for (int k = 0; k < soapObjectVector.size(); k++) {
                         SoapObject so = soapObjectVector.get(k);
                         so.setSoapType(soapType);
                         Object o = deserializer.deserialize(so);
@@ -206,49 +206,49 @@ public class SoapServerClient extends HttpServlet {
                     obj = deserializer.deserialize(so);
                 }
             }
-            arguments[i]=obj;
+            arguments[i] = obj;
             i++;
         }
         // find resultType
         Object result = null;
-        log.info("invoking "+ idealMethod.getDeclaringClass().getCanonicalName() + " " + idealMethod.toString());
-        String args="";
-        String	sep="on ( ";
-        String close=")";
-        if (arguments!=null) {
-	        for (Object arg : arguments){
-	        	String argStr = "null";
-	        	if (arg!=null){
-	        		argStr = arg.toString();
-	        	}
-	            args += sep + argStr;
-	            sep = ", ";
-	            close = " )";
-	        }
-    	}
+        log.info("invoking " + idealMethod.getDeclaringClass().getCanonicalName() + " " + idealMethod.toString());
+        String args = "";
+        String sep = "on ( ";
+        String close = ")";
+        if (arguments != null) {
+            for (Object arg : arguments) {
+                String argStr = "null";
+                if (arg != null) {
+                    argStr = arg.toString();
+                }
+                args += sep + argStr;
+                sep = ", ";
+                close = " )";
+            }
+        }
         log.info(args + close);
 
         try {
-			result = idealMethod.invoke(object, arguments);
-		} catch (InvocationTargetException e) {
-			Throwable cause = e.getCause();
-			if (cause.getClass().equals(AuthorizationException.class)){
-				throw((AuthorizationException)cause);
-			}
-			throw(e);
-		}
+            result = idealMethod.invoke(object, arguments);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause.getClass().equals(AuthorizationException.class)) {
+                throw((AuthorizationException) cause);
+            }
+            throw(e);
+        }
         String resultName = object.getResultParameterName(idealMethod);
         methodName = name.replace(REQUEST_POSTFIX, "") + RESPONSE_POSTFIX;
 
-	    SoapSerializer serializer = new SoapSerializer();
-        if (result==null){
+        SoapSerializer serializer = new SoapSerializer();
+        if (result == null) {
             return serializer.serializeMethod(methodNameSpace, methodName,
                     new String[]{}, new Object[]{},
                     new Object[]{});
         }
         String resultType = object.getResultParameterType(idealMethod);
 
-        log.info("resultName: " +resultName +" "+ methodName);
+        log.info("resultName: " + resultName + " " + methodName);
 
         return serializer.serializeMethod(methodNameSpace, methodName,
                 new String[]{resultName}, new Object[]{result},
@@ -283,14 +283,15 @@ public class SoapServerClient extends HttpServlet {
                 int charsRead = reader.read(data, dataRead,
                         data.length - dataRead);
                 if (charsRead < 0) {
-                    throw new IOException("Data ended early: length: " + dataRead + "of "+ data.length +"\n "+ new String(data));
+                    throw new IOException("Data ended early: length: " + dataRead + "of "
+                            + data.length + "\n " + new String(data));
                 }
                 dataRead += charsRead;
             }
-            log.info("SOAP-request: "+ new String(data));
+            log.info("SOAP-request: " + new String(data));
 
             result = parseSoap(new String(data), object);
-            log.info("SOAP-result: "+ result);
+            log.info("SOAP-result: " + result);
             writer.print(result);
             writer.flush();
         } catch (AuthorizationException e) {
@@ -306,7 +307,7 @@ public class SoapServerClient extends HttpServlet {
             faultString += "</SOAP-ENV:Body>";
             faultString += "</SOAP-ENV:Envelope>";
             writer.print(faultString);
-            log.error("SOAP-error: "+ faultString);
+            log.error("SOAP-error: " + faultString);
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -322,7 +323,7 @@ public class SoapServerClient extends HttpServlet {
             faultString += "</SOAP-ENV:Body>";
             faultString += "</SOAP-ENV:Envelope>";
             writer.print(faultString);
-            log.error("SOAP-error: "+ faultString);
+            log.error("SOAP-error: " + faultString);
             writer.flush();
         }
     }

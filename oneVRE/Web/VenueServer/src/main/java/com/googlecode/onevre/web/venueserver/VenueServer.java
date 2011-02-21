@@ -50,7 +50,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import org.jsslutils.keystores.KeyStoreLoader;
 import org.jsslutils.sslcontext.PKIXSSLContextFactory;
-import org.jsslutils.sslcontext.X509SSLContextFactory;
 import org.jsslutils.sslcontext.trustmanagers.TrustAllClientsWrappingTrustManager;
 
 import com.googlecode.onevre.ag.agserver.VenueServerConfigParameters;
@@ -74,20 +73,23 @@ public class VenueServer extends Thread {
 
     public static final boolean SSL_WANT_CLIENT_AUTH = true;
 
+    public static final int SSL_MAX_IDLE_TIME = 30000;
+
+    public static final int SSL_HANDSHAKE_TIMEOUT = 10000;
 
     private Server server = null;
 
-    private String defaultPolicy ="";
+    private String defaultPolicy = "";
 
-    private PrintWriter serverLog=null;
+    private PrintWriter serverLog = null;
 
-    private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
+    private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String, String>>();
     /**
      * Creates a new VenueServer
      * @param serverConfig The HashMap that stores the server configuration
      * @throws Exception
      */
-    public VenueServer(HashMap<String, HashMap<String,String>> serverConfig) throws Exception {
+    public VenueServer(HashMap<String, HashMap<String, String>> serverConfig) throws Exception {
         this.serverConfig = serverConfig;
         int serverPort =  Integer.valueOf(ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
@@ -102,7 +104,7 @@ public class VenueServer extends Thread {
                     VenueServerConfigParameters.VENUE_SERVER_LOG_FILE,
                     VenueServerDefaults.venueServerLogFile);
             System.out.println("web.venueserver.VenueServer Log-File: " + configLocation + serverLogFile);
-            serverLog = new PrintWriter(new FileOutputStream(configLocation + serverLogFile),true);
+            serverLog = new PrintWriter(new FileOutputStream(configLocation + serverLogFile), true);
             serverLog.println("Starting Venue Server at: " + new Date());
         } catch (FileNotFoundException e) {
             throw new ServletException(e);
@@ -128,20 +130,20 @@ public class VenueServer extends Thread {
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.SSL_TRUSTSTORE_TYPE,
                 VenueServerDefaults.trustStoreType);
-        String PkiCrls = ConfigFile.getParameter(serverConfig,
+        String pkiCrls = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.PKI_CRL, "");
 
-        if (!keyStore.startsWith("/")){
-            keyStore=configLocation + keyStore;
+        if (!keyStore.startsWith("/")) {
+            keyStore = configLocation + keyStore;
         }
-        if (!trustStore.startsWith("/")){
-            trustStore=configLocation + trustStore;
+        if (!trustStore.startsWith("/")) {
+            trustStore = configLocation + trustStore;
         }
         SslSocketConnector connector = new SslSocketConnector();
         connector.setPort(Integer.valueOf(serverPort));
-        connector.setMaxIdleTime(30000);
-        connector.setHandshakeTimeout(10000);
+        connector.setMaxIdleTime(SSL_MAX_IDLE_TIME);
+        connector.setHandshakeTimeout(SSL_HANDSHAKE_TIMEOUT);
         connector.setWantClientAuth(SSL_WANT_CLIENT_AUTH);
 
         KeyStoreLoader keyStoreLoader = new KeyStoreLoader();
@@ -154,11 +156,11 @@ public class VenueServer extends Thread {
         trustStoreLoader.setKeyStorePath(trustStore);
         trustStoreLoader.setKeyStoreType(trustStoreType);
         trustStoreLoader.setKeyStorePassword(trustStorePasswd);
-        KeyStore sslTrustStore= trustStoreLoader.loadKeyStore();
+        KeyStore sslTrustStore = trustStoreLoader.loadKeyStore();
 
-        PKIXSSLContextFactory sslContextFactory = new PKIXSSLContextFactory(sslKeyStore,keyStorePasswd,sslTrustStore);
-        if (PkiCrls!=null){
-            for (String crl : PkiCrls.split(";")){
+        PKIXSSLContextFactory sslContextFactory = new PKIXSSLContextFactory(sslKeyStore, keyStorePasswd, sslTrustStore);
+        if (pkiCrls != null) {
+            for (String crl : pkiCrls.split(";")) {
                 sslContextFactory.addCrl(crl.trim());
             }
         }
@@ -170,10 +172,10 @@ public class VenueServer extends Thread {
         String capString = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_CAPABILITIES,
                 VenueServerConfigParameters.VENUE_SERVER_CAPABILITIY_TYPES, "").trim();
-        for (String captype: capString.split("[:;]")){
+        for (String captype : capString.split("[:;]")) {
             String ctype = ConfigFile.getParameter(serverConfig, captype.trim(), "vector", "").trim();
-            for (String capSection : ctype.split("[:;]")){
-                capSection=capSection.trim();
+            for (String capSection : ctype.split("[:;]")) {
+                capSection = capSection.trim();
                 Capability capability = new Capability(
                         ConfigFile.getParameter(serverConfig, capSection,
                                 VenueServerConfigParameters.CAPABILITIY_ROLE, "").trim(),
@@ -182,7 +184,7 @@ public class VenueServer extends Thread {
                         ConfigFile.getParameter(serverConfig, capSection,
                                 VenueServerConfigParameters.CAPABILITIY_CODEC, "").trim(),
                         Integer.valueOf(ConfigFile.getParameter(serverConfig, capSection,
-                                VenueServerConfigParameters.CAPABILITIY_RATE, "").trim()),0);
+                                VenueServerConfigParameters.CAPABILITIY_RATE, "").trim()), 0);
                 VenueServerConfigParameters.addCapabilty(captype, capability);
             }
         }
@@ -190,24 +192,24 @@ public class VenueServer extends Thread {
         server.start();
     }
 
-    private ServletHolder addVenues() throws ServletException{
-        ServletContextHandler venuesContext= new ServletContextHandler(ServletContextHandler.SESSIONS);
-        VenuesServlet venuesServlet=new VenuesServlet(serverLog);
+    private ServletHolder addVenues() throws ServletException {
+        ServletContextHandler venuesContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        VenuesServlet venuesServlet = new VenuesServlet(serverLog);
         venuesServlet.addVenues(serverConfig, serverLog);
         ServletHolder venues = new ServletHolder(venuesServlet);
         venuesContext.addServlet(venues, SERVLET_ALL_FILES);
         venuesContext.setContextPath("/");
         try {
-			ConfigFile.store("/tmp/venueServer-tmp-2", serverConfig);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            ConfigFile.store("/tmp/venueServer-tmp-2", serverConfig);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         server.setHandler(venuesContext);
         return venues;
     }
 
-    public synchronized void exit() throws Exception{
-    	ConfigFile.store("/tmp/venueServer-tmp", serverConfig);
+    public synchronized void exit() throws Exception {
+        ConfigFile.store("/tmp/venueServer-tmp", serverConfig);
         server.stop();
     }
 
@@ -217,15 +219,15 @@ public class VenueServer extends Thread {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
-        String configLocation="";
-        if (!(args.length>0)){
+        HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String, String>>();
+        String configLocation = "";
+        if (!(args.length > 0)) {
             System.out.println("Need VenueServer config file!");
             return;
         }
         String configFile = args[0];
-        if (configFile!=null){
-            configLocation = (new File((new File(configFile)).getParent())).getAbsolutePath()+"/";
+        if (configFile != null) {
+            configLocation = (new File((new File(configFile)).getParent())).getAbsolutePath() + "/";
             try {
                 serverConfig = ConfigFile.read(configFile);
             } catch (IOException e) {
@@ -235,21 +237,21 @@ public class VenueServer extends Thread {
              throw new Exception("No VenueServer config file specified");
         }
         HashMap<String, String> serverCfg = serverConfig.get(VenueServerConfigParameters.VENUE_SERVER_SECTION);
-        if (serverCfg==null){
-            throw new Exception("VenueServer config file needs [" +
-                    VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
+        if (serverCfg == null) {
+            throw new Exception("VenueServer config file needs ["
+                    + VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
         }
         serverCfg.put(VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION, configLocation);
-        if ((serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_FILE)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_FILE)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD)==null)){
-            throw new Exception("VenueServer config file needs \"" +
-                    VenueServerConfigParameters.SSL_KEYSTORE_FILE + "\", \"" +
-                    VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD + "\", \"" +
-                    VenueServerConfigParameters.SSL_TRUSTSTORE_FILE	+ "\" and \"" +
-                    VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD + "\" parameters in [" +
-                    VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
+        if ((serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_FILE) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_FILE) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD) == null)) {
+            throw new Exception("VenueServer config file needs \""
+                    + VenueServerConfigParameters.SSL_KEYSTORE_FILE + "\", \""
+                    + VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD + "\", \""
+                    + VenueServerConfigParameters.SSL_TRUSTSTORE_FILE + "\" and \""
+                    + VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD + "\" parameters in ["
+                    + VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
         }
         VenueServer venueServer = new VenueServer(serverConfig);
         venueServer.start();

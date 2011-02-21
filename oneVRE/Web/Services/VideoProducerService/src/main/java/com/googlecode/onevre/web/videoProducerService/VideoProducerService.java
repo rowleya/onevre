@@ -216,8 +216,8 @@ public class VideoProducerService extends AGService {
     public void setConfiguration(AGParameter[] config) {
         AGParameter param = new ValueParameter("Capture Device", null);
         Vector<AGParameter> config_vector = new Vector<AGParameter>();
-        for (AGParameter par:config){
-            if (par.equals(param)){
+        for (AGParameter par : config) {
+            if (par.equals(param)) {
                 device = (String) par.getValue();
             } else {
                 config_vector.add(par);
@@ -238,7 +238,7 @@ public class VideoProducerService extends AGService {
             throw new Exception(
                     "Can't set RTP Defaults without a valid profile.");
         }
-        if (OS.IS_LINUX ||OS.IS_OSX
+        if (OS.IS_LINUX || OS.IS_OSX
                 || OS.IS_BSD) {
             try {
                 FileWriter rtpDefaultsFH;
@@ -384,27 +384,24 @@ public class VideoProducerService extends AGService {
             } else if (OS.IS_LINUX) {
                 path = path.concat(VICLINUX);
                 vic = dir1.getCanonicalPath() + "/" + path;
-                Runtime.getRuntime().exec("chmod 755 "+ vic, null, getResourcesDirectory());
+                Runtime.getRuntime().exec("chmod 755 " + vic, null, getResourcesDirectory());
             } else if (OS.IS_OSX) {
                 path = path.concat(VICMAC);
                 vic = dir1.getCanonicalPath() + "/" + path;
-                Runtime.getRuntime().exec("chmod 755 "+ vic, null, getResourcesDirectory());
+                Runtime.getRuntime().exec("chmod 755 " + vic, null, getResourcesDirectory());
                 Thread.sleep(1000);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         String vicDevice;
         String name;
         String email;
         String portstr;
-
         // enable firewall
         SystemConfig sysConf = SystemConfig.getInstance();
         sysConf.detectCaptureDevices();
         sysConf.appFirewallConfig(vic, true);
-
         // resolve assigned resource to a device understood by vic
         if (device == null) {
             vicDevice = NONE;
@@ -413,11 +410,9 @@ public class VideoProducerService extends AGService {
             vicDevice = vicDevice.replaceAll("\\[", "\\\\[");
             vicDevice = vicDevice.replaceAll("\\]", "\\\\]");
         }
-
         if (OS.IS_WINDOWS) {
             mapWinDevice(device);
         }
-
         // write vic startup file
         String startupfile = SystemConfig.getInstance().getTempDir() + "/"
                 + "VideoProducerService_" + System.currentTimeMillis() + ".vic";
@@ -445,49 +440,38 @@ public class VideoProducerService extends AGService {
                     (String) STREAM_NAME.getValue(), email, portstr));
             f.flush();
             f.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         try {
-            if (!OS.IS_WINDOWS){
+            if (!OS.IS_WINDOWS) {
                 Runtime.getRuntime().exec(CHMOD + startupfile);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         // replace double backslashes in the startup-file name with single
         // forward
         // slashes (vic will crash otherwise)
         if (OS.IS_WINDOWS) {
             startupfile = startupfile.replaceAll("\\\\", "/");
         }
-
         // start the service; in this case store command line args in a vector
         Vector<String> options = new Vector<String>();
-
         options.add("-u");
         options.add(startupfile);
-
         options.add("-C");
         if (device == null) {
             options.add("\"Video Transmitter\"");
         } else {
-            options.add("\"Video Transmitter: "
-                    + device + "\"");
+            options.add("\"Video Transmitter: " + device + "\"");
         }
-
         // - set vic window geometry
         options.add("-Xgeometry=384x100");
-
         // - set number of columns of thumbnails to display
         options.add("-Xtile=2");
-
         options.add("-X");
         options.add("noMulticastBind=true");
-
         if (OS.IS_OSX) {
             options.add("-X");
             options.add("transmitOnStartup=1");
@@ -509,20 +493,16 @@ public class VideoProducerService extends AGService {
          * services relying on the attribute; it should be removed when the
          * incompatibilty is gone
          */
-
         if (streamDescription.getLocation()
                 instanceof MulticastNetworkLocation) {
             options.add("-t");
-            options.add(Integer
-                    .toString(((MulticastNetworkLocation) streamDescription
-                            .getLocation()).getTtl()));
+            options.add(Integer.toString(((MulticastNetworkLocation)
+                    streamDescription.getLocation()).getTtl()));
         }
-
         // add address/port options
         // (these must occur last; don't add options beyond here)
         options.add((streamDescription.getLocation()).getHost() + "/"
                 + (streamDescription.getLocation()).getPort());
-
         // start VIC
         options.add(0, vic);
         try {
@@ -535,7 +515,6 @@ public class VideoProducerService extends AGService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**

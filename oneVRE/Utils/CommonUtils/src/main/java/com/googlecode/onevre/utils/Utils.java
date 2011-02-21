@@ -88,7 +88,7 @@ import com.googlecode.onevre.security.AliasKeyManager;
  */
 public class Utils {
 
-	static Log log = LogFactory.getLog(Utils.class);
+    private static Log log = LogFactory.getLog(Utils.class);
 
     /** get an even port number */
     public static final int PAG_PORT_EVEN = 2;
@@ -106,7 +106,7 @@ public class Utils {
     // The slash charchter on windows
     private static final String WINDOWS_SLASH = "\\";
 
-    private static final Boolean syncConnectionID=true;
+    private static final Boolean syncConnectionID = true;
 
     // The quote character
     private static final String QUOTE = "\"";
@@ -122,7 +122,7 @@ public class Utils {
 
     // The windows executable
     private static final String WINDOWS_EXEC = WINDOWS_SLASH + "bin"
-    										 + WINDOWS_SLASH + "javaws.exe";
+                                             + WINDOWS_SLASH + "javaws.exe";
 
     // The linux executable
     private static final String LINUX_EXEC = "/bin/javaws";
@@ -143,7 +143,7 @@ public class Utils {
                         NetworkInterface.getNetworkInterfaces();
                     NetworkInterface loopback = null;
                     NetworkInterface siteLocal = null;
-                    InetAddress lh=null; // check if we can find an IPv4 address rather than an IPv6 one
+                    InetAddress lh = null; // check if we can find an IPv4 address rather than an IPv6 one
                     while (interfaces.hasMoreElements() && (localhost == null)) {
                         NetworkInterface intf = interfaces.nextElement();
                         if (intf.getDisplayName().startsWith(
@@ -158,16 +158,17 @@ public class Utils {
                                         && !addr.isSiteLocalAddress()) {
                                     System.err.println("Using interface " + intf.getDisplayName() + " as localhost");
                                     lh = addr;
-                                    if (lh.getAddress().length==4){
-                                        localhost=lh;
+                                    if (lh.getAddress().length == 4){
+                                        localhost = lh;
                                     }
                                 } else if (addr.isSiteLocalAddress()
                                         && (siteLocal == null)) {
                                     siteLocal = intf;
                                 }
                             }
-                            if (localhost==null)
-                                localhost=lh;
+                            if (localhost == null) {
+                                localhost = lh;
+                            }
                         }
                     }
                     if ((localhost == null) && (siteLocal != null)) {
@@ -175,7 +176,7 @@ public class Utils {
                         while (ifaddrs.hasMoreElements() && (localhost == null)) {
                             InetAddress addr = ifaddrs.nextElement();
                             if (!addr.getHostAddress().equals("127.0.0.1")) {
-                                System.err.println("Using site local interface " + siteLocal.getDisplayName() + " as localhost");
+                                log.info("Using site local interface " + siteLocal.getDisplayName() + " as localhost");
                                 localhost = addr;
                             }
                         }
@@ -185,7 +186,7 @@ public class Utils {
                         while (ifaddrs.hasMoreElements() && (localhost == null)) {
                             InetAddress addr = ifaddrs.nextElement();
                             if (!addr.getHostAddress().equals("127.0.0.1")) {
-                                System.err.println("Using loopback interface " + loopback.getDisplayName() + " as localhost");
+                                log.info("Using loopback interface " + loopback.getDisplayName() + " as localhost");
                                 localhost = addr;
                             }
                         }
@@ -233,12 +234,14 @@ public class Utils {
      * @return The localhost address
      */
 
-    public static String getLocalHostAddress(){
-        byte[] addr=localhost.getAddress();
+    public static String getLocalHostAddress() {
+        byte[] addr = localhost.getAddress();
 
-        String localHostAddress=localhost.getHostAddress().replaceAll("%10","");
-        if (addr.length==16) // ipv6 address
-            localHostAddress="["+localHostAddress+"]";
+        String localHostAddress = localhost.getHostAddress().replaceAll("%10", "");
+        if (addr.length == 16) {
+            // ipv6 address
+            localHostAddress = "[" + localHostAddress + "]";
+        }
         return localHostAddress;
     }
 
@@ -253,46 +256,45 @@ public class Utils {
      * is the first of number successive numbers
      * @throws SocketException
      */
-    public static int searchPort(int number, int even, boolean stream) throws SocketException{
-        boolean found=false;
-        int offset=0;
-        int port=minPort;
-        while (!found)
-        {
-            switch (even){
-                case 2: {
-                    port=minPort+2*offset;
-                };break;
-                case 1: {
-                    port=minPort+2*offset+1;
-                };break;
+    public static int searchPort(int number, int even, boolean stream) throws SocketException {
+        boolean found = false;
+        int offset = 0;
+        int port = minPort;
+        while (!found) {
+            switch (even) {
+                case 2:
+                    port = minPort + 2 * offset;
+                    break;
+                case 1:
+                    port = minPort + 2 * offset + 1;
+                    break;
                 default:
-                    port=minPort+offset;
+                    port = minPort + offset;
             }
-            for (int i=0;i<number;i++){
-                if ((port+i)>maxPort) {
-                    throw new SocketException ("No port in Range found");
+            for (int i = 0; i < number; i++) {
+                if ((port + i) > maxPort) {
+                    throw new SocketException("No port in Range found");
                 } else if (!assignedPorts.contains(new Integer(port + i))) {
                     System.err.println((port + i) + " is not assigned");
                     try {
-                        if (stream)	{
-                            ServerSocket test = new ServerSocket(port+i);
-                            found=true;
+                        if (stream) {
+                            ServerSocket test = new ServerSocket(port + i);
+                            found = true;
                             test.close();
                         } else {
-                            DatagramSocket test = new DatagramSocket(port+i);
-                            found=true;
+                            DatagramSocket test = new DatagramSocket(port + i);
+                            found = true;
                             test.close();
                         }
                     } catch (SocketException e) {
-                        found=false;
+                        found = false;
                         offset++;
                         break;
                     } catch (UnknownHostException e) {
                         // this should not happen
                         e.printStackTrace();
                     } catch (IOException e) {
-                        found=false;
+                        found = false;
                         offset++;
                         break;
                     }
@@ -325,7 +327,7 @@ public class Utils {
      * @return String with all & symbols escaped
      */
     public static String escapeXmlRpcValue(String string) {
-        return 	StringEscapeUtils.escapeXml(string.replaceAll("&","&_"));
+        return StringEscapeUtils.escapeXml(string.replaceAll("&", "&_"));
     }
 
     /**
@@ -335,7 +337,7 @@ public class Utils {
      * @return String with all &_ symbols unescaped
      */
     public static String unescapeXmlRpcValue(String string) {
-        return StringEscapeUtils.unescapeXml(string).replaceAll("&_","&");
+        return StringEscapeUtils.unescapeXml(string).replaceAll("&_", "&");
     }
 
     /**
@@ -422,9 +424,10 @@ public class Utils {
      * @return a unique Id to
      */
     public static String generateID() {
-        String connectionId=null;
+        String connectionId = null;
         synchronized (syncConnectionID) {
-            connectionId=String.valueOf(System.currentTimeMillis()+String.valueOf((long)(Math.random()*100000000)));
+            connectionId = String.valueOf(System.currentTimeMillis()
+                    + String.valueOf((long) (Math.random() * 100000000)));
         }
         return connectionId;
     }
@@ -455,105 +458,102 @@ public class Utils {
      * @param connection the connection to add the SSL context to
      *
      */
-    public static void addSslConnection(final URLConnection connection){
+    public static void addSslConnection(final URLConnection connection) {
         addSslConnection(connection, null);
     }
 
-    public static void addSslConnection(final URLConnection connection,final GSSCredential credential){
+    public static void addSslConnection(final URLConnection connection, final GSSCredential credential) {
 
-    	if (connection instanceof HttpsURLConnection){
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                public Void run() {
-                	KeyManager km[] = null;
-                	if (credential!=null){
-            	    	GlobusGSSCredentialImpl globusCredential = (GlobusGSSCredentialImpl)credential;
-            	    	try {
-							log.info("credential :"+ globusCredential.getName().toString());
-						} catch (GSSException e1) {
-							log.info("globusCredential.getName() failed");
-						}
-            	    	KeyStore ks = null;
-            			try {
-            				ks = KeyStore.getInstance("JKS");
-            				try {
-								ks.load(null,new String("").toCharArray());
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-            		    	ks.setEntry("cert", new KeyStore.PrivateKeyEntry(globusCredential.getPrivateKey(),globusCredential.getCertificateChain()), new KeyStore.PasswordProtection(new String("").toCharArray()));
-            			} catch (KeyStoreException e) {
-            				e.printStackTrace();
-            			}
-            	    	km = new KeyManager[]{new AliasKeyManager(ks, "cert", "")};
-                	} else {
-                		log.info("credential not provided");
-                	}
-
-                	String truststore = "/usr/local/liferay/tomcat5.5/webapps/Venues/WEB-INF/venueTrustStore";
-                	if(truststore != null)
-                	{
-                		log.debug("found configured truststore: "+ truststore);
-  //              		truststore = expandPathname(truststore);
-                		log.debug("final truststore: "+ truststore);
-                		String truststorepw = "gridcert";
-                		try
-                		{
-                			log.info("loading truststore "+ truststore);
-                			KeyStore tsKS = KeyStore.getInstance("JKS");
-                			char[] pw = (truststorepw != null ? truststorepw.toCharArray() : null);
-                			tsKS.load(new FileInputStream(truststore), pw);
-                			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                			tmf.init(tsKS);
-                			log.info("loading truststore "+ truststore);
-                			SSLContext context = SSLContext.getInstance("TLS");
-                            if (credential!=null){
-                            	context.init(km, tmf.getTrustManagers(), new SecureRandom());
-                            }else{
-                            	context.init(km, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+        if (connection instanceof HttpsURLConnection) {
+            AccessController.doPrivileged(
+                new PrivilegedAction<Void>() {
+                    public Void run() {
+                        KeyManager[] km = null;
+                        if (credential != null) {
+                            GlobusGSSCredentialImpl globusCredential = (GlobusGSSCredentialImpl) credential;
+                            try {
+                                log.info("credential :" + globusCredential.getName().toString());
+                            } catch (GSSException e1) {
+                                log.info("globusCredential.getName() failed");
                             }
-                            ((HttpsURLConnection)connection).setSSLSocketFactory(context.getSocketFactory());
+                            KeyStore ks = null;
+                            try {
+                                ks = KeyStore.getInstance("JKS");
+                                try {
+                                    ks.load(null, new String("").toCharArray());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                ks.setEntry("cert", new KeyStore.PrivateKeyEntry(globusCredential.getPrivateKey(),
+                                        globusCredential.getCertificateChain()),
+                                        new KeyStore.PasswordProtection(new String("").toCharArray()));
+                            } catch (KeyStoreException e) {
+                                e.printStackTrace();
+                            }
+                            km = new KeyManager[]{new AliasKeyManager(ks, "cert", "")};
+                        } else {
+                            log.info("credential not provided");
+                        }
+
+                        String truststore = "/usr/local/liferay/tomcat5.5/webapps/Venues/WEB-INF/venueTrustStore";
+                        if (truststore != null) {
+                            log.debug("found configured truststore: " + truststore);
+      //                      truststore = expandPathname(truststore);
+                            log.debug("final truststore: " + truststore);
+                            String truststorepw = "gridcert";
+                            try {
+                                log.info("loading truststore " + truststore);
+                                KeyStore tsKS = KeyStore.getInstance("JKS");
+                                char[] pw = null;
+                                if (truststorepw != null) {
+                                    pw = truststorepw.toCharArray();
+                                }
+                                tsKS.load(new FileInputStream(truststore), pw);
+                                TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                                        TrustManagerFactory.getDefaultAlgorithm());
+                                tmf.init(tsKS);
+                                log.info("loading truststore " + truststore);
+                                SSLContext context = SSLContext.getInstance("TLS");
+                                if (credential != null) {
+                                    context.init(km, tmf.getTrustManagers(), new SecureRandom());
+                                } else {
+                                    context.init(km, new TrustManager[]{new AcceptAllTrustManager()},
+                                            new SecureRandom());
+                                }
+                                ((HttpsURLConnection) connection).setSSLSocketFactory(context.getSocketFactory());
+                                ((HttpsURLConnection) connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
+                            } catch (KeyStoreException e) {
+                                log.error("unable to create truststore", e);
+                            } catch (NoSuchAlgorithmException e) {
+                                log.error("configuration problem, unable to check integrity of truststore", e);
+                            } catch (CertificateException e) {
+                                log.error("configuration problem, unable to load at least "
+                                        + "one certificate from truststore", e);
+                            } catch (FileNotFoundException e) {
+                                log.error("configuration problem, unable load truststore, file not found", e);
+                            } catch (IOException e) {
+                                log.error("configuration problem, unable to load truststore", e);
+                            } catch (KeyManagementException e) {
+                                log.error("configuration problem, unable to initialise truststore", e);
+                            }
+                        }
+
+
+
+
+        /*                try {
+                            SSLContext sslContext = SSLContext.getInstance("TLS");
+                            sslContext.init(km, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+                            sslContext.init(km, tmf.getTrustManagers(), new SecureRandom());
+                            ((HttpsURLConnection)connection).setSSLSocketFactory(sslContext.getSocketFactory());
                             ((HttpsURLConnection)connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
-                     	}
-                		catch(KeyStoreException e)
-                		{
-                			log.error("unable to create truststore", e);
-                		}
-                		catch(NoSuchAlgorithmException e)
-                		{
-                			log.error("configuration problem, unable to check integrity of truststore", e);
-                		}
-                		catch(CertificateException e)
-                		{
-                			log.error("configuration problem, unable to load at least one certificate from truststore", e);
-                		}
-                		catch(FileNotFoundException e)
-                		{
-                			log.error("configuration problem, unable load truststore, file not found", e);
-                		}
-                		catch(IOException e)
-                		{
-                			log.error("configuration problem, unable to load truststore", e);
-                		}
-                		catch(KeyManagementException e)
-                		{
-                			log.error("configuration problem, unable to initialise truststore", e);
-                		}
-                	}
-
-
-
-
-    /*            	try {
-                        SSLContext sslContext = SSLContext.getInstance("TLS");
-                        sslContext.init(km, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
-                        sslContext.init(km, tmf.getTrustManagers(), new SecureRandom());
-                        ((HttpsURLConnection)connection).setSSLSocketFactory(sslContext.getSocketFactory());
-                        ((HttpsURLConnection)connection).setHostnameVerifier(new AcceptAllHostnameVerifier());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
-                    return null;
-                }});
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }*/
+                        return null;
+                    }
+                }
+            );
         }
 
     }
@@ -561,19 +561,22 @@ public class Utils {
     /**
      * Sets the defaut SSL connection to an all accepting SSL context
      */
-    public static void setDefaultSslConnection(){
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            public Void run() {
-		        try {
-		            SSLContext sslContext = SSLContext.getInstance("TLS");
-		            sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
-		            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-		            HttpsURLConnection.setDefaultHostnameVerifier(new AcceptAllHostnameVerifier());
-		        } catch (Exception e) {
-		            e.printStackTrace();
-		        }
-                return null;
-            }});
+    public static void setDefaultSslConnection() {
+        AccessController.doPrivileged(
+            new PrivilegedAction<Void>() {
+                public Void run() {
+                    try {
+                        SSLContext sslContext = SSLContext.getInstance("TLS");
+                        sslContext.init(null, new TrustManager[]{new AcceptAllTrustManager()}, new SecureRandom());
+                        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+                        HttpsURLConnection.setDefaultHostnameVerifier(new AcceptAllHostnameVerifier());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }
+        );
    }
 
     /**
@@ -613,14 +616,12 @@ public class Utils {
         Runtime.getRuntime().exec(launch2);
     }
 
-    public static String readPlainFile(String filename) throws IOException
-    {
+    public static String readPlainFile(String filename) throws IOException {
         String contents = "";
-    	BufferedReader reader = new BufferedReader(new FileReader(filename));
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
         String text = null;
         // repeat until all lines is read
-        while ((text = reader.readLine()) != null)
-        {
+        while ((text = reader.readLine()) != null) {
             contents += text;
         }
         return contents;

@@ -52,7 +52,7 @@ public class GetClientProfileTag extends PortletTag {
     // The variable to return the profile in
     private String var = null;
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     /**
      * Sets the variable to return the profile in
@@ -70,18 +70,19 @@ public class GetClientProfileTag extends PortletTag {
         if (ui != null) {
             getJspContext().setAttribute(var,
                     XMLSerializer.serialize(ui.getClientProfile()));
-        	Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
+            @SuppressWarnings("unchecked")
+            Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
 
-        	System.out.println("IN GetClientProfileTag");
+            System.out.println("IN GetClientProfileTag");
 
-            for (String att :attr){
-            	System.out.println("analyzing: " + att );
+            for (String att : attr) {
+                System.out.println("analyzing: " + att);
             }
         } else {
-        	log.info("ClientProfile namespace = " + getNamespace());
-        	log.info("ClientProfile session id = " + getRequest().getSession().getId());
+            log.info("ClientProfile namespace = " + getNamespace());
+            log.info("ClientProfile session id = " + getRequest().getSession().getId());
 
-        	getJspContext().setAttribute(var, "not available");
+            getJspContext().setAttribute(var, "not available");
         }
     }
 }

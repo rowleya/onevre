@@ -60,11 +60,13 @@ import ag3.interfaces.types.MulticastNetworkLocation;
  */
 public class VenueServerStartServlet extends HttpServlet {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private static final long serialVersionUID = 1L;
 
-    private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String,String>>();
+    private Log log = LogFactory.getLog(this.getClass());
 
-    private String configFile="";
+    private HashMap<String, HashMap<String, String>> serverConfig = new HashMap<String, HashMap<String, String>>();
+
+    private String configFile = "";
 
     private String configLocation = "";
 
@@ -77,12 +79,12 @@ public class VenueServerStartServlet extends HttpServlet {
     public void init() throws ServletException {
         ServletConfig config = getServletConfig();
 
-        log.info("servletname: "+config.getServletName());
-        String configFile = config.getInitParameter("ServerConfig");
-        if (configFile!=null){
-            configLocation = (new File(new File(configFile).getAbsolutePath()).getParent())+"/";
+        log.info("servletname: " + config.getServletName());
+        String confFile = config.getInitParameter("ServerConfig");
+        if (confFile != null) {
+            configLocation = (new File(new File(confFile).getAbsolutePath()).getParent()) + "/";
             try {
-                serverConfig = ConfigFile.read(configFile);
+                serverConfig = ConfigFile.read(confFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,22 +92,22 @@ public class VenueServerStartServlet extends HttpServlet {
              throw new ServletException("No VenueServer config file specified");
         }
         HashMap<String, String> serverCfg = serverConfig.get(VenueServerConfigParameters.VENUE_SERVER_SECTION);
-        if (serverCfg==null){
-            throw new ServletException("VenueServer config file needs [" +
-                    VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
+        if (serverCfg == null) {
+            throw new ServletException("VenueServer config file needs ["
+                    + VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
         }
         log.info("ConfigLocation: " + configLocation);
         serverCfg.put(VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION, configLocation);
-        if ((serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_FILE)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_FILE)==null)
-                ||(serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD)==null)){
-            throw new ServletException("VenueServer config file needs \"" +
-                    VenueServerConfigParameters.SSL_KEYSTORE_FILE + "\", \"" +
-                    VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD + "\", \"" +
-                    VenueServerConfigParameters.SSL_TRUSTSTORE_FILE	+ "\" and \"" +
-                    VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD + "\" parameters in [" +
-                    VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
+        if ((serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_FILE) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_FILE) == null)
+                || (serverCfg.get(VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD) == null)) {
+            throw new ServletException("VenueServer config file needs \""
+                    + VenueServerConfigParameters.SSL_KEYSTORE_FILE + "\", \""
+                    + VenueServerConfigParameters.SSL_KEYSTORE_PASSWORD + "\", \""
+                    + VenueServerConfigParameters.SSL_TRUSTSTORE_FILE + "\" and \""
+                    + VenueServerConfigParameters.SSL_TRUSTSTORE_PASSWORD + "\" parameters in ["
+                    + VenueServerConfigParameters.VENUE_SERVER_SECTION + "] Section");
         }
         try {
             venueServer = new VenueServer(serverConfig);
@@ -127,7 +129,7 @@ public class VenueServerStartServlet extends HttpServlet {
  // receive SOAP request
  // decode SOAP
  // trigger
-    	log.info("VenuesServlet - RequestProto: "+request.getProtocol());
+        log.info("VenuesServlet - RequestProto: " + request.getProtocol());
                  response.setStatus(HttpServletResponse.SC_OK);
     }
 

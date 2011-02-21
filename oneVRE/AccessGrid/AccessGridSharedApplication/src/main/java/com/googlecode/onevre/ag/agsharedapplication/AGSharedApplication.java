@@ -43,7 +43,9 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 
@@ -69,7 +71,7 @@ import com.googlecode.onevre.utils.Preferences;
  * @author Tobias M Schiebeck
  * @version 1.0
  */
-public abstract class AGSharedApplication extends SoapServable{
+public abstract class AGSharedApplication extends SoapServable {
 
     private static final int BUFFER_SIZE = 4096;
     // The maximum random number
@@ -93,9 +95,9 @@ public abstract class AGSharedApplication extends SoapServable{
     // The local resources directory
     private File resourcesDirectory = null;
 
-    private String namespace=null;
-    private String sessionId=null;
-    private String dataDownloadUrl=null;
+    private String namespace = null;
+    private String sessionId = null;
+    private String dataDownloadUrl = null;
 
     // The shutdown hook
     private DoShutdown ds = null;
@@ -182,32 +184,33 @@ public abstract class AGSharedApplication extends SoapServable{
      * @param venueFilename
      * @return the local filename where the application can access the file
      */
-    public String downloadData(String venueFilename){
+    public String downloadData(String venueFilename) {
 
-        String localFileName=venueFilename;
+        String localFileName = venueFilename;
         BufferedOutputStream out = null;
 
         InputStream  in = null;
         try {
-            File tempFile = File.createTempFile( "SharedApplication", venueFilename, new File(SystemConfig.getInstance().getTempDir()));
+            File tempFile = File.createTempFile("SharedApplication", venueFilename,
+                    new File(SystemConfig.getInstance().getTempDir()));
             tempFile.deleteOnExit();
             out = new BufferedOutputStream(
                     new FileOutputStream(tempFile));
 
-            String data="?"+URLEncoder.encode("namespace", "UTF-8") + "=" + URLEncoder.encode(namespace, "UTF-8");
+            String data = "?" + URLEncoder.encode("namespace", "UTF-8") + "=" + URLEncoder.encode(namespace, "UTF-8");
             data += "&" + URLEncoder.encode("file", "UTF-8") + "=" + URLEncoder.encode(venueFilename, "UTF-8");
             data += "&" + URLEncoder.encode("selection", "UTF-8") + "=" + URLEncoder.encode("filename", "UTF-8");
 
-            System.out.println("Download URL: "+dataDownloadUrl+data);
-            System.out.println("SessId: "+sessionId);
+            System.out.println("Download URL: " + dataDownloadUrl + data);
+            System.out.println("SessId: " + sessionId);
 
-            GetMethod get = new GetMethod(dataDownloadUrl+data);
-            get.addRequestHeader("Cookie","JSESSIONID=" + sessionId);
+            GetMethod get = new GetMethod(dataDownloadUrl + data);
+            get.addRequestHeader("Cookie", "JSESSIONID=" + sessionId);
             HttpClient httpClient = new HttpClient();
             int status = httpClient.executeMethod(get);
             System.err.println("Upload Status: " + status);
-            if (status==200) {
-                in=get.getResponseBodyAsStream();
+            if (status == HttpStatus.SC_OK) {
+                in = get.getResponseBodyAsStream();
 
 
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -217,7 +220,7 @@ public abstract class AGSharedApplication extends SoapServable{
                     out.write(buffer, 0, numRead);
                     numWritten += numRead;
                 }
-                localFileName=tempFile.getCanonicalPath();
+                localFileName = tempFile.getCanonicalPath();
                 System.out.println(localFileName + "\t" + numWritten);
             }
         } catch (Exception e) {
@@ -264,26 +267,35 @@ public abstract class AGSharedApplication extends SoapServable{
      * @param args command line arguments of the application<br>
      * <dl><dd>valid arguments:</dd>
      *    <dl>
-     *    <dt>--exitOnStart</dt><dd>exits the application immediately</dd>
-     *    <dt>--port | -p  &lt;port&gt;</dt><dd>the port number on which the SOAP server of the shared application listens</dd>
-     *    <dt>--applicationManagerUri | -a &lt;uri&gt;</dt><dd>the uri of the shared application manager</dd>
-     *    <dt>--token | -t &lt;token&gt;</dt><dd>the token to register the shared application with the shared application manager</dd>
-     *    <dt>--sessionId | -s &lt;session id&gt;</dt><dd>the session id of the PAG session</dd>
-     *    <dt>--namespace | -n &lt;namespace&gt;</dt><dd>the PAG namespace</dd>
-     *    <dt>--dataUri | -a &lt;uri&gt;</dt><dd>the uri of the shared application data</dd>
-     *    <dt>--secure</dt><dd>the SOAP server of the shared application uses an ssl connection to communicate</dd>
-     *    <dt>--test</dt><dd>the shared application is run in test mode</dd>
+     *    <dt>--exitOnStart</dt>
+     *    <dd>exits the application immediately</dd>
+     *    <dt>--port | -p  &lt;port&gt;</dt>
+     *    <dd>the port number on which the SOAP server of the shared application listens</dd>
+     *    <dt>--applicationManagerUri | -a &lt;uri&gt;</dt>
+     *    <dd>the uri of the shared application manager</dd>
+     *    <dt>--token | -t &lt;token&gt;</dt>
+     *    <dd>the token to register the shared application with the shared application manager</dd>
+     *    <dt>--sessionId | -s &lt;session id&gt;</dt>
+     *    <dd>the session id of the PAG session</dd>
+     *    <dt>--namespace | -n &lt;namespace&gt;</dt>
+     *    <dd>the PAG namespace</dd>
+     *    <dt>--dataUri | -a &lt;uri&gt;</dt>
+     *    <dd>the uri of the shared application data</dd>
+     *    <dt>--secure</dt>
+     *    <dd>the SOAP server of the shared application uses an ssl connection to communicate</dd>
+     *    <dt>--test</dt>
+     *    <dd>the shared application is run in test mode</dd>
      *    </dl>
      * </dl>
      */
-    public void run(String [] args){
+    public void run(String [] args) {
         System.err.println("SharedApplication run called: " + Arrays.toString(args));
         int port = 0;
         String applicationMgrUrl = null;
         String token = null;
         String dataUrl = null;
-        String ns=null;
-        String sessId=null;
+        String ns = null;
+        String sessId = null;
         boolean test = false;
         boolean secure = false;
 
@@ -326,14 +338,14 @@ public abstract class AGSharedApplication extends SoapServable{
             e.printStackTrace();
         }
 
-        if (dataUrl!=null){
-            dataDownloadUrl=dataUrl;
+        if (dataUrl != null) {
+            dataDownloadUrl = dataUrl;
         }
-        if (ns!=null){
-            namespace=ns;
+        if (ns != null) {
+            namespace = ns;
         }
-        if (sessId!=null){
-            sessionId=sessId;
+        if (sessId != null) {
+            sessionId = sessId;
         }
         if (test) {
             // testing hook - do nothing

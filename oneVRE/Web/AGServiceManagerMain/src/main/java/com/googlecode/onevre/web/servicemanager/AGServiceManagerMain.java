@@ -72,6 +72,7 @@ public class AGServiceManagerMain {
      * The main method that allows you to run a remote service manager
      * @param args The arguments
      */
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         //System.setSecurityManager(null);
         int port = DEFAULT_PORT;
@@ -90,7 +91,7 @@ public class AGServiceManagerMain {
                         bridgeConnectors.indexOf("=") + 1);
                 try {
                     BridgeClientCreator.setBridgeConnectors((HashMap<String, AGBridgeConnectorDescription>)
-                    		XMLDeserializer.deserialize(StringEscapeUtils.unescapeXml(bridgeConnectors)));
+                            XMLDeserializer.deserialize(StringEscapeUtils.unescapeXml(bridgeConnectors)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -131,5 +132,8 @@ public class AGServiceManagerMain {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private AGServiceManagerMain() {
     }
 }

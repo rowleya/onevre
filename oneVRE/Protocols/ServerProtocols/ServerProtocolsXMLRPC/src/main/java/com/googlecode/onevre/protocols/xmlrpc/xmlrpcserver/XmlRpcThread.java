@@ -58,7 +58,7 @@ import com.googlecode.onevre.utils.Utils;
  */
 public class XmlRpcThread extends Thread {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The server on which to process the request
     private XmlRpcServer server = null;
@@ -98,15 +98,15 @@ public class XmlRpcThread extends Thread {
        queue.addResponse(execute());
     }
 
-    public static String getFault(String methodName, int errorCode, String errorMessage){
+    public static String getFault(String methodName, int errorCode, String errorMessage) {
         Log log = LogFactory.getLog(XmlRpcThread.class);
-    	log.error ("Returning error message " + errorMessage);
+        log.error("Returning error message " + errorMessage);
         String xml = "";
         xml += "<?xml version=\"1.0\"?>";
         xml += "<methodResponse>";
         xml += "<fault><value><struct>";
         if (methodName != null) {
-        	errorMessage += " ... in Method :" + methodName;
+            errorMessage += " ... in Method :" + methodName;
         }
         xml += "<member><name>faultCode</name><value><int>";
         xml += errorCode;
@@ -120,7 +120,7 @@ public class XmlRpcThread extends Thread {
 
     }
 
-    public String execute(){
+    public String execute() {
         String methodName = null;
         int errorCode = 0;
         String errorMessage = null;
@@ -131,7 +131,7 @@ public class XmlRpcThread extends Thread {
             XmlRpcRequestParser requestParser = new XmlRpcRequestParser(
                     config, new TypeFactoryImpl(server));
             XMLReader parser = new org.apache.xerces.parsers.SAXParser();
-            log.info("Request: " + request );
+            log.info("Request: " + request);
             InputSource input = new InputSource(new StringReader(request));
             parser.setContentHandler(requestParser);
             parser.parse(input);
@@ -170,12 +170,12 @@ public class XmlRpcThread extends Thread {
             errorMessage = e.getMessage();
         }
         if (errorMessage == null) {
-        	errorMessage = "unkown fault";
+            errorMessage = "unkown fault";
         }
         return getFault(methodName, errorCode, errorMessage);
     }
 
-    public String executeSync(){
+    public String executeSync() {
         String methodName = null;
         int errorCode = 0;
         String errorMessage = null;
@@ -186,7 +186,7 @@ public class XmlRpcThread extends Thread {
             XmlRpcRequestParser requestParser = new XmlRpcRequestParser(
                     config, new TypeFactoryImpl(server));
             XMLReader parser = new org.apache.xerces.parsers.SAXParser();
-            log.info("Request: " + request );
+            log.info("Request: " + request);
             InputSource input = new InputSource(syncRequest.getReader());
             parser.setContentHandler(requestParser);
             parser.parse(input);
@@ -225,7 +225,7 @@ public class XmlRpcThread extends Thread {
             errorMessage = e.getMessage();
         }
         if (errorMessage == null) {
-        	errorMessage = "unkown fault";
+            errorMessage = "unkown fault";
         }
         return getFault(methodName, errorCode, errorMessage);
     }

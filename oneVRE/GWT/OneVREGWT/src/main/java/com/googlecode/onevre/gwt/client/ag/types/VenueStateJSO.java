@@ -5,13 +5,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class VenueStateJSO extends JavaScriptObject {
 
-	protected VenueStateJSO (){
-	}
+    protected VenueStateJSO() {
+    }
     /**
      * Returns the applications
      * @return A list of application descriptions
      */
-    public native final VectorJSO<ApplicationDescriptionJSO> getApplications() /*-{
+    public final native VectorJSO<ApplicationDescriptionJSO> getApplications() /*-{
         return this.getApplications();
     }-*/;
 
@@ -19,7 +19,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the clients
      * @return A list of client profiles
      */
-    public native final VectorJSO<ClientProfileJSO> getClients() /*-{
+    public final native VectorJSO<ClientProfileJSO> getClients() /*-{
         return this.getClients();
     }-*/;
 
@@ -28,7 +28,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the connections
      * @return A list of connection descriptions
      */
-    public native final VectorJSO<ConnectionDescriptionJSO> getConnections() /*-{
+    public final native VectorJSO<ConnectionDescriptionJSO> getConnections() /*-{
         return this.getConnections();
     }-*/;
 
@@ -37,7 +37,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the data
      * @return A list of data descriptions
      */
-    public native final VectorJSO<DataDescriptionJSO> getData() /*-{
+    public final native VectorJSO<DataDescriptionJSO> getData() /*-{
         return this.getData();
     }-*/;
 
@@ -46,7 +46,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the data store location
      * @return the data location
      */
-    public native final String getDataLocation() /*-{
+    public final native String getDataLocation() /*-{
         return this.getDataLocation();
     }-*/;
 
@@ -54,7 +54,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the description
      * @return the description
      */
-    public native final String getDescription() /*-{
+    public final native String getDescription() /*-{
         return this.getDescription();
     }-*/;
 
@@ -62,7 +62,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the location of the event stream
      * @return the event location
      */
-    public native final String getEventLocation() /*-{
+    public final native String getEventLocation() /*-{
         return this.getEventLocation();
     }-*/;
 
@@ -70,7 +70,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the name
      * @return the name
      */
-    public native final String getName() /*-{
+    public final native String getName() /*-{
         return this.getName();
     }-*/;
 
@@ -78,7 +78,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the venue services
      * @return a list of service descriptions
      */
-    public native final VectorJSO<ServiceDescriptionJSO> getServices() /*-{
+    public final native VectorJSO<ServiceDescriptionJSO> getServices() /*-{
         return this.getServices();
     }-*/;
 
@@ -86,7 +86,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the location of the jabber service
      * @return the text location
      */
-    public native final String getTextLocation() /*-{
+    public final native String getTextLocation() /*-{
         return this.getTextLocation();
     }-*/;
 
@@ -94,7 +94,7 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the unique id
      * @return the unique id
      */
-    public native final String getUniqueId() /*-{
+    public final native String getUniqueId() /*-{
         return this.getUniqueId();
     }-*/;
 
@@ -102,11 +102,11 @@ public class VenueStateJSO extends JavaScriptObject {
      * Returns the uri
      * @return the uri
      */
-    public native final String getUri() /*-{
+    public final native String getUri() /*-{
         return this.getUri();
     }-*/;
 
-    public native final VenueList getVenueList()/*-{
+    public final native VenueList getVenueList()/*-{
         return this.getVenueList();
     }-*/;
 

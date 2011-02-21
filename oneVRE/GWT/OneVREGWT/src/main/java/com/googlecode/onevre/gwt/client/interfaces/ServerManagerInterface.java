@@ -7,18 +7,18 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueServerType;
 
 public interface ServerManagerInterface {
 
-	public void setServerManager(ServerManager serverManager);
+    void setServerManager(ServerManager serverManager);
 
-	public void updateUI();
+    void updateUI();
 
-	public void addServer(VenueServerType server);
+    void addServer(VenueServerType server);
 
-	public void removeServer(VenueServerType server);
+    void removeServer(VenueServerType server);
 
-	public void clearServers();
+    void clearServers();
 
-	public Panel getPanel();
+    Panel getPanel();
 
-	public ServerVenueManagerInterface getServerVenueManager();
+    ServerVenueManagerInterface getServerVenueManager();
 
 }

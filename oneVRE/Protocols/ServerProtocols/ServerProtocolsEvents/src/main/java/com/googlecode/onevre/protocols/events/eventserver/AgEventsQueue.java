@@ -56,7 +56,7 @@ import com.sun.jersey.api.json.JSONMarshaller;
  */
 public class AgEventsQueue implements ActionListener {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
 
     private static final int TIMEOUT_TIME = 20000;
@@ -90,23 +90,23 @@ public class AgEventsQueue implements ActionListener {
         }
     }
 
-   public String getEventString(AgEvent event){
-		try {
-			Object evObject = event.getEventObject();
-			Class<?> [] classes = new Class<?>[]{AgEvent.class};
-			if (evObject!=null){
-				log.info("evOBJ class: " + evObject.getClass());
-				classes = new Class<?>[]{AgEvent.class,evObject.getClass()};
-			}
-			JSONJAXBContext context = new JSONJAXBContext(JSONConfiguration.natural().build(),classes);
-			JSONMarshaller marshaller = context.createJSONMarshaller();
-	        StringWriter writer = new StringWriter();
-	        marshaller.marshallToJSON(event, writer);
-	        return (writer.toString());
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return ("");
+   public String getEventString(AgEvent event) {
+        try {
+            Object evObject = event.getEventObject();
+            Class<?> [] classes = new Class<?>[]{AgEvent.class};
+            if (evObject != null) {
+                log.info("evOBJ class: " + evObject.getClass());
+                classes = new Class<?>[]{AgEvent.class, evObject.getClass()};
+            }
+            JSONJAXBContext context = new JSONJAXBContext(JSONConfiguration.natural().build(), classes);
+            JSONMarshaller marshaller = context.createJSONMarshaller();
+            StringWriter writer = new StringWriter();
+            marshaller.marshallToJSON(event, writer);
+            return (writer.toString());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return ("");
     }
     /**
      * Adds a response to the queue
@@ -138,9 +138,9 @@ public class AgEventsQueue implements ActionListener {
             if (!queue.isEmpty()) {
                 return queue.removeFirst();
             } else if (!done) {
-                return getEventString(new AgEvent("",Event.NONE,null));
+                return getEventString(new AgEvent("", Event.NONE, null));
             } else {
-                return getEventString(new AgEvent("",Event.DONE,null));
+                return getEventString(new AgEvent("", Event.DONE, null));
             }
         }
     }

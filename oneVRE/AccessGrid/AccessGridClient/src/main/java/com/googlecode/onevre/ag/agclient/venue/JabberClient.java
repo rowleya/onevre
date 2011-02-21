@@ -57,7 +57,6 @@ import org.jivesoftware.smackx.packet.DiscoverItems;
 
 import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
 import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
-import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 
 /**
  * Represents a client connection to a jabber room
@@ -66,7 +65,7 @@ import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
  */
 public class JabberClient implements PacketListener {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     private XMPPConnection connection = null;
 
@@ -99,7 +98,7 @@ public class JabberClient implements PacketListener {
         JabberMessage jabberMessage = new JabberMessage(
                 from, message, dateFormat.format(date));
         history.add(jabberMessage);
-        agEventServer.addEvent(new AgEvent(clientUri,"jabberAddMessage", jabberMessage));
+        agEventServer.addEvent(new AgEvent(clientUri, "jabberAddMessage", jabberMessage));
     }
 
     private void addRoster(String name) {
@@ -121,10 +120,10 @@ public class JabberClient implements PacketListener {
      * @throws XMPPException
      */
     @SuppressWarnings("unchecked")
-	public JabberClient(String server, int port, boolean secure, String venueUri,
+    public JabberClient(String server, int port, boolean secure, String venueUri,
             String roomname, String nickname, AgEventServer agEventServer)
             throws XMPPException {
-    	this.clientUri = venueUri;
+        this.clientUri = venueUri;
         this.agEventServer = agEventServer;
         if (!secure) {
             connection = new XMPPConnection(server, port);
@@ -172,7 +171,7 @@ public class JabberClient implements PacketListener {
                 nickname += "_";
             }
         }
-        agEventServer.addEvent(new AgEvent(clientUri,"jabberClearWindow", clientUri));
+        agEventServer.addEvent(new AgEvent(clientUri, "jabberClearWindow", clientUri));
 
         Thread keepalive = new Thread() {
             public void run() {

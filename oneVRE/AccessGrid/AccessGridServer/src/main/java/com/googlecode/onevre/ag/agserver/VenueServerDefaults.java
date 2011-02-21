@@ -53,9 +53,9 @@ public class VenueServerDefaults {
     /** Port for the Event Server */
     public static String eventPort = "8002";
 
-    public static Role Everybody = new Role("Everybody",0);
+    public static Role Everybody = new Role("Everybody", 0);
 
-    public static Role VOMSdependent = new Role("VOMSdependent",0);
+    public static Role VOMSdependent = new Role("VOMSdependent", 0);
 
-    public static Role Administrators = new Role("Administrators",1);
+    public static Role Administrators = new Role("Administrators", 1);
 }

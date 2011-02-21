@@ -66,8 +66,8 @@ public class MessageBox {
      * @param date The date of the message
      */
     public MessageBox(String type, String message) {
-    	this.type = type;
-    	this.message = message;
+        this.type = type;
+        this.message = message;
     }
 
     /**

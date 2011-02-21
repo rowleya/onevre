@@ -89,7 +89,7 @@ public class SystemConfigWin extends SystemConfig {
 
         } catch (RegistryException e) {
             System.err.println(e.getMessage());
-        	//e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return;

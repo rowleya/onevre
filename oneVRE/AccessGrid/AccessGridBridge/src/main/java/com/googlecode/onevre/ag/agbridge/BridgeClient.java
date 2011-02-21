@@ -50,37 +50,37 @@ public interface BridgeClient {
      * Best bridge in order - to be tried before anything else (equivalent to
      *     using multicast)
      */
-    final int ORDER_BEST_BRIDGE = Integer.MIN_VALUE / 2;
+    int ORDER_BEST_BRIDGE = Integer.MIN_VALUE / 2;
 
     /**
      * A great bridge in order
      */
-    final int ORDER_GREAT_BRIDGE = (Integer.MIN_VALUE / 6) * 2;
+    int ORDER_GREAT_BRIDGE = (Integer.MIN_VALUE / 6) * 2;
 
     /**
      * A good bridge in order
      */
-    final int ORDER_GOOD_BRIDGE = (Integer.MIN_VALUE / 6) * 1;
+    int ORDER_GOOD_BRIDGE = (Integer.MIN_VALUE / 6) * 1;
 
     /**
      * An average bridge in order
      */
-    final int ORDER_AVERAGE_BRIDGE = 0;
+    int ORDER_AVERAGE_BRIDGE = 0;
 
     /**
      * A poor bridge in order
      */
-    final int ORDER_POOR_BRIDGE = (Integer.MAX_VALUE / 6) * 1;
+    int ORDER_POOR_BRIDGE = (Integer.MAX_VALUE / 6) * 1;
 
     /**
      * A rubbish bridge in order
      */
-    final int ORDER_RUBBISH_BRIDGE = (Integer.MAX_VALUE / 6) * 2;
+    int ORDER_RUBBISH_BRIDGE = (Integer.MAX_VALUE / 6) * 2;
 
     /**
      * Worst bridge in order - use only as a last resort
      */
-    final int ORDER_WORST_BRIDGE = Integer.MAX_VALUE / 2;
+    int ORDER_WORST_BRIDGE = Integer.MAX_VALUE / 2;
 
     /**
      * Initialises the connection to the bridge

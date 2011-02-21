@@ -47,37 +47,37 @@ public class VenueState {
     private VenueList venueList = null;
 
 
-	public VenueState (VenueStateJSO jso){
-		this.dataLocation = jso.getDataLocation();
-		this.eventLocation = jso.getEventLocation();
-		this.textLocation = jso.getTextLocation();
-		this.name = jso.getName();
-		this.uri = jso.getUri();
-		this.description = jso.getDescription();
-		this.uniqueId = jso.getUniqueId();
-		this.venueList = jso.getVenueList();
+    public VenueState(VenueStateJSO jso) {
+        this.dataLocation = jso.getDataLocation();
+        this.eventLocation = jso.getEventLocation();
+        this.textLocation = jso.getTextLocation();
+        this.name = jso.getName();
+        this.uri = jso.getUri();
+        this.description = jso.getDescription();
+        this.uniqueId = jso.getUniqueId();
+        this.venueList = jso.getVenueList();
 
-		VectorJSO<DataDescriptionJSO> datajso = jso.getData();
-		for (int i = 0; i<datajso.size(); i++) {
-			data.add(new DataDescription(datajso.get(i)));
-		}
-		VectorJSO<ClientProfileJSO> clientsjso = jso.getClients();
-		for (int i = 0; i<clientsjso.size(); i++) {
-			clients.add(new ClientProfile(clientsjso.get(i)));
-		}
-		VectorJSO<ConnectionDescriptionJSO> connectionsjso = jso.getConnections();
-		for (int i = 0; i<connectionsjso.size(); i++) {
-			connections.add(new ConnectionDescription(connectionsjso.get(i)));
-		}
-		VectorJSO<ApplicationDescriptionJSO> applicationsjso = jso.getApplications();
-		for (int i = 0; i<applicationsjso.size(); i++) {
-			applications.add(new ApplicationDescription(applicationsjso.get(i)));
-		}
-		VectorJSO<ServiceDescriptionJSO> servicesjso = jso.getServices();
-		for (int i = 0; i<servicesjso.size(); i++) {
-			services.add(new ServiceDescription(servicesjso.get(i)));
-		}
-	}
+        VectorJSO<DataDescriptionJSO> datajso = jso.getData();
+        for (int i = 0; i < datajso.size(); i++) {
+            data.add(new DataDescription(datajso.get(i)));
+        }
+        VectorJSO<ClientProfileJSO> clientsjso = jso.getClients();
+        for (int i = 0; i < clientsjso.size(); i++) {
+            clients.add(new ClientProfile(clientsjso.get(i)));
+        }
+        VectorJSO<ConnectionDescriptionJSO> connectionsjso = jso.getConnections();
+        for (int i = 0; i < connectionsjso.size(); i++) {
+            connections.add(new ConnectionDescription(connectionsjso.get(i)));
+        }
+        VectorJSO<ApplicationDescriptionJSO> applicationsjso = jso.getApplications();
+        for (int i = 0; i < applicationsjso.size(); i++) {
+            applications.add(new ApplicationDescription(applicationsjso.get(i)));
+        }
+        VectorJSO<ServiceDescriptionJSO> servicesjso = jso.getServices();
+        for (int i = 0; i < servicesjso.size(); i++) {
+            services.add(new ServiceDescription(servicesjso.get(i)));
+        }
+    }
 
     /**
      * Returns the applications
@@ -156,7 +156,7 @@ public class VenueState {
      * @param services services to add
      */
     public void setServices(Vector<ServiceDescription> services) {
-        this.services=services;
+        this.services = services;
     }
 
     /**
@@ -187,7 +187,7 @@ public class VenueState {
      * Returns the list of venues
      * @return the list of venues
      */
-    public VenueList getVenueList(){
+    public VenueList getVenueList() {
         return venueList;
     }
 
@@ -205,7 +205,7 @@ public class VenueState {
      * @param applications The list of applications to add
      */
     public void setApplications(Vector<ApplicationDescription> applications) {
-        this.applications=applications;
+        this.applications = applications;
     }
 
     /**
@@ -213,7 +213,7 @@ public class VenueState {
      * @param application The application to update
      */
     public void updateApplication(ApplicationDescription application) {
-        applications.set(applications.indexOf(application),application);
+        applications.set(applications.indexOf(application), application);
     }
 
     /**
@@ -237,7 +237,7 @@ public class VenueState {
      * @param clients The list of clients to add
      */
     public void setClients(Vector<ClientProfile> clients) {
-        this.clients=clients;
+        this.clients = clients;
     }
 
     /**
@@ -245,7 +245,7 @@ public class VenueState {
      * @param client The client to update
      */
     public void updateClient(ClientProfile client) {
-        clients.set(clients.indexOf(client),client);
+        clients.set(clients.indexOf(client), client);
     }
 
     /**
@@ -269,7 +269,7 @@ public class VenueState {
      * @param connections The list of connections to add
      */
     public void setConnections(Vector<ConnectionDescription> connections) {
-        this.connections=connections;
+        this.connections = connections;
     }
 
     /**
@@ -278,7 +278,7 @@ public class VenueState {
      */
 
     public void setVenueList(VenueList venueList) {
-        this.venueList=venueList;
+        this.venueList = venueList;
     }
 
     /**
@@ -302,7 +302,7 @@ public class VenueState {
      * @param data The data to add
      */
     public void setData(Vector<DataDescription> data) {
-        this.data=data;
+        this.data = data;
     }
 
     /**
@@ -310,7 +310,7 @@ public class VenueState {
      * @param datum The data to update
      */
     public void updateData(DataDescription datum) {
-        data.set(data.indexOf(datum),datum);
+        data.set(data.indexOf(datum), datum);
     }
 
     /**
@@ -366,7 +366,7 @@ public class VenueState {
      * @param service The service to update
      */
     public void updateService(ServiceDescription service) {
-        services.set(services.indexOf(service),service);
+        services.set(services.indexOf(service), service);
     }
 
     /**
@@ -405,7 +405,7 @@ public class VenueState {
     /** (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-    public String toString(){
+    public String toString() {
         String out = "VenueState : \n";
         out += "uniqueId:" + uniqueId + "\n";
         out += "name:" + name + "\n";
@@ -414,24 +414,24 @@ public class VenueState {
         out += "eventlocation:" + eventLocation + "\n";
         out += "textlocation:" + textLocation + "\n";
         out += "dataLocation:" + dataLocation + "\n";
-        out += "services: " + services.size() + "\n" ;
-        for (ServiceDescription service : services){
+        out += "services: " + services.size() + "\n";
+        for (ServiceDescription service : services) {
                out += "    " + service.toString() + "\n";
         }
-        out += "connections: " + connections.size() + "\n" ;
-        for (ConnectionDescription conn: connections){
+        out += "connections: " + connections.size() + "\n";
+        for (ConnectionDescription conn : connections) {
                out += "    " + conn.toString() + "\n";
         }
         out += "clients:" + clients.size() + "\n";
-        for (ClientProfile client : clients){
+        for (ClientProfile client : clients) {
                out += "    " + client.toString() + "\n";
         }
         out += "data:" + data.size() + "\n";
-        for (DataDescription datadesc : data){
+        for (DataDescription datadesc : data) {
                out += "    " + datadesc.toString() + "\n";
         }
-        out += "applications:" + applications.size()+ "\n";
-        for (ApplicationDescription application:applications){
+        out += "applications:" + applications.size() + "\n";
+        for (ApplicationDescription application : applications) {
                out += "    " + application.toString() + "\n";
         }
         return out;
@@ -441,7 +441,7 @@ public class VenueState {
      * Returns a string to go into the log file
      * @return log file string
      */
-    public String toLog(){
+    public String toLog() {
         return name + ", " + description;
     }
 

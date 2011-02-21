@@ -51,7 +51,7 @@ public class BlankLineResponseWrapper extends HttpServletResponseWrapper {
 
     private CharArrayWriter writer = new CharArrayWriter();
 
-    private boolean gotOutput=false;
+    private boolean gotOutput = false;
 
     /**
      * Creates a new BlankLineResponseWrapper
@@ -64,8 +64,8 @@ public class BlankLineResponseWrapper extends HttpServletResponseWrapper {
     /**
      * @see javax.servlet.ServletResponseWrapper#getOutputStream()
      */
-    public ServletOutputStream getOutputStream() throws IOException{
-        gotOutput=true;
+    public ServletOutputStream getOutputStream() throws IOException {
+        gotOutput = true;
         return super.getOutputStream();
     }
 
@@ -73,7 +73,7 @@ public class BlankLineResponseWrapper extends HttpServletResponseWrapper {
      * Return the output available flag
      * @return  the output available flag
      */
-    public boolean getGotOutput(){
+    public boolean getGotOutput() {
         return gotOutput;
     }
 
@@ -88,8 +88,8 @@ public class BlankLineResponseWrapper extends HttpServletResponseWrapper {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        if ((getContentType() != null) &&
-                getContentType().toLowerCase().startsWith("text/xml")) {
+        if ((getContentType() != null)
+                && getContentType().toLowerCase().startsWith("text/xml")) {
             String result = "";
             char[] chars = writer.toCharArray();
             BufferedReader reader = new BufferedReader(

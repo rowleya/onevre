@@ -14,24 +14,24 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class SetUploadStatusReceiver implements RequestReceiver {
 
-	private VenueState state = null;
+    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
-		JabberMessage message = new JabberMessage ((JabberMessageJSO) parameters.get(0));
-		GWT.log("Jabber Message: " + message.toString());
-		state = Application.getServerManager().getVenuefromSource(source);
-		Application.getJabberManager().addMessage(state, message);
-	}
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
+        JabberMessage message = new JabberMessage((JabberMessageJSO) parameters.get(0));
+        GWT.log("Jabber Message: " + message.toString());
+        state = Application.getServerManager().getVenuefromSource(source);
+        Application.getJabberManager().addMessage(state, message);
+    }
 
-	public void init(String source) {
-		state = Application.getServerManager().getVenuefromSource(source);
-	}
+    public void init(String source) {
+        state = Application.getServerManager().getVenuefromSource(source);
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		UploadStatus uploadStatus = new UploadStatus((UploadStatusJSO) eventJSO.getEventObject());
-		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-		Application.getMessageManager().setUploadStatus(state, uploadStatus);
-	}
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        UploadStatus uploadStatus = new UploadStatus((UploadStatusJSO) eventJSO.getEventObject());
+        state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+        Application.getMessageManager().setUploadStatus(state, uploadStatus);
+    }
 
 }

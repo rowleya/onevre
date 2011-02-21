@@ -2,9 +2,9 @@ package com.googlecode.onevre.gwt.client.ag.types;
 
 public class DataDescription {
 
-    public static String TYPE_DIR = "Directory";
-    public static String TYPE_FILE = "File";
-    public static String TYPE_COMMON = "Common undefined";
+    public static final String TYPE_DIR = "Directory";
+    public static final String TYPE_FILE = "File";
+    public static final String TYPE_COMMON = "Common undefined";
 
     // The id of the data
     private String id = null;
@@ -48,45 +48,45 @@ public class DataDescription {
     // The id of the item that is above this one in the hierarchy
     private String parentId = null;
 
-	public DataDescription (String name, String description, String expires){
-		this.name = name;
-		this.description = description;
-		this.expires = expires;
-	}
+    public DataDescription(String name, String description, String expires) {
+        this.name = name;
+        this.description = description;
+        this.expires = expires;
+    }
 
-	public DataDescription (DataDescriptionJSO jso){
-	    id = jso.getId();
-	    name = jso.getName();
-	    description = jso.getDescription();
-	    uri = jso.getUri();
-	    status = jso.getStatus();
-	    size = Integer.valueOf(jso.getSize());
-	    checksum = jso.getChecksum();
-	    owner = jso.getOwner();
-	    type = jso.getType();
-	    expires = jso.getExpires();
-	    lastModified = jso.getLastModified();
-	    objectType = jso.getObjectType();
-	    hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
-	    parentId = jso.getParentId();
-	}
+    public DataDescription(DataDescriptionJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+        status = jso.getStatus();
+        size = Integer.valueOf(jso.getSize());
+        checksum = jso.getChecksum();
+        owner = jso.getOwner();
+        type = jso.getType();
+        expires = jso.getExpires();
+        lastModified = jso.getLastModified();
+        objectType = jso.getObjectType();
+        hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
+        parentId = jso.getParentId();
+    }
 
-	public DataDescription (DataDescriptionEJSO jso){
-	    id = jso.getId();
-	    name = jso.getName();
-	    description = jso.getDescription();
-	    uri = jso.getUri();
-	    status = jso.getStatus();
-	    size = Integer.valueOf(jso.getSize());
-	    checksum = jso.getChecksum();
-	    owner = jso.getOwner();
-	    type = jso.getType();
-	    expires = jso.getExpires();
-	    lastModified = jso.getLastModified();
-	    objectType = jso.getObjectType();
-	    hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
-	    parentId = jso.getParentId();
-	}
+    public DataDescription(DataDescriptionEJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+        status = jso.getStatus();
+        size = Integer.valueOf(jso.getSize());
+        checksum = jso.getChecksum();
+        owner = jso.getOwner();
+        type = jso.getType();
+        expires = jso.getExpires();
+        lastModified = jso.getLastModified();
+        objectType = jso.getObjectType();
+        hierarchyLevel = Integer.valueOf(jso.getHierarchyLevel());
+        parentId = jso.getParentId();
+    }
 
     /**
      * Returns the last time the data was modified
@@ -195,34 +195,35 @@ public class DataDescription {
      * Returns the objectType
      * @return the objectType
      */
-    public String getObjectType(){
-    	return objectType;
+    public String getObjectType() {
+        return objectType;
     }
 
     /**
      * Returns the hierarchyLevel
      * @return the hierarchyLevel
      */
-    public int getHierarchyLevel(){
-    	return hierarchyLevel;
+    public int getHierarchyLevel() {
+        return hierarchyLevel;
     }
 
     /**
      * Checks if it data is a presentation
      * @return true if data is a presentation
      */
-    public boolean isPresentation(){
-    	if (name.endsWith(".ppt"))
-    		return true;
-    	return false;
+    public boolean isPresentation() {
+        if (name.endsWith(".ppt")) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Returns the id of the parent item
      * @return the id of the parent item
      */
-   public String getParentId(){
-    	return parentId;
+   public String getParentId() {
+        return parentId;
     }
 
     /**
@@ -327,28 +328,32 @@ public class DataDescription {
         this.parentId = parentId;
     }
 
-    public String toString(){
-	    String out = "Id: " +id +"\n";
-	    	out += "Name: "+ name +"\n";
-	    	out += "Description: "+ description +"\n";
-	    	out += "Size: " + size +"\n";
-	    	out += "lastModified: " + lastModified +"\n";
-	    	out += "expires: " + expires +"\n";
-	    	out += "uri: " + uri + "\n";
-	    	out += "type: " + objectType + "\n";
-	    	out += "parentId: " + parentId + "\n";
-	    	out += "hierarchyLevel: " + hierarchyLevel + "\n";
-		return out;
+    public String toString() {
+        String out = "Id: " + id + "\n";
+            out += "Name: " + name + "\n";
+            out += "Description: " + description + "\n";
+            out += "Size: " + size + "\n";
+            out += "lastModified: " + lastModified + "\n";
+            out += "expires: " + expires + "\n";
+            out += "uri: " + uri + "\n";
+            out += "type: " + objectType + "\n";
+            out += "parentId: " + parentId + "\n";
+            out += "hierarchyLevel: " + hierarchyLevel + "\n";
+        return out;
     }
 
-    public boolean equals(Object other){
-    	if (other.getClass()!=DataDescription.class){
-    		return false;
-    	}
-    	if (id.equals(((DataDescription)other).id)){
-    		return true;
-    	}
-    	return false;
+    public boolean equals(Object other) {
+        if (other.getClass() != DataDescription.class) {
+            return false;
+        }
+        if (id.equals(((DataDescription) other).id)) {
+            return true;
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        return id.hashCode();
     }
 
 }

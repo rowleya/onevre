@@ -48,11 +48,11 @@ public class SoapObject {
      * @param soapType the soap type of the entity
      * @param nameSpace the soap name-space of the entity
      */
-    public SoapObject(String name, String soapType, String nameSpace){
-        this.name=name;
-        this.soapType=soapType;
-        this.value="";
-        this.nameSpace=nameSpace;
+    public SoapObject(String name, String soapType, String nameSpace) {
+        this.name = name;
+        this.soapType = soapType;
+        this.value = "";
+        this.nameSpace = nameSpace;
     }
 
     /**
@@ -65,15 +65,16 @@ public class SoapObject {
      * @throws SoapException if a component of the name of the soapObject
      * exists in the objectMap, but other objects have been added since
      */
-    public void addSubObject(SoapObject soapObject) throws SoapException{
-        if (!subObjects.isEmpty()){
+    public void addSubObject(SoapObject soapObject) throws SoapException {
+        if (!subObjects.isEmpty()) {
             String lastObjectName = subObjects.lastElement();
-            if (soapObject.name.equals(lastObjectName)){
+            if (soapObject.name.equals(lastObjectName)) {
                 subObjectMap.get(soapObject.name).add(soapObject);
                 return;
             }
-            if (subObjectMap.get(soapObject.name)!=null){
-                throw new SoapException("soapObject "+ soapObject.name +" already in parent ("+ name +") hierarchy" );
+            if (subObjectMap.get(soapObject.name) != null) {
+                throw new SoapException("soapObject " + soapObject.name
+                        + " already in parent (" + name + ") hierarchy");
             }
         }
         Vector<SoapObject> soapObjectVector = new Vector<SoapObject>();
@@ -85,43 +86,43 @@ public class SoapObject {
      * Sets the name of the SoapObject
      * @param name the name
      */
-    public void setName(String name){
-        this.name=name;
+    public void setName(String name) {
+        this.name = name;
     }
     /**
      * Sets the name of the SoapObject
      * @param nameSpace the nameSpace
      */
-    public void setNameSpace(String nameSpace){
-        this.nameSpace=nameSpace;
+    public void setNameSpace(String nameSpace) {
+        this.nameSpace = nameSpace;
     }
    /**
      * Sets the SoapObject to nil
      * @param nil
      */
-    public void setNil(boolean nil){
-        this.nil=nil;
+    public void setNil(boolean nil) {
+        this.nil = nil;
     }
 
     /**
      * checks if the SoapObject is nil
      * @return flag if the SoapObject is nil
      */
-    public boolean isNil(){
+    public boolean isNil() {
         return nil;
     }
 
     /**
      * @return the name
      */
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     /**
      * @return the name
      */
-    public String getNameSpace(){
+    public String getNameSpace() {
         return nameSpace;
     }
 
@@ -167,12 +168,12 @@ public class SoapObject {
         return soapXML;
     }
 
-    private String printObject(String prefix){
+    private String printObject(String prefix) {
         String out = "";
         out += prefix + "Name: " + name + " Type: " +  soapType + " Value:" + value + "\n";
-        for (String n : subObjects){
-            for (SoapObject o :subObjectMap.get(n)){
-                out+=o.printObject(prefix+"    ");
+        for (String n : subObjects) {
+            for (SoapObject o : subObjectMap.get(n)) {
+                out += o.printObject(prefix + "    ");
             }
         }
         return out;
@@ -181,7 +182,7 @@ public class SoapObject {
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString(){
+    public String toString() {
         return printObject("");
     }
 }

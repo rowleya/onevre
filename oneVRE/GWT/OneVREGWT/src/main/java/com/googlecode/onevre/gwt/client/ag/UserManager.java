@@ -11,82 +11,82 @@ import com.googlecode.onevre.gwt.client.ui.panels.ClientPanel;
 
 public class UserManager {
 
-	private HashMap<VenueState, Vector<ClientProfile>> users = new HashMap<VenueState, Vector<ClientProfile>>();
-//	private Vector<ClientProfile> users = new Vector<ClientProfile>();
+    private HashMap<VenueState, Vector<ClientProfile>> users = new HashMap<VenueState, Vector<ClientProfile>>();
+//    private Vector<ClientProfile> users = new Vector<ClientProfile>();
 
-	private Vector<VOAttribute> voAttributes = null;
+    private Vector<VOAttribute> voAttributes = null;
 
-	private ClientProfile localUser = null;
+    private ClientProfile localUser = null;
 
-	private UserManagerInterface ui = null;
+    private UserManagerInterface ui = null;
 
-	public UserManager(UserManagerInterface ui){
-		this.ui = ui;
-		ui.setUserManager(this);
-	}
+    public UserManager(UserManagerInterface ui) {
+        this.ui = ui;
+        ui.setUserManager(this);
+    }
 
-	public void setVOAttributes(Vector<VOAttribute> voAttributes){
-		this.voAttributes = voAttributes;
-	}
+    public void setVOAttributes(Vector<VOAttribute> voAttributes) {
+        this.voAttributes = voAttributes;
+    }
 
-	public Vector<VOAttribute> getVOAttributes(){
-		return voAttributes;
-	}
+    public Vector<VOAttribute> getVOAttributes() {
+        return voAttributes;
+    }
 
-	public Vector<ClientProfile> addVenue(VenueState state){
-		Vector<ClientProfile> userList = new Vector<ClientProfile>();
-		users.put(state, userList);
-		return userList;
-	}
+    public Vector<ClientProfile> addVenue(VenueState state) {
+        Vector<ClientProfile> userList = new Vector<ClientProfile>();
+        users.put(state, userList);
+        return userList;
+    }
 
-	public void addUser(VenueState state, ClientProfile user){
-		Vector<ClientProfile> userList = users.get(state);
-		if (userList==null){
-			userList = addVenue(state);
-		}
-		userList.add(user);
-		ui.addUser(state, user);
-	}
+    public void addUser(VenueState state, ClientProfile user) {
+        Vector<ClientProfile> userList = users.get(state);
+        if (userList == null) {
+            userList = addVenue(state);
+        }
+        userList.add(user);
+        ui.addUser(state, user);
+    }
 
-	public void setLocalUser(ClientProfile user){
-		this.localUser = user;
-		ui.addLocalUser(user);
-	}
+    public void setLocalUser(ClientProfile user) {
+        this.localUser = user;
+        ui.addLocalUser(user);
+    }
 
-	public Vector<ClientProfile> getUsers(VenueState state){
-		Vector<ClientProfile> userList = users.get(state);
-		return userList;
-	}
+    public Vector<ClientProfile> getUsers(VenueState state) {
+        Vector<ClientProfile> userList = users.get(state);
+        return userList;
+    }
 
-	public void deleteUser(VenueState state, ClientProfile user) {
-		Vector<ClientProfile> userList = users.get(state);
-		if (userList!=null){
-			userList.remove(user);
-			ui.delUser(state, user);
-		}
-	}
+    public void deleteUser(VenueState state, ClientProfile user) {
+        Vector<ClientProfile> userList = users.get(state);
+        if (userList != null) {
+            userList.remove(user);
+            ui.delUser(state, user);
+        }
+    }
 
-	public void updateUser(VenueState state, ClientProfile user) {
-		Vector<ClientProfile> userList = users.get(state);
-		if (userList!=null){
-			int idx = userList.indexOf(user);
-			userList.remove(user);
-			userList.insertElementAt(user, idx);
-			ui.modifyUser(state, user);
-		}
-	}
+    public void updateUser(VenueState state, ClientProfile user) {
+        Vector<ClientProfile> userList = users.get(state);
+        if (userList != null) {
+            int idx = userList.indexOf(user);
+            userList.remove(user);
+            userList.insertElementAt(user, idx);
+            ui.modifyUser(state, user);
+        }
+    }
 
-	public ClientProfile getLocalUser() {
-		return localUser;
-	}
+    public ClientProfile getLocalUser() {
+        return localUser;
+    }
 
-	public Vector<VOAttribute> getLocalUserVoAttributes() {
-		return voAttributes;
-	}
+    public Vector<VOAttribute> getLocalUserVoAttributes() {
+        return voAttributes;
+    }
 
-	public void setClientPanel(VenueState state, ClientPanel clientPanel) {
-		users.put(state, state.getClients());
-		ui.setClientPanel(state,clientPanel);
-	}
+    public void setClientPanel(VenueState state, ClientPanel clientPanel) {
+        users.put(state, state.getClients());
+        ui.setClientPanel(state, clientPanel);
+    }
 
 }

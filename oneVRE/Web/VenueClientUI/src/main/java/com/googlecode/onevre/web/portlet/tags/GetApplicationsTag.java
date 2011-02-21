@@ -41,6 +41,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.googlecode.onevre.ag.types.application.AGSharedApplicationDescription;
 import com.googlecode.onevre.protocols.xmlrpc.common.XMLSerializer;
@@ -54,6 +56,8 @@ import com.googlecode.onevre.web.servlet.tags.PortletTag;
  * @version 1.0
  */
 public class GetApplicationsTag extends PortletTag {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     private String var = null;
 
@@ -70,14 +74,14 @@ public class GetApplicationsTag extends PortletTag {
             HashMap<String, AGSharedApplicationDescription> applications,
             String baseUrl)
             throws IOException {
-        System.err.println("Searching " + dir.getAbsolutePath() + " for applications");
+        log.info("Searching " + dir.getAbsolutePath() + " for applications");
         File[] listing = dir.listFiles();
         for (int i = 0; i < listing.length; i++) {
             if (listing[i].isDirectory()) {
                 applications = searchForApplications(listing[i], applications,
                         baseUrl);
             } else if (listing[i].getName().endsWith(".jar")) {
-//                System.err.println("Checking if " + listing[i].getName() + " is an application");
+                log.debug("Checking if " + listing[i].getName() + " is an application");
                 JarFile jar = new JarFile(listing[i]);
                 JarEntry application = jar.getJarEntry("shared.app");
                 if (application != null) {
@@ -117,7 +121,7 @@ public class GetApplicationsTag extends PortletTag {
         url += request.getContextPath()
             + "/jsp/executeApplication.jsp?application=";
         applications = searchForApplications(dir, applications, url);
-        System.err.println("Applications = " + applications.toString());
+        log.debug("Applications = " + applications.toString());
         getJspContext().setAttribute(var,
                 StringEscapeUtils.escapeXml(
                         XMLSerializer.serialize(applications)));

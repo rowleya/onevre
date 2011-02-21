@@ -50,7 +50,7 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
 public class Capability implements SoapSerializable, Serializable {
 
     private static final long serialVersionUID = 1L;
-//	public static final String Capability_TYPE = "Capability";
+//  public static final String Capability_TYPE = "Capability";
 
     /**
      * Audio type
@@ -195,9 +195,9 @@ public class Capability implements SoapSerializable, Serializable {
         this.channels = channels;
         this.serviceId = String.valueOf(System.currentTimeMillis())
             + (Math.random() * RANDOM_SIZE) + (instanceCount++);
-        this.locationType=locationType;
-        this.host=host;
-        this.port=port;
+        this.locationType = locationType;
+        this.host = host;
+        this.port = port;
     }
 
     /**
@@ -259,7 +259,7 @@ public class Capability implements SoapSerializable, Serializable {
      * @return the locationType Specifies whether to use multicast assigned by Venue or Unicast as specified by service
      */
     @XmlElement
-    public String getLocationType(){
+    public String getLocationType() {
         return locationType;
     }
 
@@ -268,7 +268,7 @@ public class Capability implements SoapSerializable, Serializable {
      * @return the host ip of the service to use (only applicable if used PFEFERRED_UNICAST)
      */
     @XmlElement
-    public String getHost(){
+    public String getHost() {
         return host;
     }
 
@@ -347,16 +347,16 @@ public class Capability implements SoapSerializable, Serializable {
      * Sets  the locationType Specifies whether to use multicast assigned by Venue or Unicast as specified by service
      * @param locationType Specifies whether to use multicast assigned by Venue or Unicast as specified by service
      */
-    public void setLocationType(String locationType){
-        this.locationType=locationType;
+    public void setLocationType(String locationType) {
+        this.locationType = locationType;
     }
 
     /**
      * Sets the host ip of the service to use (only applicable if used PFEFERRED_UNICAST)
      * @param host the host ip of the service to use (only applicable if used PFEFERRED_UNICAST)
      */
-    public void setHost(String host){
-        this.host=host;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     /**
@@ -364,7 +364,7 @@ public class Capability implements SoapSerializable, Serializable {
      * @param port the port of the service to use (only applicable if used PREFERRED_UNICAST)
      */
     public void setPort(int port) {
-        this.port=port;
+        this.port = port;
     }
 
     /**
@@ -372,12 +372,13 @@ public class Capability implements SoapSerializable, Serializable {
      * @param port the port of the service to use (only applicable if used PREFERRED_UNICAST)
      */
     public void setPort(String port) {
-        this.port=Integer.parseInt(port);
+        this.port = Integer.parseInt(port);
     }
 
     /**
      * Returns the SOAP type of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getSoapType()}</dd></dl>
      * @return the SOAP Type - "Capability"
      */
     public String getSoapType() {
@@ -386,7 +387,8 @@ public class Capability implements SoapSerializable, Serializable {
 
     /**
      * Returns the namespace of the item
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getNameSpace()}</dd></dl>
      * @return the namespace - "http://www.accessgrid.org/v3.0"
      */
     public String getNameSpace() {
@@ -394,8 +396,12 @@ public class Capability implements SoapSerializable, Serializable {
     }
 
     /**
-     * Returns the fields that should be included with the soap Each of the fields should have a getter and a setter with the same name e.g. field is "test" there should be a "getTest" and a "setTest" method (note standard capitalisation)
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
+     * Returns the fields that should be included with the soap.
+     * Each of the fields should have a getter and a setter with
+     * the same name e.g. field is "test" there should be a "getTest"
+     * and a "setTest" method (note standard capitalisation)
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.soap.SoapSerializable#getFields()}</dd></dl>
      * @return the fields :
      *	<ul>
      *	<li>"role"</li>
@@ -478,8 +484,8 @@ public class Capability implements SoapSerializable, Serializable {
      * @return "type=&lt;type&gt;, role=&lt;role&gt;, codec=&lt;codec&gt;, channels=&lt;channels&gt;, rate=&lt;rate&gt;"
      */
      public String toString() {
-        return "type=" + type + ", role=" + role + ", codec=" + codec +
-            ", channels=" + channels + ", rate=" + rate + "\n";
+        return "type=" + type + ", role=" + role + ", codec=" + codec
+            + ", channels=" + channels + ", rate=" + rate + "\n";
     }
 
 }

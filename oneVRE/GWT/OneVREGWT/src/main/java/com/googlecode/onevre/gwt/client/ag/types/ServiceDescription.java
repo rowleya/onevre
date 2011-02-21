@@ -1,6 +1,6 @@
 package com.googlecode.onevre.gwt.client.ag.types;
 
-public class ServiceDescription{
+public class ServiceDescription {
 
     // The id of the service
     private String id = null;
@@ -17,21 +17,21 @@ public class ServiceDescription{
     // The mime type of the service
     private String mimeType = null;
 
-	public ServiceDescription (ServiceDescriptionJSO jso){
-		id = jso.getId();
-		name = jso.getName();
-		description = jso.getDescription();
-		uri = jso.getUri();
-		mimeType = jso.getMimeType();
-	}
+    public ServiceDescription(ServiceDescriptionJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+        mimeType = jso.getMimeType();
+    }
 
-	public ServiceDescription (ServiceDescriptionEJSO jso){
-		id = jso.getId();
-		name = jso.getName();
-		description = jso.getDescription();
-		uri = jso.getUri();
-		mimeType = jso.getMimeType();
-	}
+    public ServiceDescription(ServiceDescriptionEJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+        mimeType = jso.getMimeType();
+    }
 
     /**
      * Returns the description

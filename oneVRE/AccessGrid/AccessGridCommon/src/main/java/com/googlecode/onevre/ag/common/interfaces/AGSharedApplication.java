@@ -70,7 +70,7 @@ public class AGSharedApplication {
      * @param serverUrl
      * @throws MalformedURLException
      */
-    public AGSharedApplication (String serverUrl) throws MalformedURLException {
+    public AGSharedApplication(String serverUrl) throws MalformedURLException {
         this.soapRequest = new SoapRequest(serverUrl);
     }
 

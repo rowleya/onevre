@@ -12,7 +12,7 @@ import com.googlecode.onevre.ag.types.VenueState;
  */
 public class VenueEventListener implements EventListener {
 
-    private VenueState venueState=null;
+    private VenueState venueState = null;
 
     public String getListenerId() {
         return null;

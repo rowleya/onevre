@@ -7,17 +7,17 @@ import com.googlecode.onevre.gwt.client.ui.panels.DataPanel;
 
 public interface DataManagerInterface {
 
-	public void setDataManager (DataManager dataManager);
+    void setDataManager(DataManager dataManager);
 
-	public void setDataPanel(VenueState state, DataPanel dataPanel);
+    void setDataPanel(VenueState state, DataPanel dataPanel);
 
-	public void addData(VenueState state, DataDescription data);
+    void addData(VenueState state, DataDescription data);
 
-	public void removeData(VenueState state, DataDescription data);
+    void removeData(VenueState state, DataDescription data);
 
-	public void updateData(VenueState state, DataDescription data);
+    void updateData(VenueState state, DataDescription data);
 
-	public void addDirectory(VenueState state, DataDescription data);
+    void addDirectory(VenueState state, DataDescription data);
 
-	public void deleteDirectory(VenueState state, DataDescription data);
+    void deleteDirectory(VenueState state, DataDescription data);
 }

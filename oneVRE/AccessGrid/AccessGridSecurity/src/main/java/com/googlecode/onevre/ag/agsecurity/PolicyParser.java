@@ -23,13 +23,13 @@ public class PolicyParser {
 
     private String value = "";
 
-    public HashMap<String, String> attributes = null;
+    private HashMap<String, String> attributes = null;
 
     private Vector<Node> subElements =  null;
 
   //  HashMap<String, Class<XmlParsable>> registeredClasses = new HashMap<String, Class<XmlParsable>>();
 
-    public PolicyParser (String xml) throws  IOException, SAXException, ParserConfigurationException{
+    public PolicyParser(String xml) throws  IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(xml)));
@@ -37,7 +37,7 @@ public class PolicyParser {
         subElements.add(document.getFirstChild());
     }
 
-    public PolicyParser (InputStream xmlStream) throws  IOException, SAXException, ParserConfigurationException{
+    public PolicyParser(InputStream xmlStream) throws  IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(xmlStream);
@@ -45,28 +45,28 @@ public class PolicyParser {
         subElements.add(document.getFirstChild());
     }
 
-    public void parse (Node node) {
+    public void parse(Node node) {
         attributes = new HashMap<String, String>();
         subElements =  new Vector<Node>();
         name = node.getNodeName();
         value = node.getNodeValue();
         NamedNodeMap attributeMap = node.getAttributes();
-        for (int i=0; i<attributeMap.getLength(); i++){
+        for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attr = attributeMap.item(i);
-            attributes.put(attr.getNodeName(),attr.getNodeValue());
+            attributes.put(attr.getNodeName(), attr.getNodeValue());
         }
         NodeList children = node.getChildNodes();
-        for (int i=0;i<children.getLength();i++){
+        for (int i = 0; i < children.getLength(); i++) {
             subElements.add(children.item(i));
         }
     }
 
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getValue(){
+    public String getValue() {
         return value;
     }
 

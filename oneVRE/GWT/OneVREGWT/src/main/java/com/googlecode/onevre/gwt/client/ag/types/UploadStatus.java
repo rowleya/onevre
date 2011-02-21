@@ -11,28 +11,28 @@ public class UploadStatus {
     // The date of the message
     private long done = 0;
 
-	public UploadStatus (UploadStatusJSO jso) {
-		fileName = jso.getFileName();
-		size = Long.parseLong(jso.getSize());
-		done = Long.parseLong(jso.getDone());
-	};
+    public UploadStatus(UploadStatusJSO jso) {
+        fileName = jso.getFileName();
+        size = Long.parseLong(jso.getSize());
+        done = Long.parseLong(jso.getDone());
+    };
 
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public long getSize() {
-		return size;
-	};
+    public long getSize() {
+        return size;
+    };
 
-	public long getCurrent() {
-		return done;
-	};
+    public long getCurrent() {
+        return done;
+    };
 
 
-	public String toString(){
-		String out = fileName+" ( "+ done +" / " + size +" )";
-		return out;
-	}
+    public String toString() {
+        String out = fileName + " ( " + done + " / " + size + " )";
+        return out;
+    }
 }

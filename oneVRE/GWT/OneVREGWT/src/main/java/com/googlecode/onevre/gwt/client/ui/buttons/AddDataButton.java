@@ -11,31 +11,31 @@ import com.googlecode.onevre.gwt.common.client.MessageResponse;
 
 public class AddDataButton extends ActionButton implements ClickHandler {
 
-	private VenueState venueState = null;
+    private VenueState venueState = null;
 
-	private NamedFrame targetFrame = null;
+    private NamedFrame targetFrame = null;
 
-	private String parent = null;
+    private String parent = null;
 
-	public AddDataButton(VenueState state, String parent, NamedFrame targetFrame) {
-		this.venueState = state;
-		this.targetFrame = targetFrame;
-		this.parent = parent;
-		setImageUrl("images/icons/add.png");
-		setName("Add data item");
-		setImageHeight("20px");
-		getButton().addClickHandler(this);
-	}
+    public AddDataButton(VenueState state, String parent, NamedFrame targetFrame) {
+        this.venueState = state;
+        this.targetFrame = targetFrame;
+        this.parent = parent;
+        setImageUrl("images/icons/add.png");
+        setName("Add data item");
+        setImageHeight("20px");
+        getButton().addClickHandler(this);
+    }
 
-	@Override
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    @Override
+    public void action() {
+        MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
-	public void onClick(ClickEvent paramClickEvent) {
-		AddDataPanel adp = new AddDataPanel(parent,venueState.getUri(),targetFrame);
-		adp.show();
-	}
+    public void onClick(ClickEvent paramClickEvent) {
+        AddDataPanel adp = new AddDataPanel(parent, venueState.getUri(), targetFrame);
+        adp.show();
+    }
 
 
 }

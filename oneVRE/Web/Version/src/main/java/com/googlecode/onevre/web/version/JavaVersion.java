@@ -43,9 +43,9 @@ import java.util.regex.Pattern;
  */
 public class JavaVersion extends Applet {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final Pattern VERSION_PATTERN = Pattern.compile(
+    private static final Pattern VERSION_PATTERN = Pattern.compile(
             "^(\\d+)\\.(\\d+)\\.(\\d+)(_(\\d+))?(-(.*))?");
 
     private static final Matcher MATCHER = VERSION_PATTERN.matcher(

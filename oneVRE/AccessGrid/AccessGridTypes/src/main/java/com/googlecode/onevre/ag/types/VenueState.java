@@ -229,7 +229,7 @@ public class VenueState implements SoapSerializable {
      * @param services services to add
      */
     public void setServices(Vector<ServiceDescription> services) {
-        this.services=services;
+        this.services = services;
     }
 
     /**
@@ -264,7 +264,7 @@ public class VenueState implements SoapSerializable {
      * @return the list of venues
      */
     @XmlElement
-    public VenueList getVenueList(){
+    public VenueList getVenueList() {
         return venueList;
     }
 
@@ -282,7 +282,7 @@ public class VenueState implements SoapSerializable {
      * @param applications The list of applications to add
      */
     public void setApplications(Vector<ApplicationDescription> applications) {
-        this.applications=applications;
+        this.applications = applications;
     }
 
     /**
@@ -290,7 +290,7 @@ public class VenueState implements SoapSerializable {
      * @param application The application to update
      */
     public void updateApplication(ApplicationDescription application) {
-        applications.set(applications.indexOf(application),application);
+        applications.set(applications.indexOf(application), application);
     }
 
     /**
@@ -314,7 +314,7 @@ public class VenueState implements SoapSerializable {
      * @param clients The list of clients to add
      */
     public void setClients(Vector<ClientProfile> clients) {
-        this.clients=clients;
+        this.clients = clients;
     }
 
     /**
@@ -322,7 +322,7 @@ public class VenueState implements SoapSerializable {
      * @param client The client to update
      */
     public void updateClient(ClientProfile client) {
-        clients.set(clients.indexOf(client),client);
+        clients.set(clients.indexOf(client), client);
     }
 
     /**
@@ -346,7 +346,7 @@ public class VenueState implements SoapSerializable {
      * @param connections The list of connections to add
      */
     public void setConnections(Vector<ConnectionDescription> connections) {
-        this.connections=connections;
+        this.connections = connections;
     }
 
     /**
@@ -355,7 +355,7 @@ public class VenueState implements SoapSerializable {
      */
 
     public void setVenueList(VenueList venueList) {
-        this.venueList=venueList;
+        this.venueList = venueList;
     }
 
     /**
@@ -379,7 +379,7 @@ public class VenueState implements SoapSerializable {
      * @param data The data to add
      */
     public void setData(Vector<DataDescription> data) {
-        this.data=data;
+        this.data = data;
     }
 
     /**
@@ -389,13 +389,13 @@ public class VenueState implements SoapSerializable {
     public String updateData(DataDescription datum) {
         int index = data.indexOf(datum);
         String filename = datum.getName();
-        if (index!=-1){
-	    	filename = data.get(index).getName();
-	    	data.set(index,datum);
+        if (index != -1) {
+            filename = data.get(index).getName();
+            data.set(index, datum);
         } else {
-        	data.add(datum);
+            data.add(datum);
         }
-    	return filename;
+        return filename;
     }
 
     /**
@@ -451,7 +451,7 @@ public class VenueState implements SoapSerializable {
      * @param service The service to update
      */
     public void updateService(ServiceDescription service) {
-        services.set(services.indexOf(service),service);
+        services.set(services.indexOf(service), service);
     }
 
     /**
@@ -530,7 +530,7 @@ public class VenueState implements SoapSerializable {
     /** (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-    public String toString(){
+    public String toString() {
         String out = "VenueState : \n";
         out += "uniqueId:" + uniqueId + "\n";
         out += "name:" + name + "\n";
@@ -539,24 +539,24 @@ public class VenueState implements SoapSerializable {
         out += "eventlocation:" + eventLocation + "\n";
         out += "textlocation:" + textLocation + "\n";
         out += "dataLocation:" + dataLocation + "\n";
-        out += "services: " + services.size() + "\n" ;
-        for (ServiceDescription service : services){
+        out += "services: " + services.size() + "\n";
+        for (ServiceDescription service : services) {
                out += "    " + service.toString() + "\n";
         }
-        out += "connections: " + connections.size() + "\n" ;
-        for (ConnectionDescription conn: connections){
+        out += "connections: " + connections.size() + "\n";
+        for (ConnectionDescription conn : connections) {
                out += "    " + conn.toString() + "\n";
         }
         out += "clients:" + clients.size() + "\n";
-        for (ClientProfile client : clients){
+        for (ClientProfile client : clients) {
                out += "    " + client.toString() + "\n";
         }
         out += "data:" + data.size() + "\n";
-        for (DataDescription datadesc : data){
+        for (DataDescription datadesc : data) {
                out += "    " + datadesc.toString() + "\n";
         }
-        out += "applications:" + applications.size()+ "\n";
-        for (ApplicationDescription application:applications){
+        out += "applications:" + applications.size() + "\n";
+        for (ApplicationDescription application : applications) {
                out += "    " + application.toString() + "\n";
         }
         return out;
@@ -596,7 +596,7 @@ public class VenueState implements SoapSerializable {
      * Returns a string to go into the log file
      * @return log file string
      */
-    public String toLog(){
+    public String toLog() {
         return name + ", " + description;
     }
 

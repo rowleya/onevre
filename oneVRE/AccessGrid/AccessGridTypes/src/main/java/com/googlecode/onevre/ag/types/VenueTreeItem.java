@@ -62,7 +62,7 @@ public class VenueTreeItem implements Comparable <Object> {
     }
 
 
-//	private HashMap<String,VenueTreeItem> venues;
+//  private HashMap<String,VenueTreeItem> venues;
     // The unique id of the node
 //    private String selectedVenueId = null;
 
@@ -96,7 +96,7 @@ public class VenueTreeItem implements Comparable <Object> {
     /**
      * empty constructor
      */
-    public VenueTreeItem(){
+    public VenueTreeItem() {
         // do nothing
     }
 
@@ -113,8 +113,8 @@ public class VenueTreeItem implements Comparable <Object> {
      * Sets the unique Id
      * @param uniqueId the unique Id
      */
-    public void setId(String uniqueId){
-        this.uniqueId=uniqueId;
+    public void setId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     /**
@@ -130,8 +130,8 @@ public class VenueTreeItem implements Comparable <Object> {
      * Add a venueName
      * @param venueName the venue name
      */
-    public void setName(String venueName){
-        this.venueName=venueName;
+    public void setName(String venueName) {
+        this.venueName = venueName;
     }
 
     /**
@@ -147,8 +147,8 @@ public class VenueTreeItem implements Comparable <Object> {
      * add a venueUrl
      * @param venueUrl the venue url
      */
-    public void setUri(String venueUrl){
-        this.venueUrl=venueUrl;
+    public void setUri(String venueUrl) {
+        this.venueUrl = venueUrl;
     }
 
     /**
@@ -164,8 +164,8 @@ public class VenueTreeItem implements Comparable <Object> {
      * set the expanded flag
      * @param isExpanded the expanded flag
      */
-    public void setExpanded(boolean isExpanded){
-        this.isExpanded=isExpanded;
+    public void setExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
     }
 
     /**
@@ -190,23 +190,23 @@ public class VenueTreeItem implements Comparable <Object> {
      * add connections
      * @param connections the list of connections
      */
-    public void setConnections(Vector<VenueTreeItem> connections){
-        this.connections=connections;
+    public void setConnections(Vector<VenueTreeItem> connections) {
+        this.connections = connections;
     }
 
-    public VenueTreeItem findVenueTreeItem(String venueId){
-    	if (venueId.equals(uniqueId)){
-    		return this;
-    	}
-    	if (connections != null){
-    		for (VenueTreeItem vti : connections){
-    			VenueTreeItem out = vti.findVenueTreeItem(venueId);
-    			if (out!=null){
-    				return out;
-    			}
-    		}
-    	}
-    	return null;
+    public VenueTreeItem findVenueTreeItem(String venueId) {
+        if (venueId.equals(uniqueId)) {
+            return this;
+        }
+        if (connections != null) {
+            for (VenueTreeItem vti : connections) {
+                VenueTreeItem out = vti.findVenueTreeItem(venueId);
+                if (out != null) {
+                    return out;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -229,24 +229,24 @@ public class VenueTreeItem implements Comparable <Object> {
      * set the selected flag
      * @param isSelected the selected flag
      */
-    public void setSelected(boolean isSelected){
-        this.isSelected=isSelected;
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
-    public String toString(String l){
-    	String out="";
-   	   	out += l + toString();
-   	   	Vector<VenueTreeItem> vti = getConnections();
-   	   	if (vti!=null){
-	   	   	for (VenueTreeItem conn: vti){
-	   	   		out += conn.toString(l + "\t");
-	   	   	}
-   	   	}
-   	   	return out;
+    public String toString(String l) {
+        String out = "";
+              out += l + toString();
+              Vector<VenueTreeItem> vti = getConnections();
+              if (vti != null) {
+                  for (VenueTreeItem conn : vti) {
+                      out += conn.toString(l + "\t");
+                  }
+              }
+              return out;
     }
 
-    public String toString(){
-   	   	return "id:" + getId() +" url: " + getUri() +" = "+ getName() + "\n";
+    public String toString() {
+              return "id:" + getId() + " url: " + getUri() + " = " + getName() + "\n";
     }
     /**
      *

@@ -98,7 +98,7 @@ public class VenueDescription implements SoapSerializable {
     /**
      * Default Constructor
      */
-    public VenueDescription () {
+    public VenueDescription() {
         // do nothing
     }
 
@@ -111,14 +111,16 @@ public class VenueDescription implements SoapSerializable {
      * @param connections
      * @param streams
      */
-    public VenueDescription(String id, String name, String description, int encryptMedia, String encryptionKey, Vector<ConnectionDescription> connections, Vector<StreamDescription> streams ) {
-        this.id=id;
-        this.name=name;
-        this.description=description;
-        this.streams=streams;
-        this.encryptMedia=encryptMedia;
-        this.encryptionKey=encryptionKey;
-        this.connections=connections;
+    public VenueDescription(String id, String name, String description,
+            int encryptMedia, String encryptionKey, Vector<ConnectionDescription> connections,
+            Vector<StreamDescription> streams) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.streams = streams;
+        this.encryptMedia = encryptMedia;
+        this.encryptionKey = encryptionKey;
+        this.connections = connections;
     }
 
     /**
@@ -187,7 +189,7 @@ public class VenueDescription implements SoapSerializable {
      * Adds a stream
      * @param stream The stream to add
      */
-    public void setStreams (StreamDescription stream) {
+    public void setStreams(StreamDescription stream) {
         this.streams.add(stream);
     }
 
@@ -195,7 +197,7 @@ public class VenueDescription implements SoapSerializable {
      * Sets the streams
      * @param streams the streams
      */
-    public void setStreams (Vector<StreamDescription> streams) {
+    public void setStreams(Vector<StreamDescription> streams) {
         this.streams = streams;
     }
    /**
@@ -300,9 +302,13 @@ public class VenueDescription implements SoapSerializable {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals( Object other){
-        VenueDescription onsd = (VenueDescription)other;
+    public boolean equals(Object other) {
+        VenueDescription onsd = (VenueDescription) other;
         return uri.equals(onsd.uri);
+    }
+
+    public int hashCode() {
+        return uri.hashCode();
     }
 
     public void setEncryptMedia(int encryptMedia) {

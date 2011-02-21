@@ -52,7 +52,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
 
     private static final String[] SOAP_FIELDS =
         new String[]{"name",
-    				 "description",
+                     "description",
                      "uri",
                      "mimeType",
                      "packageName"};
@@ -120,7 +120,7 @@ public class AGSharedApplicationDescription implements SoapSerializable {
      * @param mimeType
      */
     public void setMimeType(String mimeType) {
-        this.mimeType = mimeType ;
+        this.mimeType = mimeType;
     }
 
     /**

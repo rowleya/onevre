@@ -11,54 +11,52 @@ import com.googlecode.onevre.gwt.client.ui.panels.ClientPanel;
 
 public class OneVREUserManager implements UserManagerInterface {
 
-	UserManager userManager = null;
+    private UserManager userManager = null;
 
-	HashMap<VenueState, ClientPanel> clientPanels = new HashMap<VenueState, ClientPanel>();
+    private HashMap<VenueState, ClientPanel> clientPanels = new HashMap<VenueState, ClientPanel>();
 
-	ClientPanel clientPanel = null;
+    private ClientProfile localUser = null;
 
-	ClientProfile localUser = null;
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
 
-	public void setUserManager (UserManager userManager){
-		this.userManager = userManager;
-	}
-
-	public Panel getUserPanel(VenueState state){
-		return clientPanel;
-	}
+    public Panel getUserPanel(VenueState state) {
+        return clientPanels.get(state);
+    }
 
 
-	public void updateUI(VenueState state) {
-	//	clientPanel = new ClientPanel(userManager.getUsers(state));
-	}
+    public void updateUI(VenueState state) {
+    //  clientPanel = new ClientPanel(userManager.getUsers(state));
+    }
 
-	public void addUser(VenueState state, ClientProfile user) {
-		ClientPanel clientPanel = clientPanels.get(state);
-		if (clientPanel!=null){
-			clientPanel.addClient(user);
-		}
-	}
+    public void addUser(VenueState state, ClientProfile user) {
+        ClientPanel clientPanel = clientPanels.get(state);
+        if (clientPanel != null) {
+            clientPanel.addClient(user);
+        }
+    }
 
-	public void delUser(VenueState state, ClientProfile user) {
-		ClientPanel clientPanel = clientPanels.get(state);
-		if (clientPanel!=null){
-			clientPanel.removeClient(user);
-		}
-	}
+    public void delUser(VenueState state, ClientProfile user) {
+        ClientPanel clientPanel = clientPanels.get(state);
+        if (clientPanel != null) {
+            clientPanel.removeClient(user);
+        }
+    }
 
-	public void modifyUser(VenueState state, ClientProfile user) {
-		ClientPanel clientPanel = clientPanels.get(state);
-		if (clientPanel!=null){
-			clientPanel.updateClient(user);
-		}
-	}
+    public void modifyUser(VenueState state, ClientProfile user) {
+        ClientPanel clientPanel = clientPanels.get(state);
+        if (clientPanel != null) {
+            clientPanel.updateClient(user);
+        }
+    }
 
-	public void addLocalUser(ClientProfile user) {
-		localUser = user;
-	}
+    public void addLocalUser(ClientProfile user) {
+        localUser = user;
+    }
 
-	public void setClientPanel(VenueState state, ClientPanel clientPanel) {
-		clientPanels.put(state, clientPanel);
-	}
+    public void setClientPanel(VenueState state, ClientPanel clientPanel) {
+        clientPanels.put(state, clientPanel);
+    }
 
 }

@@ -7,8 +7,8 @@ import javax.media.Format;
 
 public interface RtpWriter {
 
-	void addPacket(DatagramPacket packet, InetSocketAddress address);
+    void addPacket(DatagramPacket packet, InetSocketAddress address);
 
-	boolean checkFormatSupport(Format outputFormat);
+    boolean checkFormatSupport(Format outputFormat);
 
 }

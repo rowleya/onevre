@@ -214,16 +214,16 @@ public class ApplicationCmdDescription implements SoapSerializable {
      * compares two AppDataDescriptions in [appDesc && profile]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return (this.appDesc.equals(((ApplicationCmdDescription)o).appDesc) &&
-        		this.profile.equals(((ApplicationCmdDescription)o).profile)) ;
+    public boolean equals(Object o) {
+        return (this.appDesc.equals(((ApplicationCmdDescription) o).appDesc)
+                && this.profile.equals(((ApplicationCmdDescription) o).profile));
     }
 
     /**
      *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return verb.hashCode();
     }
 

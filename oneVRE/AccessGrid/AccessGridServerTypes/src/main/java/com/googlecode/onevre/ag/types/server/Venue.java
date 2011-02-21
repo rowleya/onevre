@@ -72,7 +72,7 @@ import com.googlecode.onevre.types.soap.interfaces.SoapServable;
  */
 public class Venue extends SoapServable {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
     // The string that is the connection id parameter
     private static final String CONNECTION_ID = "connectionId";
 
@@ -82,6 +82,7 @@ public class Venue extends SoapServable {
     // The soap request
     private SoapRequest soapRequest = null;
 
+    @SuppressWarnings("unused")
     private String sessionId = null;
 
     private boolean managable = false;
@@ -113,24 +114,24 @@ public class Venue extends SoapServable {
         this.managable = managable;
     }
 
-    public void setGSScredential (CredentialMappings credential){
-    	log.info("IN setGSScredential");
-    	if (credential == null) {
-    		log.info("Credential=null");
-    		return;
-    	}
-    	if (!managable){
-    		log.info("Venue not managable");
-    		return;
-    	}
-    	log.info(credential.getDN());
-    	GSSCredential cred = credential.getCredential();
-    	try {
-			log.info("Setting credential for venue " + cred.getName().toString());
-		} catch (GSSException e) {
-			e.printStackTrace();
-		}
-    	soapRequest.setGSScredential(cred);
+    public void setGSScredential(CredentialMappings credential) {
+        log.info("IN setGSScredential");
+        if (credential == null) {
+            log.info("Credential=null");
+            return;
+        }
+        if (!managable) {
+            log.info("Venue not managable");
+            return;
+        }
+        log.info(credential.getDN());
+        GSSCredential cred = credential.getCredential();
+        try {
+            log.info("Setting credential for venue " + cred.getName().toString());
+        } catch (GSSException e) {
+            e.printStackTrace();
+        }
+        soapRequest.setGSScredential(cred);
     }
 
     /**
@@ -174,11 +175,11 @@ public class Venue extends SoapServable {
                         new Class[]{ConnectionDescription.class},
                         new boolean[]{true}));
         Object connections = result.get("connections");
-        if (connections==null){
+        if (connections == null) {
             return new ConnectionDescription[0];
         }
-        if (ConnectionDescription.class.equals(connections.getClass().getComponentType())){
-            return (ConnectionDescription[])connections;
+        if (ConnectionDescription.class.equals(connections.getClass().getComponentType())) {
+            return (ConnectionDescription[]) connections;
         }
         throw new SoapException("Return type not correct");
     }
@@ -243,7 +244,7 @@ public class Venue extends SoapServable {
      * @throws SoapException
      */
     @SoapReturn(
-            name="timeout"
+            name = "timeout"
         )
     public float updateLifetime(
             @SoapParameter("connectionId") String connectionId,
@@ -274,7 +275,7 @@ public class Venue extends SoapServable {
      * @throws SoapException
      */
     @SoapReturn(
-            name="streams"
+            name = "streams"
         )
     public StreamDescription[] negotiateCapabilities(
             @SoapParameter("connectionId") String connectionId,
@@ -290,8 +291,8 @@ public class Venue extends SoapServable {
                         new Class[]{StreamDescription.class},
                         new boolean[]{true}));
         Object streams = result.get("streams");
-        if ((streams != null) && StreamDescription.class.equals(streams.getClass().getComponentType())){
-            return (StreamDescription[])streams;
+        if ((streams != null) && StreamDescription.class.equals(streams.getClass().getComponentType())) {
+            return (StreamDescription[]) streams;
         }
         throw new SoapException("Return type not correct");
     }
@@ -303,7 +304,7 @@ public class Venue extends SoapServable {
      * @throws SoapException
      */
     public void exit(
-            @SoapParameter("connectionId" )String connectionId
+            @SoapParameter("connectionId")String connectionId
         ) throws IOException, SoapException {
         soapRequest.call(VENUE_NS, "Exit", "ExitRequest",
                 new String[]{CONNECTION_ID}, new Object[]{connectionId},
@@ -318,9 +319,9 @@ public class Venue extends SoapServable {
      * @throws SoapException
      */
     public void updateClientProfile(
-            @SoapParameter("clientProfile" ) ClientProfile clientProfile
+            @SoapParameter("clientProfile") ClientProfile clientProfile
         ) throws IOException, SoapException {
-        soapRequest.call(VENUE_NS, "UpdateClientProfile", "UpdateClientProfileRequest",new String[]{"clientProfile"},
+        soapRequest.call(VENUE_NS, "UpdateClientProfile", "UpdateClientProfileRequest", new String[]{"clientProfile"},
                 new Object[]{clientProfile}, new Object[]{null},
                 null);
     }
@@ -343,8 +344,8 @@ public class Venue extends SoapServable {
                     new Class[]{StreamDescription.class},
                     new boolean[]{true}));
         Object streams = result.get("streams");
-        if ((streams != null) && StreamDescription.class.equals(streams.getClass().getComponentType())){
-            return (StreamDescription[])streams;
+        if ((streams != null) && StreamDescription.class.equals(streams.getClass().getComponentType())) {
+            return (StreamDescription[]) streams;
         }
         throw new SoapException("Return type not correct");
     }
@@ -421,13 +422,13 @@ public class Venue extends SoapServable {
 //           dataDescription.setType(null);
         HashMap<String, Object> result = soapRequest.call(VENUE_NS, "AddDir",
                 "AddDirRequest",
-                new String[]{"name","desc","level","parentUID"},
-                new Object[]{name,desc,level,parentUID},
+                new String[]{"name", "desc", "level", "parentUID"},
+                new Object[]{name, desc, level, parentUID},
                 new Object[]{
-        			SoapSerializable.STRING_TYPE,
-        			SoapSerializable.STRING_TYPE,
-        			SoapSerializable.STRING_TYPE,
-        			SoapSerializable.STRING_TYPE},
+                    SoapSerializable.STRING_TYPE,
+                    SoapSerializable.STRING_TYPE,
+                    SoapSerializable.STRING_TYPE,
+                    SoapSerializable.STRING_TYPE},
                 new SoapResponseHash(
                         new String[]{VENUE_NS + "/data"},
                          new Class[]{DataDescription.class}));
@@ -447,7 +448,7 @@ public class Venue extends SoapServable {
     @SoapReturn(
             name = "uploadUrl"
         )
-    public String getUploadDescriptor() throws IOException, SoapException{
+    public String getUploadDescriptor() throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(VENUE_NS,
                 "GetUploadDescriptor", "GetUploadDescriptorRequest",
                 new String[0], new Object[0], new Object[0],
@@ -473,14 +474,15 @@ public class Venue extends SoapServable {
     @SoapReturn(
             name = "appDescription"
         )
-    public ApplicationDescription createApplication (
+    public ApplicationDescription createApplication(
             @SoapParameter("appName") String appName,
             @SoapParameter("appDescription") String appDescription,
             @SoapParameter("appMimeType") String appMimeType
         ) throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(VENUE_NS, "CreateApplication",
-                "CreateApplicationRequest", new String[]{"appName","appDescription", "appMimeType"},
-                new Object[]{appName,appDescription, appMimeType}, new Object[]{SoapSerializable.STRING_TYPE,SoapSerializable.STRING_TYPE,SoapSerializable.STRING_TYPE},
+                "CreateApplicationRequest", new String[]{"appName", "appDescription", "appMimeType"},
+                new Object[]{appName, appDescription, appMimeType},
+                new Object[]{SoapSerializable.STRING_TYPE, SoapSerializable.STRING_TYPE, SoapSerializable.STRING_TYPE},
                 new SoapResponseHash(
                         new String[]{VENUE_NS + "/appDescription"},
                          new Class[]{ApplicationDescription.class}));
@@ -493,9 +495,9 @@ public class Venue extends SoapServable {
     }
 
     @SoapReturn(
-    		name="version"
-		)
-    public String  getVersion () throws IOException, SoapException {
+            name = "version"
+        )
+    public String  getVersion() throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(VENUE_NS,
                 "GetVersion", "GetVersionRequest",
                 new String[0], new Object[0], new Object[0],

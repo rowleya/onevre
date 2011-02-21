@@ -44,9 +44,9 @@ import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.XmlRpcThread;
  */
 public class XmlRpcExecuteSyncTag extends PortletTag {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
-	// The variable that will contain the xml response
+    // The variable that will contain the xml response
     private String var = null;
 
     // The message to process
@@ -72,12 +72,12 @@ public class XmlRpcExecuteSyncTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTagSupport#doTag()
      */
     public void doTag() {
-    	log.info("XmlRpcExecuteSyncTag -- namespace" + getNamespace());
-    	PagXmlRpcServer server = getXmlRpcServer();
+        log.info("XmlRpcExecuteSyncTag -- namespace" + getNamespace());
+        PagXmlRpcServer server = getXmlRpcServer();
         if (server != null) {
             getJspContext().setAttribute(var, server.handleSyncRequest(getRequest()));
         } else {
-            getJspContext().setAttribute(var,XmlRpcThread.getFault(null, 537, "XML-RPC Server not running"));
+            getJspContext().setAttribute(var, XmlRpcThread.getFault(null, 537, "XML-RPC Server not running"));
         }
 
     }

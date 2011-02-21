@@ -4,14 +4,14 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class ApplicationDescriptionEJSO  extends JavaScriptObject {
 
-	protected ApplicationDescriptionEJSO (){
-	}
+    protected ApplicationDescriptionEJSO() {
+    }
 
     /**
      * Returns the description
      * @return this.getthe description
      */
-    public native final String getDescription() /*-{
+    public final native String getDescription() /*-{
         return this.description;
     }-*/;
 
@@ -19,7 +19,7 @@ public class ApplicationDescriptionEJSO  extends JavaScriptObject {
      * Returns the id
      * @return this.getthe id
      */
-    public native final String getId() /*-{
+    public final native String getId() /*-{
         return this.id;
     }-*/;
 
@@ -27,7 +27,7 @@ public class ApplicationDescriptionEJSO  extends JavaScriptObject {
      * Returns the mime type that the application opens
      * @return this.getthe mimeType
      */
-    public native final String getMimeType() /*-{
+    public final native String getMimeType() /*-{
         return this.mimeType;
     }-*/;
 
@@ -35,7 +35,7 @@ public class ApplicationDescriptionEJSO  extends JavaScriptObject {
      * Returns the name
      * @return this.getthe name
      */
-    public native final String getName() /*-{
+    public final native String getName() /*-{
         return this.name;
     }-*/;
 
@@ -43,7 +43,7 @@ public class ApplicationDescriptionEJSO  extends JavaScriptObject {
      * Returns the uri
      * @return this.getthe uri
      */
-    public native final String getUri() /*-{
+    public final native String getUri() /*-{
         return this.uri;
     }-*/;
 

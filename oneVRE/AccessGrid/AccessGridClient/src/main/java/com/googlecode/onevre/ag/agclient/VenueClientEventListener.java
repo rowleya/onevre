@@ -31,7 +31,6 @@
 
 package com.googlecode.onevre.ag.agclient;
 
-
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -52,9 +51,6 @@ import com.googlecode.onevre.ag.types.application.ApplicationDescription;
 import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
 import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
 
-
-
-
 /**
  * Implements the Listener for the VenueClient (the top level events)
  * @author Tobias M Schiebeck
@@ -62,16 +58,16 @@ import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
  */
 public class VenueClientEventListener implements EventListener {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
  //   private Vector<String> history = new Vector<String>();
 
-    private String eventLocation=null;
+    private String eventLocation = null;
     private String venueId = null;
-//    private String connectionId=null;
-    private VenueState venueState=null;
-    private AgEventServer agEventServer=null;
-    private ApplicationListener venueClientUI=null;
+//    private String connectionId = null;
+    private VenueState venueState = null;
+    private AgEventServer agEventServer = null;
+    private ApplicationListener venueClientUI = null;
 
     /**
      * Creates the EventListener to be used by the Venue-EventClient to respond to the general events
@@ -80,12 +76,13 @@ public class VenueClientEventListener implements EventListener {
      * @param venueClientUI
      * @param xmlRpcServer
      */
-    public VenueClientEventListener(VenueState venueState, String eventLocation, ApplicationListener venueClientUI, AgEventServer agEventServer) {
-        this.eventLocation=eventLocation;
-        this.venueState=venueState;
+    public VenueClientEventListener(VenueState venueState, String eventLocation,
+            ApplicationListener venueClientUI, AgEventServer agEventServer) {
+        this.eventLocation = eventLocation;
+        this.venueState = venueState;
         this.venueId = venueState.getUri();
-        this.venueClientUI=venueClientUI;
-        this.agEventServer=agEventServer;
+        this.venueClientUI = venueClientUI;
+        this.agEventServer = agEventServer;
     }
 
     /**
@@ -93,7 +90,7 @@ public class VenueClientEventListener implements EventListener {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.EventListener#getLocation()}</dd></dl>
      * @return eventLocation of the venue
      */
-    public String getLocation(){
+    public String getLocation() {
         return eventLocation;
     }
 
@@ -102,7 +99,7 @@ public class VenueClientEventListener implements EventListener {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.EventListener#getListenerId()}</dd></dl>
      * @return a unique id for the Eventlistener
      */
-    public String getListenerId(){
+    public String getListenerId() {
         return String.valueOf(hashCode());
     }
 
@@ -111,7 +108,7 @@ public class VenueClientEventListener implements EventListener {
      * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.EventListener#getListenerUri()}</dd></dl>
      * @return The uri of the venue the EventListener is responding to
      */
-    public String getListenerUri(){
+    public String getListenerUri() {
         return venueState.getUri();
     }
 
@@ -159,121 +156,120 @@ public class VenueClientEventListener implements EventListener {
         StreamDescription stream;
 
         log.info("-------------------------------------------------------------");
-        log.info("Event: " + eventType + " data: "+ event.getData().toString());
+        log.info("Event: " + eventType + " data: " + event.getData().toString());
         log.info("-------------------------------------------------------------");
         // user events
-        if (eventType.equals(Event.ENTER)){
-            client = (ClientProfile)event.getData();
+        if (eventType.equals(Event.ENTER)) {
+            client = (ClientProfile) event.getData();
             venueState.setClients(client);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventEnterVenue", client));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventEnterVenue", client));
        } else
-        if (eventType.equals(Event.EXIT)){
-            client = (ClientProfile)event.getData();
+        if (eventType.equals(Event.EXIT)) {
+            client = (ClientProfile) event.getData();
             venueState.removeClient(client);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventExitVenue", client));
-        }else
-        if (eventType.equals(Event.MODIFY_USER)){
-            client = (ClientProfile)event.getData();
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventExitVenue", client));
+        } else
+        if (eventType.equals(Event.MODIFY_USER)) {
+            client = (ClientProfile) event.getData();
             venueState.updateClient(client);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyUser", client));
-        }else
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventModifyUser", client));
+        } else
         // data events
-        if (eventType.equals(Event.ADD_DATA)){
-            data = (DataDescription)event.getData();
+        if (eventType.equals(Event.ADD_DATA)) {
+            data = (DataDescription) event.getData();
             venueState.setData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddData", data));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddData", data));
         } else
-        if (eventType.equals(Event.REMOVE_DATA)){
-            data = (DataDescription)event.getData();
+        if (eventType.equals(Event.REMOVE_DATA)) {
+            data = (DataDescription) event.getData();
             venueState.removeData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveData", data));
-        }else
-        if (eventType.equals(Event.UPDATE_DATA)){
-            data = (DataDescription)event.getData();
-            venueState.updateData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateData", data));
-        }else
-        if (eventType.equals(Event.ADD_DIR)){
-            data = (DataDescription)event.getData();
-            venueState.updateData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddDirectory", data));
-        }else
-        if (eventType.equals(Event.REMOVE_DIR)){
-            data = (DataDescription)event.getData();
-            venueState.updateData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveDirectory", data));
-        }else
-        // service events
-        if (eventType.equals(Event.ADD_SERVICE)){
-            service = (ServiceDescription)event.getData();
-            venueState.setServices(service);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddService", service));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveData", data));
         } else
-        if (eventType.equals(Event.REMOVE_SERVICE)){
-            service = (ServiceDescription)event.getData();
+        if (eventType.equals(Event.UPDATE_DATA)) {
+            data = (DataDescription) event.getData();
+            venueState.updateData(data);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventUpdateData", data));
+        } else
+        if (eventType.equals(Event.ADD_DIR)) {
+            data = (DataDescription) event.getData();
+            venueState.updateData(data);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddDirectory", data));
+        } else
+        if (eventType.equals(Event.REMOVE_DIR)) {
+            data = (DataDescription) event.getData();
+            venueState.updateData(data);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveDirectory", data));
+        } else
+        // service events
+        if (eventType.equals(Event.ADD_SERVICE)) {
+            service = (ServiceDescription) event.getData();
+            venueState.setServices(service);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddService", service));
+        } else
+        if (eventType.equals(Event.REMOVE_SERVICE)) {
+            service = (ServiceDescription) event.getData();
             venueState.removeService(service);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveService", service));
-        }else
-        if (eventType.equals(Event.UPDATE_SERVICE)){
-            service = (ServiceDescription)event.getData();
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveService", service));
+        } else
+        if (eventType.equals(Event.UPDATE_SERVICE)) {
+            service = (ServiceDescription) event.getData();
             venueState.updateService(service);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateService", service));
-        }else
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventUpdateService", service));
+        } else
         // application events
-        if (eventType.equals(Event.ADD_APPLICATION)){
-            application = (ApplicationDescription)event.getData();
-            System.out.println("Add application: " + application.getName());
+        if (eventType.equals(Event.ADD_APPLICATION)) {
+            application = (ApplicationDescription) event.getData();
+            log.info("Add application: " + application.getName());
             venueState.setApplications(application);
             venueClientUI.addApplication(application);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddApplication", application));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddApplication", application));
         } else
-        if (eventType.equals(Event.REMOVE_APPLICATION)){
-            application = (ApplicationDescription)event.getData();
+        if (eventType.equals(Event.REMOVE_APPLICATION)) {
+            application = (ApplicationDescription) event.getData();
             venueState.removeApplication(application);
             venueClientUI.removeApplication(application);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveApplication", application));
-        }else
-        if (eventType.equals(Event.UPDATE_APPLICATION)){
-            application = (ApplicationDescription)event.getData();
-            venueState.updateApplication(application);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventUpdateApplication", application));
-        }else
-        // connection events
-        if (eventType.equals(Event.ADD_CONNECTION)){
-            connection = (ConnectionDescription)event.getData();
-            venueState.setConnections(connection);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddConnection", connection));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveApplication", application));
         } else
-        if (eventType.equals(Event.REMOVE_CONNECTION)){
-            connection = (ConnectionDescription)event.getData();
+        if (eventType.equals(Event.UPDATE_APPLICATION)) {
+            application = (ApplicationDescription) event.getData();
+            venueState.updateApplication(application);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventUpdateApplication", application));
+        } else
+        // connection events
+        if (eventType.equals(Event.ADD_CONNECTION)) {
+            connection = (ConnectionDescription) event.getData();
+            venueState.setConnections(connection);
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddConnection", connection));
+        } else
+        if (eventType.equals(Event.REMOVE_CONNECTION)) {
+            connection = (ConnectionDescription) event.getData();
             venueState.removeConnection(connection);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveConnection", connection));
-        }else
-        if (eventType.equals(Event.ADD_STREAM)){
-            stream = (StreamDescription)event.getData();
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventAddStream", stream));
-        }else
-        if (eventType.equals(Event.MODIFY_STREAM)){
-            stream = (StreamDescription)event.getData();
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyStream", stream));
-        }else
-        if (eventType.equals(Event.REMOVE_STREAM)){
-            stream = (StreamDescription)event.getData();
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoveStream", stream));
-        }else
-        if (eventType.equals(Event.OPEN_APP)){
-            appCmd = (ApplicationCmdDescription)event.getData();
-            System.out.println("Start application: cmd=" + appCmd.getCmd() +" verb="+ appCmd.getVerb() );
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveConnection", connection));
+        } else
+        if (eventType.equals(Event.ADD_STREAM)) {
+            stream = (StreamDescription) event.getData();
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventAddStream", stream));
+        } else
+        if (eventType.equals(Event.MODIFY_STREAM)) {
+            stream = (StreamDescription) event.getData();
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventModifyStream", stream));
+        } else
+        if (eventType.equals(Event.REMOVE_STREAM)) {
+            stream = (StreamDescription) event.getData();
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoveStream", stream));
+        } else
+        if (eventType.equals(Event.OPEN_APP)) {
+            appCmd = (ApplicationCmdDescription) event.getData();
+            log.info("Start application: cmd=" + appCmd.getCmd() + " verb=" + appCmd.getVerb());
             Vector<Object> ov = new Vector<Object>();
             ov.add(appCmd.getAppDesc());
             ov.add(appCmd.getProfile());
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventRemoteStartApplication", ov));
-        }else
-        {
-            System.out.println("Event Client: ");
-            System.out.println("unhandled Event: " + eventType);
-            System.out.println("SenderId:  " + event.getSenderId());
-            System.out.println("ChannelId: " + event.getChannelId() );
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventRemoteStartApplication", ov));
+        } else {
+            log.info("Event Client: ");
+            log.info("unhandled Event: " + eventType);
+            log.info("SenderId:  " + event.getSenderId());
+            log.info("ChannelId: " + event.getChannelId());
         }
     }
 }

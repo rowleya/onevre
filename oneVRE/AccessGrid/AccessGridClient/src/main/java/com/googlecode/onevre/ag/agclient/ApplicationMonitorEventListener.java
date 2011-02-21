@@ -41,7 +41,6 @@ import com.googlecode.onevre.ag.types.application.AppParticipantDescription;
 import com.googlecode.onevre.ag.types.application.ApplicationDescription;
 import com.googlecode.onevre.protocols.events.eventserver.AgEvent;
 import com.googlecode.onevre.protocols.events.eventserver.AgEventServer;
-import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
 
 
 
@@ -53,22 +52,23 @@ import com.googlecode.onevre.protocols.xmlrpc.xmlrpcserver.PagXmlRpcServer;
  */
 public class ApplicationMonitorEventListener implements EventListener {
 
-	private String appLocation=null;
+    private String appLocation = null;
 
-	private ApplicationDescription application = null;
+    private ApplicationDescription application = null;
    // private String connectionId=null;
 
-    private AgEventServer agEventServer=null;
+    private AgEventServer agEventServer = null;
 
    /**
      * @param application The application description of the application the EventListener is responding to
      * @param appLocation The uri of the SharedApplication (including the public id)
      * @param xmlRpcServer The XML-RPC server that responds to the Application Event
      */
-    public ApplicationMonitorEventListener(ApplicationDescription application, String appLocation, AgEventServer agEventServer) {
-        this.appLocation=appLocation;
-        this.application=application;
-        this.agEventServer=agEventServer;
+    public ApplicationMonitorEventListener(ApplicationDescription application,
+            String appLocation, AgEventServer agEventServer) {
+        this.appLocation = appLocation;
+        this.application = application;
+        this.agEventServer = agEventServer;
     }
 
     /**
@@ -93,9 +93,9 @@ public class ApplicationMonitorEventListener implements EventListener {
     /**
      * Method to return the unique IdURI of the EventListener
      * <dl><dt><b>overrides:</b></dt><dd>{@link  ag3.interfaces.EventListener#getListenerId()}</dd></dl>
-     * @return The unique Idof the EventListener (SharedApplication)
+     * @return The unique Id of the EventListener (SharedApplication)
      */
-    public String getListenerId(){
+    public String getListenerId() {
         return application.getId();
     }
 
@@ -119,39 +119,40 @@ public class ApplicationMonitorEventListener implements EventListener {
 
         // user events
 
-        if (eventType.equals("Join application")){
-            participant = (AppParticipantDescription)event.getData();
-            System.out.println("Participant: "+ participant.getClientProfile().getName()+" joined application");
-            Vector<Object> ov= new Vector<Object>();
+        if (eventType.equals("Join application")) {
+            participant = (AppParticipantDescription) event.getData();
+            System.out.println("Participant: " + participant.getClientProfile().getName() + " joined application");
+            Vector<Object> ov = new Vector<Object>();
             ov.add(application);
             ov.add(participant);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventJoinApplication", ov));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventJoinApplication", ov));
         } else
-        if (eventType.equals("Leave application")){
-            participant = (AppParticipantDescription)event.getData();
-            System.out.println("Participant: "+ participant.getClientProfile().getName()+" left application");
-            Vector<Object> ov= new Vector<Object>();
+        if (eventType.equals("Leave application")) {
+            participant = (AppParticipantDescription) event.getData();
+            System.out.println("Participant: " + participant.getClientProfile().getName() + " left application");
+            Vector<Object> ov = new Vector<Object>();
             ov.add(application);
             ov.add(participant);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventLeaveApplication", ov));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventLeaveApplication", ov));
         } else
-        if (eventType.equals("Update application participant status")){
-            participant = (AppParticipantDescription)event.getData();
-            Vector<Object> ov= new Vector<Object>();
+        if (eventType.equals("Update application participant status")) {
+            participant = (AppParticipantDescription) event.getData();
+            Vector<Object> ov = new Vector<Object>();
             ov.add(application);
             ov.add(participant);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventModifyApplicationUser",ov));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventModifyApplicationUser", ov));
         } else
         // data events
-        if (eventType.equals("Set application data")){
-            appdata = (AppDataDescription)event.getData();
-            System.out.println("Key: "+ appdata.getKey()+" Value: "+ appdata.getValue());
-            Vector<Object> ov= new Vector<Object>();
+        if (eventType.equals("Set application data")) {
+            appdata = (AppDataDescription) event.getData();
+            System.out.println("Key: " + appdata.getKey() + " Value: " + appdata.getValue());
+            Vector<Object> ov = new Vector<Object>();
             ov.add(application);
             ov.add(appdata);
   //        venueState.setData(data);
-            agEventServer.addEvent(new AgEvent(getListenerUri(),"eventSetApplicationData", ov));
-  //        addMessage("<concerns>data</concerns><eventType>" + eventType + "</eventType>"  + XMLSerializer.serialize(data));
+            agEventServer.addEvent(new AgEvent(getListenerUri(), "eventSetApplicationData", ov));
+  //        addMessage("<concerns>data</concerns><eventType>" + eventType + "</eventType>"
+  //                  + XMLSerializer.serialize(data));
         }
     }
 

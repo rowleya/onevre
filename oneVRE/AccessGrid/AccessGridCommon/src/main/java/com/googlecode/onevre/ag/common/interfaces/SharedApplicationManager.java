@@ -100,13 +100,13 @@ public class SharedApplicationManager {
      * @throws IOException
      * @throws SoapException
      */
-    public void downloadData(String venueFilename,String applicationUrl)
+    public void downloadData(String venueFilename, String applicationUrl)
             throws IOException, SoapException {
         soapRequest.call(SHARED_APPLICATION_MANAGER_NS,
            "downloadData", "downloadDataRequest",
-           new String[]{"venueFilename","applicationUrl"},
-           new Object[]{venueFilename,applicationUrl},
-           new Object[]{SoapSerializable.STRING_TYPE,SoapSerializable.STRING_TYPE},
+           new String[]{"venueFilename", "applicationUrl"},
+           new Object[]{venueFilename, applicationUrl},
+           new Object[]{SoapSerializable.STRING_TYPE, SoapSerializable.STRING_TYPE},
            null);
     }
 

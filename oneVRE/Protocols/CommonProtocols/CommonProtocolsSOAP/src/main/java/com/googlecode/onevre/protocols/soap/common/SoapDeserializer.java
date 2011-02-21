@@ -28,6 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.googlecode.onevre.protocols.soap.common;
 
 import java.io.BufferedReader;
@@ -62,8 +63,8 @@ public class SoapDeserializer {
     private static final HashMap<String, Class<?>> TYPE_MAP =
         new HashMap<String, Class<?>>();
     // A map of known types to classes
-    private static final HashMap<Class<?>,String> CLASS_MAP =
-        new HashMap<Class<?>,String>();
+    private static final HashMap<Class<?>, String> CLASS_MAP =
+        new HashMap<Class<?>, String>();
 
     static {
         mapType(XSD + "/string", String.class);
@@ -72,10 +73,10 @@ public class SoapDeserializer {
         mapType(XSD + "/float", Float.TYPE);
         mapType(XSD + "/double", Double.TYPE);
         mapType(XSD + "/boolean", Boolean.TYPE);
-        CLASS_MAP.put(Float.class,XSD + "/float");
-        CLASS_MAP.put(Integer.class,XSD + "/integer");
-        CLASS_MAP.put(Double.class,XSD + "/double");
-        CLASS_MAP.put(Boolean.class,XSD + "/boolean");
+        CLASS_MAP.put(Float.class, XSD + "/float");
+        CLASS_MAP.put(Integer.class, XSD + "/integer");
+        CLASS_MAP.put(Double.class, XSD + "/double");
+        CLASS_MAP.put(Boolean.class, XSD + "/boolean");
     }
 
     // The SOAP parser
@@ -96,7 +97,7 @@ public class SoapDeserializer {
      */
     public static void mapType(String soapType, Class <?> javaType) {
         TYPE_MAP.put(soapType, javaType);
-        CLASS_MAP.put(javaType,soapType);
+        CLASS_MAP.put(javaType, soapType);
     }
 
     /**
@@ -109,7 +110,7 @@ public class SoapDeserializer {
             String soapType = soap.getNameSpace() + URL_PATH_SEP
                 + soap.getSoapType();
             TYPE_MAP.put(soapType, javaType);
-            CLASS_MAP.put(javaType,soapType);
+            CLASS_MAP.put(javaType, soapType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,7 +122,7 @@ public class SoapDeserializer {
      * @param soapType
      * @return the Java class
      */
-    public static Class<?> getJavaType(String soapType){
+    public static Class<?> getJavaType(String soapType) {
         return TYPE_MAP.get(soapType);
     }
 
@@ -130,7 +131,7 @@ public class SoapDeserializer {
      * @param javaType
      * @return the SOAP Type
      */
-    public static String getSoapType(Class<?> javaType){
+    public static String getSoapType(Class<?> javaType) {
         return CLASS_MAP.get(javaType);
     }
 
@@ -141,7 +142,7 @@ public class SoapDeserializer {
      * @throws SoapException
      */
     public Object deserialize(SoapObject soapObject) throws SoapException {
-        if (soapObject.isNil()){
+        if (soapObject.isNil()) {
             return null;
         }
         String type = soapObject.getSoapType();
@@ -168,29 +169,30 @@ public class SoapDeserializer {
         } catch (Exception e) {
             throw new SoapException(e);
         }
-        for (String name :soapObject.getSubObjectNames()){
-            for (SoapObject subObject : soapObject.getSubObject(name) ) {
+        for (String name : soapObject.getSubObjectNames()) {
+            for (SoapObject subObject : soapObject.getSubObject(name)) {
                 String subType = subObject.getSoapType();
                 Class<?> subClass = TYPE_MAP.get(subType);
-                String methodName = "set"+name.substring(0,1).toUpperCase()+name.substring(1);
-                if (subType==null){
+                String methodName = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                if (subType == null) {
                     subClass = findParameterType(objClass, methodName);
                     subType = CLASS_MAP.get(subClass);
                     subObject.setSoapType(subType);
                 }
                 Object subObj = deserialize(subObject);
-                if (subObj != null){
+                if (subObj != null) {
                     Method method = null;
-                    while ((method==null) && (subClass!=null)){
+                    while ((method == null) && (subClass != null)) {
                         try {
                             method = objClass.getMethod(methodName, subClass);
                         } catch (NoSuchMethodException e) {
-                            subClass=subClass.getSuperclass();
+                            subClass = subClass.getSuperclass();
                         }
                     }
                     try {
-                        if (method==null){
-                            throw new NoSuchMethodException("method " + methodName + "("+ subObj.getClass()+") does not exist in class " + objClass );
+                        if (method == null) {
+                            throw new NoSuchMethodException("method " + methodName
+                                    + "(" + subObj.getClass() + ") does not exist in class " + objClass);
                         }
                         method.invoke(obj, subObj);
                     } catch (Exception e) {

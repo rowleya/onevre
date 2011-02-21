@@ -2,39 +2,41 @@ package com.googlecode.onevre.gwt.client.net;
 
 public class URL {
 
-	String protocol = "https";
-	String host = null;
-	int port = 80;
-	String file= "";
+    private static final int HTTP_PORT = 80;
 
-	public URL(String url) {
-		String urlsplits[] = url.split("://");
-		if (urlsplits.length>1) {
-			protocol = urlsplits[0];
-			host = urlsplits[1];
-		} else {
-			host = urlsplits[0];
-		}
-		int slashidx = host.indexOf('/');
-		file = host.substring(slashidx);
-		host = host.substring(0,slashidx);
-		urlsplits = host.split(":");
-		if (urlsplits.length>1) {
-			host = urlsplits[0];
-			port = Integer.valueOf(urlsplits[1]);
-		}
-	}
+    private String protocol = "https";
+    private String host = null;
+    private int port = HTTP_PORT;
+    private String file = "";
 
-	public String getHost() {
-		return host;
-	}
+    public URL(String url) {
+        String[] urlsplits = url.split("://");
+        if (urlsplits.length > 1) {
+            protocol = urlsplits[0];
+            host = urlsplits[1];
+        } else {
+            host = urlsplits[0];
+        }
+        int slashidx = host.indexOf('/');
+        file = host.substring(slashidx);
+        host = host.substring(0, slashidx);
+        urlsplits = host.split(":");
+        if (urlsplits.length > 1) {
+            host = urlsplits[0];
+            port = Integer.valueOf(urlsplits[1]);
+        }
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public String getProtocol() {
-		return protocol;
-	}
+    public int getPort() {
+        return port;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
 
 }

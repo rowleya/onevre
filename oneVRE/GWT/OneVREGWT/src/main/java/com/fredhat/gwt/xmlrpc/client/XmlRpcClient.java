@@ -253,7 +253,6 @@ public class XmlRpcClient implements Cloneable {
      * @deprecated As of XMLRPC-GWT v1.1,
      * build an {@link XmlRpcRequest} then call {@link XmlRpcRequest#execute()}
      */
-    @SuppressWarnings("unchecked")
     @Deprecated
     public void execute(String methodName, Object[] params,
             AsyncCallback callback) {
@@ -568,7 +567,6 @@ public class XmlRpcClient implements Cloneable {
                 return new XmlRpcException("Improper XML-RPC response format");
             return new Base64(baseValue);
         } else if (valueType.getNodeName().equals("struct")) {
-            @SuppressWarnings("unchecked")
             Map<String,Object> map = new HashMap<String,Object>(
                     getElementNodeCount(valueType.getChildNodes()));
             for(int i=0; i<valueType.getChildNodes().getLength(); i++) {

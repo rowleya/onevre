@@ -15,67 +15,67 @@ public class FileIcon extends Image implements ErrorHandler {
 
     private boolean open = false;
 
-    boolean hadError = false;
+    private boolean hadError = false;
 
-	public FileIcon() {
-		super(Icons.fileIcon);
-	}
+    public FileIcon() {
+        super(Icons.fileIcon);
+    }
 
-	public static String iconFromMimeType(String mimeType){
-		if (mimeType != null){
-			String icon = mimeType.replaceAll("/", "-");
-			return GWT.getModuleBaseURL() + "images/icons/mimetypes/" + icon + ".png" ;
-		}
-		return Icons.fileIcon;
-	}
+    public static String iconFromMimeType(String mimeType) {
+        if (mimeType != null) {
+            String icon = mimeType.replaceAll("/", "-");
+            return GWT.getModuleBaseURL() + "images/icons/mimetypes/" + icon + ".png";
+        }
+        return Icons.fileIcon;
+    }
 
-	public FileIcon(String type, String mimeType){
-		addErrorHandler(this);
-		this.mimeType = mimeType;
-		this.type = type;
-		if (type.equals(DataDescription.TYPE_DIR)){
-			setUrl(Icons.folderIcon);
-		} else {
-			setUrl(iconFromMimeType(mimeType));
-		}
-	}
+    public FileIcon(String type, String mimeType) {
+        addErrorHandler(this);
+        this.mimeType = mimeType;
+        this.type = type;
+        if (type.equals(DataDescription.TYPE_DIR)) {
+            setUrl(Icons.folderIcon);
+        } else {
+            setUrl(iconFromMimeType(mimeType));
+        }
+    }
 
-	public void setMimeType(String mimeType){
-		if (!type.equals(DataDescription.TYPE_DIR)){
-			this.mimeType = mimeType;
-			setUrl(iconFromMimeType(mimeType));
-		}
-	}
+    public void setMimeType(String mimeType) {
+        if (!type.equals(DataDescription.TYPE_DIR)) {
+            this.mimeType = mimeType;
+            setUrl(iconFromMimeType(mimeType));
+        }
+    }
 
-	public boolean toggle(){
-		if (type.equals(DataDescription.TYPE_DIR)){
-			open = !open;
-			if (open){
-				setUrl(Icons.openfolderIcon);
-			} else {
-				setUrl(Icons.folderIcon);
-			}
-		}
-		return open;
-	}
+    public boolean toggle() {
+        if (type.equals(DataDescription.TYPE_DIR)) {
+            open = !open;
+            if (open) {
+                setUrl(Icons.openfolderIcon);
+            } else {
+                setUrl(Icons.folderIcon);
+            }
+        }
+        return open;
+    }
 
-	public boolean isOpen(){
-		return open;
-	}
+    public boolean isOpen() {
+        return open;
+    }
 
-	public String getType(){
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public String getMimeType(){
-		return mimeType;
-	}
+    public String getMimeType() {
+        return mimeType;
+    }
 
-	public void onError(ErrorEvent paramErrorEvent) {
-		if (!hadError){
-			setUrl(Icons.fileIcon);
-			hadError = true;
-		}
-	}
+    public void onError(ErrorEvent paramErrorEvent) {
+        if (!hadError) {
+            setUrl(Icons.fileIcon);
+            hadError = true;
+        }
+    }
 
 }

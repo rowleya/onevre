@@ -223,15 +223,15 @@ public class ApplicationDescription implements SoapSerializable {
      * compares two ApplicationDescription in [ id ]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return this.id.equals(((ApplicationDescription)o).id);
+    public boolean equals(Object o) {
+        return this.id.equals(((ApplicationDescription) o).id);
     }
 
     /**
      *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return id.hashCode();
     }
 

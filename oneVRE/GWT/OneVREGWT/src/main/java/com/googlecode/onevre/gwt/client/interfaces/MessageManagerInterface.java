@@ -6,14 +6,14 @@ import com.googlecode.onevre.gwt.client.ag.types.UploadStatus;
 
 public interface MessageManagerInterface {
 
-	public void setMessageManager(MessageManager messageManager);
+    void setMessageManager(MessageManager messageManager);
 
-	public void showUpload(UploadStatus uploadStatus);
+    void showUpload(UploadStatus uploadStatus);
 
-	public void setUploadStatus(UploadStatus uploadStatus);
+    void setUploadStatus(UploadStatus uploadStatus);
 
-	public void hideUpload();
+    void hideUpload();
 
-	public void showMessage(MessageBox message);
+    void showMessage(MessageBox message);
 
 }

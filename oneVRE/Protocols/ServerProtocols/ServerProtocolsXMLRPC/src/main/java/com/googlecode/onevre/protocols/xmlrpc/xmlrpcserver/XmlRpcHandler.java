@@ -49,7 +49,7 @@ import org.apache.xmlrpc.common.TypeConverterFactoryImpl;
  */
 public class XmlRpcHandler implements org.apache.xmlrpc.XmlRpcHandler {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The object to execute the method on
     private Object object = null;
@@ -108,7 +108,7 @@ public class XmlRpcHandler implements org.apache.xmlrpc.XmlRpcHandler {
                     "Method " + methodName + " not found in "
                     + object.getClass());
         }
-        log.info("invoke " + method.toString() + " on params "  + parameters.toString() );
+        log.info("invoke " + method.toString() + " on params "  + parameters.toString());
         try {
             result = method.invoke(object, parameters);
         } catch (Exception e) {

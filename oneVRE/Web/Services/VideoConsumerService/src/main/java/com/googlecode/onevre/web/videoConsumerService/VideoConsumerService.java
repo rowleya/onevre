@@ -228,11 +228,11 @@ public class VideoConsumerService extends AGService {
             } else if (OS.IS_LINUX) {
                 path = path.concat(VICLINUX);
                 vic = localServicesDir.getCanonicalPath() + "/" + path;
-                Runtime.getRuntime().exec("chmod 755 "+ vic, null, getResourcesDirectory());
+                Runtime.getRuntime().exec("chmod 755 " + vic, null, getResourcesDirectory());
             } else if (OS.IS_OSX) {
                 path = path.concat(VICMAC);
                 vic = localServicesDir.getCanonicalPath() + "/" + path;
-                Runtime.getRuntime().exec("chmod 755 "+ vic, null, getResourcesDirectory());
+                Runtime.getRuntime().exec("chmod 755 " + vic, null, getResourcesDirectory());
                 Thread.sleep(1000);
            }
         } catch (Exception e) {
@@ -290,7 +290,7 @@ public class VideoConsumerService extends AGService {
             e.printStackTrace();
         }
         try {
-            if (!OS.IS_WINDOWS){
+            if (!OS.IS_WINDOWS) {
                 Runtime.getRuntime().exec(CHMOD + startupfile);
             }
         } catch (Exception e) {

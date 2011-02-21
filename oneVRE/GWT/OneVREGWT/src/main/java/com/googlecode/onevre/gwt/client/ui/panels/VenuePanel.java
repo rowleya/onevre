@@ -14,96 +14,94 @@ import com.googlecode.onevre.gwt.client.ui.ButtonPanel;
 import com.googlecode.onevre.gwt.client.ui.Icons;
 import com.googlecode.onevre.gwt.client.ui.buttons.CloseButton;
 
-public class VenuePanel extends FlexTable implements ClickHandler{
-	ClientPanel clientPanel;
-	TabPanel statePanel;
-	DataPanel dataPanel;
-	ServicePanel servicePanel;
-	ApplicationPanel applicationPanel;
-	JabberPanel jabberPanel;
+public class VenuePanel extends FlexTable implements ClickHandler {
 
-	ButtonPanel buttonPanel;
+    private ClientPanel clientPanel;
+    private TabPanel statePanel;
+    private DataPanel dataPanel;
+    private ServicePanel servicePanel;
+    private ApplicationPanel applicationPanel;
+    private JabberPanel jabberPanel;
 
-	public VenuePanel(VenueState state, ServerVenueManager serverVenueManager) {
+    private ButtonPanel buttonPanel;
 
-		buttonPanel = new ButtonPanel("venue", ButtonPanel.RIGHT);
-		buttonPanel.addButton(new CloseButton(state, serverVenueManager));
-		this.setWidth("100%");
-		this.setText(0, 0, state.getName());
-		this.getFlexCellFormatter().setColSpan(0, 0, 2);
-		this.getRowFormatter().setStyleName(0, "gwt-PushButton gwt-PushButton-up");
-		this.setText(1, 0, state.getDescription());
-		this.getFlexCellFormatter().setColSpan(1, 0, 3);
-		this.addClickHandler(this);
-		this.setWidget(0, 2, buttonPanel.getPanel());
-		this.getFlexCellFormatter().setHorizontalAlignment(0,2, HorizontalPanel.ALIGN_RIGHT);
+    public VenuePanel(VenueState state, ServerVenueManager serverVenueManager) {
 
-		clientPanel = new ClientPanel(state.getClients());
-		Application.getUserManager().setClientPanel(state,clientPanel);
+        buttonPanel = new ButtonPanel("venue", ButtonPanel.RIGHT);
+        buttonPanel.addButton(new CloseButton(state, serverVenueManager));
+        this.setWidth("100%");
+        this.setText(0, 0, state.getName());
+        this.getFlexCellFormatter().setColSpan(0, 0, 2);
+        this.getRowFormatter().setStyleName(0, "gwt-PushButton gwt-PushButton-up");
+        this.setText(1, 0, state.getDescription());
+        this.getFlexCellFormatter().setColSpan(1, 0, 3);
+        this.addClickHandler(this);
+        this.setWidget(0, 2, buttonPanel.getPanel());
+        this.getFlexCellFormatter().setHorizontalAlignment(0, 2, HorizontalPanel.ALIGN_RIGHT);
 
-		this.setWidget(2, 0 , clientPanel);
+        clientPanel = new ClientPanel(state.getClients());
+        Application.getUserManager().setClientPanel(state, clientPanel);
 
-		statePanel = new TabPanel();
-		statePanel.setWidth("100%");
-		dataPanel = new DataPanel(state);
-		Application.getDataManager().setDataPanel(state,dataPanel);
-		servicePanel = new ServicePanel(state.getServices());
-		applicationPanel = new ApplicationPanel(state.getApplications());
-		jabberPanel = new JabberPanel(state.getUri());
-		Application.getJabberManager().setJabberPanel(state, jabberPanel);
+        this.setWidget(2, 0 , clientPanel);
 
-		HorizontalPanel dataTab = new HorizontalPanel();
-		Image dataIcon = new Image(Icons.folderIcon);
-		dataIcon.setHeight("16px");
-		dataTab.add(dataIcon);
-		dataTab.setCellVerticalAlignment(dataIcon, HorizontalPanel.ALIGN_MIDDLE);
-		dataTab.add(new Label("Data"));
-//		dataTab.setWidth("100%");
-		statePanel.add(dataPanel,dataTab);
-		statePanel.selectTab(0);
+        statePanel = new TabPanel();
+        statePanel.setWidth("100%");
+        dataPanel = new DataPanel(state);
+        Application.getDataManager().setDataPanel(state, dataPanel);
+        servicePanel = new ServicePanel(state.getServices());
+        applicationPanel = new ApplicationPanel(state.getApplications());
+        jabberPanel = new JabberPanel(state.getUri());
+        Application.getJabberManager().setJabberPanel(state, jabberPanel);
 
-		HorizontalPanel servicesTab = new HorizontalPanel();
-		Image serviceIcon = new Image(Icons.serviceIcon);
-		serviceIcon.setHeight("16px");
-		servicesTab.add(serviceIcon);
-		servicesTab.setCellVerticalAlignment(serviceIcon, HorizontalPanel.ALIGN_MIDDLE);
-		servicesTab.add(new Label("Services"));
-//		servicesTab.setWidth("100%");
-		statePanel.add(servicePanel,servicesTab);
+        HorizontalPanel dataTab = new HorizontalPanel();
+        Image dataIcon = new Image(Icons.folderIcon);
+        dataIcon.setHeight("16px");
+        dataTab.add(dataIcon);
+        dataTab.setCellVerticalAlignment(dataIcon, HorizontalPanel.ALIGN_MIDDLE);
+        dataTab.add(new Label("Data"));
+        statePanel.add(dataPanel, dataTab);
+        statePanel.selectTab(0);
 
-		HorizontalPanel applicationTab = new HorizontalPanel();
-		Image appIcon = new Image(Icons.applicationIcon);
-		appIcon.setHeight("16px");
-		applicationTab.add(appIcon);
-		applicationTab.setCellVerticalAlignment(appIcon, HorizontalPanel.ALIGN_MIDDLE);
-		applicationTab.add(new Label("Applications"));
-//		applicationTab.setWidth("100%");
-		statePanel.add(applicationPanel,applicationTab);
+        HorizontalPanel servicesTab = new HorizontalPanel();
+        Image serviceIcon = new Image(Icons.serviceIcon);
+        serviceIcon.setHeight("16px");
+        servicesTab.add(serviceIcon);
+        servicesTab.setCellVerticalAlignment(serviceIcon, HorizontalPanel.ALIGN_MIDDLE);
+        servicesTab.add(new Label("Services"));
+        statePanel.add(servicePanel, servicesTab);
 
-		HorizontalPanel jabberTab = new HorizontalPanel();
-		Image jabberIcon = new Image(Icons.jabberIcon);
-		jabberIcon.setHeight("16px");
-		jabberTab.add(jabberIcon);
-		jabberTab.add(new Label("Jabber"));
-		statePanel.add(jabberPanel, jabberTab);
+        HorizontalPanel applicationTab = new HorizontalPanel();
+        Image appIcon = new Image(Icons.applicationIcon);
+        appIcon.setHeight("16px");
+        applicationTab.add(appIcon);
+        applicationTab.setCellVerticalAlignment(appIcon, HorizontalPanel.ALIGN_MIDDLE);
+        applicationTab.add(new Label("Applications"));
+        statePanel.add(applicationPanel, applicationTab);
 
-		this.setWidget(2, 1 , statePanel);
-		this.getFlexCellFormatter().setColSpan(2, 1, 3);
+        HorizontalPanel jabberTab = new HorizontalPanel();
+        Image jabberIcon = new Image(Icons.jabberIcon);
+        jabberIcon.setHeight("16px");
+        jabberTab.add(jabberIcon);
+        jabberTab.add(new Label("Jabber"));
+        statePanel.add(jabberPanel, jabberTab);
+
+        this.setWidget(2, 1 , statePanel);
+        this.getFlexCellFormatter().setColSpan(2, 1, 3);
 
 
-	}
+    }
 
-	public void onClick(ClickEvent event) {
-		Cell cell = getCellForEvent(event);
-		if (cell!=null){
-			if (cell.getRowIndex() == 0) {
-				if (cell.getCellIndex()!=(getCellCount(0)-1)){
-					boolean vis = this.getRowFormatter().isVisible(1);
-					vis = !vis;
-					this.getRowFormatter().setVisible(1,vis);
-					this.getRowFormatter().setVisible(2,vis);
-				}
-			}
-		}
-	}
+    public void onClick(ClickEvent event) {
+        Cell cell = getCellForEvent(event);
+        if (cell != null) {
+            if (cell.getRowIndex() == 0) {
+                if (cell.getCellIndex() != (getCellCount(0) - 1)) {
+                    boolean vis = this.getRowFormatter().isVisible(1);
+                    vis = !vis;
+                    this.getRowFormatter().setVisible(1, vis);
+                    this.getRowFormatter().setVisible(2, vis);
+                }
+            }
+        }
+    }
 }

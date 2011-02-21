@@ -60,7 +60,7 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public class UploadTag extends PortletTag {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
   // The size of the buffer
     private static final int BUFFER_SIZE = 8196;
 
@@ -76,12 +76,12 @@ public class UploadTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTag#doTag()
      */
     @SuppressWarnings("unchecked")
-	public void doTag() {
-    	String parentId = "";
-    	String venueUri = "";
-    	String description = "";
-    	String expiry = "";
-     	log.info("in UPLOADTAG.JAVA" );
+    public void doTag() {
+        String parentId = "";
+        String venueUri = "";
+        String description = "";
+        String expiry = "";
+        log.info("in UPLOADTAG.JAVA");
         HttpServletRequest request = getRequest();
         log.info("Content Type:" + request.getContentType());
         log.info("Content Length = " + request.getContentLength());
@@ -104,23 +104,23 @@ public class UploadTag extends PortletTag {
             while (iter.hasNext()) {
                 FileItem item = iter.next();
                 if (item.isFormField()) {
-                	String name = item.getFieldName();
+                    String name = item.getFieldName();
                     String value = item.getString();
                     log.info("name: " + name + " value: " + value);
                     if (name.equals("namespace")) {
                         setNamespace(value);
                     }
-                    if (name.equals("parentId")){
-                    	parentId = value;
+                    if (name.equals("parentId")) {
+                        parentId = value;
                     }
-                    if (name.equals("venueUri")){
-                    	venueUri = value;
+                    if (name.equals("venueUri")) {
+                        venueUri = value;
                     }
-                    if (name.equals("description")){
-                    	description = value;
+                    if (name.equals("description")) {
+                        description = value;
                     }
-                    if (name.equals("expiry")){
-                    	expiry = value;
+                    if (name.equals("expiry")) {
+                        expiry = value;
                     }
                 }
             }
@@ -133,7 +133,7 @@ public class UploadTag extends PortletTag {
                     FileItem item = iter.next();
                     if (!item.isFormField()) {
                         String fileName = item.getName().replaceAll(" ", "%20");
-                        log.info("Receiving file : "+ fileName);
+                        log.info("Receiving file : " + fileName);
 
                         long size = item.getSize();
                         ui.showUploadStatus(venueUri, fileName, size);
@@ -142,7 +142,7 @@ public class UploadTag extends PortletTag {
                         try {
                             BufferedInputStream input =
                                 new BufferedInputStream(item.getInputStream());
-                            uri = ui.uploadDataItem(venueUri,parentId, fileName);
+                            uri = ui.uploadDataItem(venueUri, parentId, fileName);
                             //, parentId, description, expiry);
                             log.info("Upload to URL: " + uri);
                             log.info("scheme: " + uri.getScheme());
@@ -167,9 +167,9 @@ public class UploadTag extends PortletTag {
                         }
                         ui.setUploadStatus(venueUri, fileName, size, size);
                         if (error != null) {
-                            ui.displayMessage(venueUri,"error","Error uploading file: " + error);
+                            ui.displayMessage(venueUri, "error", "Error uploading file: " + error);
                         } else {
-                            ui.displayMessage(venueUri,"success", "File uploaded successfully");
+                            ui.displayMessage(venueUri, "success", "File uploaded successfully");
                         }
                         ui.hideUploadStatus(venueUri);
                         ui.updateData(venueUri, uri.toString(), fileName, parentId, description, expiry, size);

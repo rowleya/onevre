@@ -16,58 +16,59 @@ import com.googlecode.onevre.gwt.client.ag.types.AgEventJSO;
 
 public class AXmlRpcMessageReceiver implements RequestCallback {
 
-	private static HashMap<String, RequestReceiver> RequestMappings = new HashMap<String, RequestReceiver>();
+    private static HashMap<String, RequestReceiver> requestMappings = new HashMap<String, RequestReceiver>();
 
-	static {
-		RequestMappings.put("eventEnterVenue", new EnterVenueReceiver());
-		RequestMappings.put("eventExitVenue", new ExitVenueReceiver());
-		RequestMappings.put("eventModifyUser",new ModifyUserReceiver());
+    static {
+        requestMappings.put("eventEnterVenue", new EnterVenueReceiver());
+        requestMappings.put("eventExitVenue", new ExitVenueReceiver());
+        requestMappings.put("eventModifyUser", new ModifyUserReceiver());
 
-		RequestMappings.put("eventAddData", new AddDataReceiver());
-		RequestMappings.put("eventUpdateData", new UpdateDataReceiver());
-		RequestMappings.put("eventRemoveData", new RemoveDataReceiver());
-		RequestMappings.put("eventAddDirectory", new AddDirectoryReceiver());
-		RequestMappings.put("eventRemoveDirectory", new RemoveDirectoryReceiver());
+        requestMappings.put("eventAddData", new AddDataReceiver());
+        requestMappings.put("eventUpdateData", new UpdateDataReceiver());
+        requestMappings.put("eventRemoveData", new RemoveDataReceiver());
+        requestMappings.put("eventAddDirectory", new AddDirectoryReceiver());
+        requestMappings.put("eventRemoveDirectory", new RemoveDirectoryReceiver());
 
-		RequestMappings.put("eventAddService", new AddServiceReceiver());
-		RequestMappings.put("eventUpdateService", new UpdateServiceReceiver());
-		RequestMappings.put("eventRemoveService", new RemoveServiceReceiver());
+        requestMappings.put("eventAddService", new AddServiceReceiver());
+        requestMappings.put("eventUpdateService", new UpdateServiceReceiver());
+        requestMappings.put("eventRemoveService", new RemoveServiceReceiver());
 
-		RequestMappings.put("eventAddConnection", new AddConnectionReceiver());
-		RequestMappings.put("eventRemoveConnection", new RemoveConnectionReceiver());
+        requestMappings.put("eventAddConnection", new AddConnectionReceiver());
+        requestMappings.put("eventRemoveConnection", new RemoveConnectionReceiver());
 
-		RequestMappings.put("eventAddStream", new AddStreamReceiver());
-		RequestMappings.put("eventModifyStream", new ModifyStreamReceiver());
-		RequestMappings.put("eventRemoveStream", new RemoveStreamReceiver());
+        requestMappings.put("eventAddStream", new AddStreamReceiver());
+        requestMappings.put("eventModifyStream", new ModifyStreamReceiver());
+        requestMappings.put("eventRemoveStream", new RemoveStreamReceiver());
 
-		RequestMappings.put("jabberClearWindow", new JabberClearWindowReceiver());
-		RequestMappings.put("jabberAddMessage", new JabberAddMessageReceiver());
+        requestMappings.put("jabberClearWindow", new JabberClearWindowReceiver());
+        requestMappings.put("jabberAddMessage", new JabberAddMessageReceiver());
 
-		RequestMappings.put("setUploadStatus", new SetUploadStatusReceiver());
-		RequestMappings.put("showUploadStatus", new ShowUploadStatusReceiver());
-		RequestMappings.put("hideUploadStatus", new HideUploadStatusReceiver());
-		RequestMappings.put("displayMessage", new DisplayMessageReceiver());
-	}
+        requestMappings.put("setUploadStatus", new SetUploadStatusReceiver());
+        requestMappings.put("showUploadStatus", new ShowUploadStatusReceiver());
+        requestMappings.put("hideUploadStatus", new HideUploadStatusReceiver());
+        requestMappings.put("displayMessage", new DisplayMessageReceiver());
+    }
 
     private boolean done = false;
 
-    private String serverUrl=null;
+    private String serverUrl = null;
 
 
     private void getUpdate() {
-		RequestBuilder builder =  new RequestBuilder(RequestBuilder.GET,serverUrl);
-    	try {
-    		builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
-    		builder.sendRequest("getNextResponse", this);
-		} catch (RequestException e) {
-			onError(null, e);
-		}
+        RequestBuilder builder =  new RequestBuilder(RequestBuilder.GET, serverUrl);
+        try {
+            builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            builder.sendRequest("getNextResponse", this);
+        } catch (RequestException e) {
+            onError(null, e);
+        }
     }
 
     public AXmlRpcMessageReceiver() {
         this.serverUrl =  Application.getParam(Application.XMLRPC_RESPONSE_SERVER)
-        			   + "?namespace="+Application.encodeURIComponent(Application.getParam(Application.APPLICATION_NAMESPACE));
-		GWT.log("AXML msg serverURL = " + serverUrl);
+                       + "?namespace=" + Application.encodeURIComponent(
+                               Application.getParam(Application.APPLICATION_NAMESPACE));
+        GWT.log("AXML msg serverURL = " + serverUrl);
     }
 
     public void start() {
@@ -79,29 +80,29 @@ public class AXmlRpcMessageReceiver implements RequestCallback {
         done = true;
     }
 
-	public void onError(Request request, Throwable error) {
-		GWT.log("failed request " + request.toString(), error);
-	}
+    public void onError(Request request, Throwable error) {
+        GWT.log("failed request " + request.toString(), error);
+    }
 
-	public void onResponseReceived(Request request, Response response) {
+    public void onResponseReceived(Request request, Response response) {
         if (done) {
-        	return;
+            return;
         }
         AgEventJSO event = AgEventJSO.parse(response.getText());
-        if (event.getEventName().equals("none")){
-        	getUpdate();
-        	return;
+        if (event.getEventName().equals("none")) {
+            getUpdate();
+            return;
         }
-        if (event.getEventName().equals("done")){
-        	return;
+        if (event.getEventName().equals("done")) {
+            return;
         }
-        RequestReceiver receiver = RequestMappings.get(event.getEventName());
-        if (receiver == null){
-        	GWT.log("Unknown Event Method :" + event.getEventName());
-        	return;
+        RequestReceiver receiver = requestMappings.get(event.getEventName());
+        if (receiver == null) {
+            GWT.log("Unknown Event Method :" + event.getEventName());
+            return;
         }
         receiver.execute(event);
         getUpdate();
-	}
+    }
 
 }

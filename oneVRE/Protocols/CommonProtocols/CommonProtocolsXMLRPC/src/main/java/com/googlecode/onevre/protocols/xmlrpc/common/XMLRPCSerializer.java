@@ -67,7 +67,7 @@ public class XMLRPCSerializer {
             IllegalAccessException {
         Hashtable<String, Object> serialized = new Hashtable<String, Object>();
         String[] fields = object.getFields();
-        Class cls = object.getClass();
+        Class<?> cls = object.getClass();
         for (int i = 0; i < fields.length; i++) {
             String getMethod = "get"
                 + fields[i].substring(0, 1).toUpperCase()
@@ -77,6 +77,7 @@ public class XMLRPCSerializer {
             if (value instanceof SoapSerializable) {
                 serialized.put(fields[i], serialize((SoapSerializable) value));
             } else if (value instanceof Vector) {
+                @SuppressWarnings("unchecked")
                 Vector<Hashtable<?, ?>> values =
                     (Vector<Hashtable<?, ?>>) value;
                 for (int j = 0; j < values.size(); j++) {

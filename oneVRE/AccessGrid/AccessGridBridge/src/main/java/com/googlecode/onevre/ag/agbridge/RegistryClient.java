@@ -89,7 +89,7 @@ public class RegistryClient {
      * @return The list of bridge descriptions
      */
     @SuppressWarnings("unchecked")
-	public Vector<BridgeDescription> lookupBridges() {
+    public Vector<BridgeDescription> lookupBridges() {
         Vector<BridgeDescription> bridges = new Vector<BridgeDescription>();
         boolean registryFound = false;
         BridgeDescription desc = null;

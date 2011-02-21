@@ -41,23 +41,23 @@ import com.googlecode.onevre.ag.types.EventDescription;
  */
 public interface EventListener {
 
-	/**
-	 * Method to get the location of the Event receiver
-	 * @return Returns the location of the Receiver of the event
-	 */
-	public String getLocation();
+    /**
+     * Method to get the location of the Event receiver
+     * @return Returns the location of the Receiver of the event
+     */
+    String getLocation();
 
-	/**
-	 * Method to identify the EventListener
-	 * @return Returns a unique Id of the EventListener this will usually be a unique Id of the event receiver
-	 */
-	public String getListenerId();
+    /**
+     * Method to identify the EventListener
+     * @return Returns a unique Id of the EventListener this will usually be a unique Id of the event receiver
+     */
+    String getListenerId();
 
-	/**
-	 * Method to get the location of the EventListener
-	 * @return Returns the URI of the EventListener
-	 */
-	public String getListenerUri();
+    /**
+     * Method to get the location of the EventListener
+     * @return Returns the URI of the EventListener
+     */
+    String getListenerUri();
 
     /**
      * Processes an event

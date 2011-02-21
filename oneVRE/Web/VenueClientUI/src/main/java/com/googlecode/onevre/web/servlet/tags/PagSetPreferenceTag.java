@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PagSetPreferenceTag extends PortletTag {
 
-	private Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The name of the preference
     private String name = null;
@@ -74,11 +74,12 @@ public class PagSetPreferenceTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTag#doTag()
      */
     public void doTag() {
-    	System.out.println("IN PagSetPreferenceTag");
-    	System.out.println("Setting attribute " + getNamespace() + "pref_" + name + " = " + value);
-    	Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
-        for (String att :attr){
-        	System.out.println("analyzing: " + att );
+        log.info("IN PagSetPreferenceTag");
+        log.info("Setting attribute " + getNamespace() + "pref_" + name + " = " + value);
+        @SuppressWarnings("unchecked")
+        Vector<String> attr = (Vector<String>) getRequest().getSession().getAttributeNames();
+        for (String att : attr) {
+            log.info("analyzing: " + att);
         }
         getJspContext().setAttribute(getNamespace() + "pref_" + name, value,
                 PageContext.SESSION_SCOPE);

@@ -43,17 +43,17 @@ public class Action implements SoapSerializable {
         this.roles = roles;
     }
 
-    public boolean hasRole(Role role){
+    public boolean hasRole(Role role) {
         return roles.contains(role);
     }
 
     public void setRoles(Role role) {
-        if (!roles.contains(role)){
+        if (!roles.contains(role)) {
             roles.add(role);
         }
     }
 
-    public boolean removeRole(Role role){
+    public boolean removeRole(Role role) {
         return roles.remove(role);
     }
 
@@ -79,12 +79,16 @@ public class Action implements SoapSerializable {
         return true;
     }
 
-    public Role findRole(String roleName){
-        if (roleName==null) {
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    public Role findRole(String roleName) {
+        if (roleName == null) {
             return null;
         }
-        for (Role role : roles){
-            if (roleName.equals(role.getName())){
+        for (Role role : roles) {
+            if (roleName.equals(role.getName())) {
                 return role;
             }
         }
@@ -115,26 +119,26 @@ public class Action implements SoapSerializable {
     public void parseXml(PolicyParser parser, Node node) {
         parser.parse(node);
         name = parser.getAttributes().get("name");
-        for (Node childNode : parser.getSubElements()){
-            if (childNode.getNodeName().equals(new Role().getSoapType())){
+        for (Node childNode : parser.getSubElements()) {
+            if (childNode.getNodeName().equals(new Role().getSoapType())) {
                 Role role = new Role();
-                role.parseXml(parser,childNode);
+                role.parseXml(parser, childNode);
                 roles.add(role);
             }
         }
     }
 
-    public String toXml(){
-        String xml = "<" +getSoapType() + " name=\"" + name+ "\">";
-        for (Role role: roles){
-            xml += "<" + role.getSoapType() + " name=\"" + role.getName() +"\"/>";
+    public String toXml() {
+        String xml = "<" + getSoapType() + " name=\"" + name + "\">";
+        for (Role role : roles) {
+            xml += "<" + role.getSoapType() + " name=\"" + role.getName() + "\"/>";
         }
         xml += "</" + getSoapType() + ">";
         return xml;
     }
 
-    public String toString(){
-    	return name;
+    public String toString() {
+        return name;
     }
 
 }

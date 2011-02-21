@@ -4,7 +4,7 @@ import com.googlecode.onevre.gwt.client.ag.ApplicationManager;
 
 public interface ApplicationManagerInterface {
 
-	public void setApplicationManager (ApplicationManager applicationManager);
+    void setApplicationManager(ApplicationManager applicationManager);
 
-	public void updateUI();
+    void updateUI();
 }

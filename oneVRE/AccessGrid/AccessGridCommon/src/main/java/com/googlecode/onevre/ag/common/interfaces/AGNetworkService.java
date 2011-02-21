@@ -66,7 +66,7 @@ public class AGNetworkService {
      * @param serverUrl
      * @throws MalformedURLException
      */
-    public AGNetworkService (String serverUrl) throws MalformedURLException {
+    public AGNetworkService(String serverUrl) throws MalformedURLException {
         this.soapRequest = new SoapRequest(serverUrl);
         this.serverUrl = serverUrl;
     }
@@ -100,7 +100,7 @@ public class AGNetworkService {
                 new String[]{AG_NETWORK_SERVICE_NS + "/streamDescription"},
                 new Class[]{StreamDescription.class}));
         Object sd = result.get("streamDescription");
-        if ((sd!=null) &&  (sd instanceof StreamDescription)){
+        if ((sd != null) && (sd instanceof StreamDescription)) {
             return (StreamDescription) sd;
         }
         throw new SoapException("Return type not correct");
@@ -125,7 +125,7 @@ public class AGNetworkService {
                 new String[]{AG_NETWORK_SERVICE_NS + "/streamDescription"},
                 new Class[]{StreamDescription.class}));
         Object sd = result.get("streamDescription");
-        if ((sd != null) &&  (sd instanceof StreamDescription)){
+        if ((sd != null) &&  (sd instanceof StreamDescription)) {
             return (StreamDescription) sd;
         }
         throw new SoapException("Return type not correct");

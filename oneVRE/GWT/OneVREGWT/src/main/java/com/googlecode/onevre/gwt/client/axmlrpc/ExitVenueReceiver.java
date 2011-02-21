@@ -12,23 +12,23 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class ExitVenueReceiver implements RequestReceiver {
 
-	private VenueState state = null;
+    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
 
-		ClientProfile client = new ClientProfile((ClientProfileJSO) parameters.get(0));
-		state = Application.getServerManager().getVenuefromSource(source);
-		Application.getUserManager().deleteUser(state, client);
-	}
+        ClientProfile client = new ClientProfile((ClientProfileJSO) parameters.get(0));
+        state = Application.getServerManager().getVenuefromSource(source);
+        Application.getUserManager().deleteUser(state, client);
+    }
 
-	public void init(String source) {
-	}
+    public void init(String source) {
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		ClientProfile client = new ClientProfile((ClientProfileEJSO) eventJSO.getEventObject());
-		state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-		Application.getUserManager().deleteUser(state, client);
-	}
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        ClientProfile client = new ClientProfile((ClientProfileEJSO) eventJSO.getEventObject());
+        state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+        Application.getUserManager().deleteUser(state, client);
+    }
 
 }

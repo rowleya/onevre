@@ -29,25 +29,21 @@ import org.apache.commons.logging.LogFactory;
  * @author  Paul Ferraro
  * @since   1.0
  */
-public abstract class AbstractSession implements Session
-{
-	protected Log logger = LogFactory.getLog(this.getClass());
-	protected URI uri;
+public abstract class AbstractSession implements Session {
+    protected Log logger = LogFactory.getLog(this.getClass());
+    protected URI uri;
 
-	public AbstractSession(URI uri)
-	{
-		this.uri = uri.normalize();
-	}
+    public AbstractSession(URI uri) {
+        this.uri = uri.normalize();
+    }
 
-	/**
-	 * @see net.sf.ufsc.Session#close()
-	 */
-	@Override
-	protected void finalize()
-	{
-		if (!this.isClosed())
-		{
-			this.close();
-		}
-	}
+    /**
+     * @see net.sf.ufsc.Session#close()
+     */
+    @Override
+    protected void finalize() {
+        if (!this.isClosed()) {
+            this.close();
+        }
+    }
 }

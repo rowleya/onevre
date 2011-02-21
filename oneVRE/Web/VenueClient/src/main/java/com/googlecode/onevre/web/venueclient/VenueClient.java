@@ -57,6 +57,8 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xmlrpc.server.XmlRpcServer;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.WebServer;
@@ -117,6 +119,8 @@ import com.googlecode.onevre.web.ui.NodeManagementUI;
  *
  */
 public class VenueClient implements VenueClientInterface {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     // Time to wait
     private static final int WAIT_TIME = 1000;
@@ -195,12 +199,13 @@ public class VenueClient implements VenueClientInterface {
      * @throws IOException
      * @throws SAXException
      */
+    @SuppressWarnings("unchecked")
     public VenueClient(int port, String clientProfileXml,
             String services, String applications, String pointOfReferenceUrl,
             String bridgeConnectors)
             throws IOException, SAXException {
         BridgeClientCreator.setBridgeConnectors((HashMap<String, AGBridgeConnectorDescription>)
-        		XMLDeserializer.deserialize(StringEscapeUtils.unescapeXml(bridgeConnectors)));
+                XMLDeserializer.deserialize(StringEscapeUtils.unescapeXml(bridgeConnectors)));
         this.clientProfile = (ClientProfile) XMLDeserializer.deserialize(
                 StringEscapeUtils.unescapeXml(clientProfileXml));
         this.allServices = (HashMap<String, AGServicePackageDescription>)
@@ -224,16 +229,16 @@ public class VenueClient implements VenueClientInterface {
 
         Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-        System.err.println("Loading Bridges");
+        log.info("Loading Bridges");
         loadBridges();
 
-        System.out.println("POR: "+pointOfReferenceUrl );
+        log.info("POR: " + pointOfReferenceUrl);
 
-        String [] PORurl = pointOfReferenceUrl.split(",");
-        PointOfReferenceClient POR=new PointOfReferenceClient(PORurl);
-        String url=POR.getUrl();
+        String [] porUrl = pointOfReferenceUrl.split(",");
+        PointOfReferenceClient porClient = new PointOfReferenceClient(porUrl);
+        String url = porClient.getUrl();
 
-        System.err.println("Starting Node Service");
+        log.info("Starting Node Service");
         startNodeService();
         try {
             nodeService.setPointOfReference(url);
@@ -291,10 +296,10 @@ public class VenueClient implements VenueClientInterface {
         if ((holderSocket == null) || (holderPort != currentHolderPort)) {
             if (holderSocket != null) {
                 try {
-                    System.err.println("closing socket");
+                    log.info("closing socket");
                     holderSocket.close();
                 } catch (IOException e) {
-                    System.err.println("Venuclient.ping");
+                    log.info("Venuclient.ping");
                     e.printStackTrace();
                 }
             }
@@ -308,7 +313,7 @@ public class VenueClient implements VenueClientInterface {
                         holderSocket.setSoTimeout(0);
                         InputStream inputStream = holderSocket.getInputStream();
                         while (holderSocket.isConnected()) {
-                            System.err.println("Holder Socket Connected");
+                            log.info("Holder Socket Connected");
                             if (close != null) {
                                 close.stop();
                                 close = null;
@@ -349,7 +354,7 @@ public class VenueClient implements VenueClientInterface {
      */
     public boolean setAudioEnabled(int enabledFlag) {
         audioEnabled = enabledFlag > 0;
-        System.err.println("Setting audio enabled = " + audioEnabled);
+        log.info("Setting audio enabled = " + audioEnabled);
         waitForNodeServices();
         try {
             nodeService.setServiceEnabledByMediaType("audio", enabledFlag == 1);
@@ -366,7 +371,7 @@ public class VenueClient implements VenueClientInterface {
      */
     public boolean setDisplayEnabled(int enabledFlag) {
         displayEnabled = enabledFlag > 0;
-        System.err.println("Setting display enabled = " + displayEnabled);
+        log.info("Setting display enabled = " + displayEnabled);
         waitForNodeServices();
         try {
             ServiceManagerInterface[] managers =
@@ -398,21 +403,18 @@ public class VenueClient implements VenueClientInterface {
      */
     public boolean setVideoEnabled(int enabledFlag) {
         videoEnabled = enabledFlag > 0;
-        System.err.println("Setting video enabled = " + videoEnabled);
+        log.info("Setting video enabled = " + videoEnabled);
         waitForNodeServices();
         try {
-            ServiceManagerInterface[] managers =
-                nodeService.getServiceManagers();
+            ServiceManagerInterface[] managers = nodeService.getServiceManagers();
             for (int i = 0; i < managers.length; i++) {
                 AGServiceDescription[] services = managers[i].getServices();
                 for (int j = 0; j < services.length; j++) {
                     Vector<Capability> caps = services[j].getCapabilities();
                     for (int k = 0; k < caps.size(); k++) {
                         Capability cap = caps.get(k);
-                        if (cap.getType().equals("video")
-                                && cap.getRole().equals("producer")) {
-                            managers[i].enableService(services[j],
-                                    videoEnabled);
+                        if (cap.getType().equals("video") && cap.getRole().equals("producer")) {
+                            managers[i].enableService(services[j], videoEnabled);
                         }
                     }
                 }
@@ -429,8 +431,7 @@ public class VenueClient implements VenueClientInterface {
      */
     public boolean configureNodeServices() {
         waitForNodeServices();
-        NodeManagementUI nodeManagement =
-            new NodeManagementUI(allServices, clientProfile);
+        NodeManagementUI nodeManagement = new NodeManagementUI(allServices, clientProfile);
         nodeManagement.attachToNode(nodeService);
 
         return true;
@@ -463,7 +464,7 @@ public class VenueClient implements VenueClientInterface {
      */
     public boolean setStreams(String xml) {
         waitForNodeServices();
-        System.err.println("VenueClient set Streams called " + xml);
+        log.info("VenueClient set Streams called " + xml);
         try {
             StreamDescription[] streams =
                 (StreamDescription[]) XMLDeserializer.deserialize(xml);
@@ -477,7 +478,6 @@ public class VenueClient implements VenueClientInterface {
 
     // Waits for the node services to start
     private void waitForNodeServices() {
-
         synchronized (startSync) {
             if (!started && !nodeServiceLoadingConfig) {
                 nodeServiceLoadingConfig = true;
@@ -489,7 +489,7 @@ public class VenueClient implements VenueClientInterface {
             }
             while (!started) {
                 try {
-                    System.err.println("Waiting for node services to start");
+                    log.info("Waiting for node services to start");
                     startSync.wait(WAIT_TIME);
                 } catch (InterruptedException e) {
                     // Do Nothing
@@ -547,7 +547,7 @@ public class VenueClient implements VenueClientInterface {
          * start web (soap) service
          */
         startWebService();
-        System.err.println("Started Web Service");
+        log.info("Started Web Service");
 
         try {
             applicationManager = new AGSharedApplicationManager(allApplications,
@@ -604,7 +604,7 @@ public class VenueClient implements VenueClientInterface {
                 XMLDeserializer.deserialize(applicationXml);
             EventDescription event = (EventDescription)
                 XMLDeserializer.deserialize(eventXml);
-//            System.err.println("Start Application" + application.getName());
+            log.debug("Start Application" + application.getName());
             applicationManager.distributeEvent(application, event);
         } catch (Exception e) {
             e.printStackTrace();
@@ -616,8 +616,7 @@ public class VenueClient implements VenueClientInterface {
         try {
             int nodeServicePort = Utils.searchPort(1,
                     Utils.PAG_PORT_RANDOM, true);
-            System.err.println("Starting SOAP server on port "
-                    + nodeServicePort);
+            log.info("Starting SOAP server on port " + nodeServicePort);
             server = new SoapServer(nodeServicePort, false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -701,14 +700,15 @@ public class VenueClient implements VenueClientInterface {
      */
     public void addBridges(String bridgeXML) {
         try {
+            @SuppressWarnings("unchecked")
             Vector<BridgeDescription> newBridges = (Vector<BridgeDescription>)
                 XMLDeserializer.deserialize(bridgeXML);
-            System.err.println("Attempting to add " + newBridges.size()
+            log.info("Attempting to add " + newBridges.size()
                     + " bridges");
             for (int i = 0; i < newBridges.size(); i++) {
-                System.err.println("Checking for bridge " + newBridges.get(i));
+                log.info("Checking for bridge " + newBridges.get(i));
                 if (!bridges.contains(newBridges.get(i))) {
-                    System.err.println("Adding bridge " + i);
+                    log.info("Adding bridge " + i);
                     bridges.add(newBridges.get(i));
                 }
             }
@@ -891,7 +891,7 @@ public class VenueClient implements VenueClientInterface {
      */
     public void uploadFiles(final String namespace, final String urlString,
             final String sessionId) {
-        System.err.println("UploadFiles to " + urlString);
+        log.info("UploadFiles to " + urlString);
         Thread uploader = new Thread() {
             public void run() {
                 Frame parent = new Frame("Select a file");
@@ -907,7 +907,7 @@ public class VenueClient implements VenueClientInterface {
                 int returnVal = fileChooser.showDialog(parent, "Select a file");
                 parent.setVisible(false);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                	System.out.println("in UploadFile APPROVE_OPTION");
+                    log.debug("in UploadFile APPROVE_OPTION");
                     File[] files = fileChooser.getSelectedFiles();
                     Part[] parts = new Part[files.length + 1];
                     parts[0] = new StringPart("namespace", namespace);
@@ -919,33 +919,34 @@ public class VenueClient implements VenueClientInterface {
                             e.printStackTrace();
                         }
                     }
-                    System.out.println("Uploading " + parts.length + " files");
+                    log.debug("Uploading " + parts.length + " files");
 
                     try {
-	                    URL url = new URL(urlString);
-	                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	                    connection.setDoOutput(true);
-	                    Utils.addSslConnection(connection);
-	                    PostMethod filePost = new PostMethod(urlString);
-	                    RequestEntity requestEntity = new MultipartRequestEntity(parts,
-	                            filePost.getParams());
-	                    connection.setRequestMethod("POST");
-	                    connection.addRequestProperty("Content-Type", requestEntity.getContentType());
-	                    connection.addRequestProperty("Content-Length", String.valueOf(requestEntity.getContentLength()));
-	                    connection.addRequestProperty("Cookie","JSESSIONID=" + sessionId);
-	                 //   connection.connect();
-	                    OutputStream os = connection.getOutputStream();
-	                    System.out.println("writing files to "+ connection.getURL());
-	                    requestEntity.writeRequest(os);
-	                    os.flush();
-	                    os.close();
-	                    int response=connection.getResponseCode();
-	                    System.out.println("response :" +connection.getResponseMessage() + "( "+ response+")");
-	                    if(connection != null) {
-	                    	connection.disconnect();
-	                    }
+                        URL url = new URL(urlString);
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setDoOutput(true);
+                        Utils.addSslConnection(connection);
+                        PostMethod filePost = new PostMethod(urlString);
+                        RequestEntity requestEntity = new MultipartRequestEntity(parts,
+                                filePost.getParams());
+                        connection.setRequestMethod("POST");
+                        connection.addRequestProperty("Content-Type", requestEntity.getContentType());
+                        connection.addRequestProperty("Content-Length",
+                                String.valueOf(requestEntity.getContentLength()));
+                        connection.addRequestProperty("Cookie", "JSESSIONID=" + sessionId);
+                     //   connection.connect();
+                        OutputStream os = connection.getOutputStream();
+                        log.debug("writing files to " + connection.getURL());
+                        requestEntity.writeRequest(os);
+                        os.flush();
+                        os.close();
+                        int response = connection.getResponseCode();
+                        log.debug("response :" + connection.getResponseMessage() + "( " + response + ")");
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
                     } catch (IOException e) {
-                    	e.printStackTrace();
+                        e.printStackTrace();
                     }
                 }
             }

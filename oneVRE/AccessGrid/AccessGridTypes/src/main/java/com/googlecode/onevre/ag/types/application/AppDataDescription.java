@@ -186,17 +186,17 @@ public class AppDataDescription implements SoapSerializable {
      * compares two AppDataDescriptions in [appId && key && value]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return ((this.appId.equals(((AppDataDescription)o).appId) &&
-        		this.key.equals(((AppDataDescription)o).key)) &&
-        		this.value.equals(((AppDataDescription)o).value));
+    public boolean equals(Object o) {
+        return ((this.appId.equals(((AppDataDescription) o).appId)
+                && this.key.equals(((AppDataDescription) o).key))
+                && this.value.equals(((AppDataDescription) o).value));
     }
 
     /**
      *
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode(){
+    public int hashCode() {
         return appId.hashCode();
     }
 

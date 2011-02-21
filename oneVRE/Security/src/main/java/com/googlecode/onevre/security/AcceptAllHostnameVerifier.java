@@ -43,7 +43,8 @@ public class AcceptAllHostnameVerifier implements HostnameVerifier {
 
     /**
      * Verify that the host name is an acceptable match with the server's authentication scheme.
-     * <dl><dt><b>overrides:</b></dt><dd>{@link javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)}</dd></dl>
      * @param host the host name
      * @param session SSLSession used on the connection to host
      * @return true if the host name is acceptable

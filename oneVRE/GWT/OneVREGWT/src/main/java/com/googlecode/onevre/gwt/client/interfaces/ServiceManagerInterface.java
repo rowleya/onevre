@@ -4,8 +4,8 @@ import com.googlecode.onevre.gwt.client.ag.ServiceManager;
 
 public interface ServiceManagerInterface {
 
-	public void setServiceManager(ServiceManager serviceManager);
+    void setServiceManager(ServiceManager serviceManager);
 
-	public void updateUI();
+    void updateUI();
 
 }

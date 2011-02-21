@@ -16,17 +16,17 @@ import com.googlecode.onevre.utils.Utils;
 
 public class FtpsServer {
 
-    FtpServer server = null;
+    private FtpServer server = null;
 
-    FtpUserManager userManager = new FtpUserManager();
+    private FtpUserManager userManager = new FtpUserManager();
 
-    int dataPort = Integer.valueOf(VenueServerDefaults.dataPort);
+    private int dataPort = Integer.valueOf(VenueServerDefaults.dataPort);
 
-    String serverDir = VenueServerDefaults.serverDir;
+    private String serverDir = VenueServerDefaults.serverDir;
 
-    DataStore dataStore = null;
+    private DataStore dataStore = null;
 
-    public FtpsServer(DataStore dataStore, HashMap<String, HashMap<String, String>> serverConfig){
+    public FtpsServer(DataStore dataStore, HashMap<String, HashMap<String, String>> serverConfig) {
 //    int dataPort, String keyStoreFileName, String storePasswd, int dataPortStart, int dataPortEnd) {
         FtpServerFactory serverFactory = new FtpServerFactory();
 
@@ -41,14 +41,14 @@ public class FtpsServer {
 
         String configLocation = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
-                VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION,"");
+                VenueServerConfigParameters.VENUE_SERVER_CONFIG_LOCATION, "");
 
         String keyStoreFileName = ConfigFile.getParameter(serverConfig,
                 VenueServerConfigParameters.VENUE_SERVER_SECTION,
                 VenueServerConfigParameters.SSL_KEYSTORE_FILE, "");
 
-        if (!keyStoreFileName.startsWith("/")){
-            keyStoreFileName=configLocation + keyStoreFileName;
+        if (!keyStoreFileName.startsWith("/")) {
+            keyStoreFileName = configLocation + keyStoreFileName;
         }
 
         String keyStorePasswd = ConfigFile.getParameter(serverConfig,
@@ -63,8 +63,7 @@ public class FtpsServer {
         String portRange = ConfigFile.getParameter(serverConfig,
                     VenueServerConfigParameters.VENUE_SERVER_DATASTORE_SECTION,
                     VenueServerConfigParameters.DATASTORE_PORT_RANGE_START,
-                    VenueServerDefaults.dataPortRangeStart) + "-" +
-                ConfigFile.getParameter(serverConfig,
+                    VenueServerDefaults.dataPortRangeStart) + "-" + ConfigFile.getParameter(serverConfig,
                     VenueServerConfigParameters.VENUE_SERVER_DATASTORE_SECTION,
                     VenueServerConfigParameters.DATASTORE_PORT_RANGE_END,
                     VenueServerDefaults.dataPortRangeEnd);
@@ -93,12 +92,12 @@ public class FtpsServer {
         // replace the default listener
         serverFactory.addListener("default", factory.createListener());
         serverFactory.setUserManager(userManager);
-        HashMap<String,Ftplet> ftplets = new HashMap<String,Ftplet>();
-        ftplets.put("dataStore",new DataStoreFtplet(dataStore));
+        HashMap<String, Ftplet> ftplets = new HashMap<String, Ftplet>();
+        ftplets.put("dataStore", new DataStoreFtplet(dataStore));
         serverFactory.setFtplets(ftplets);
 
         try {
-            userManager.save(new FtpUser("ts23","ts23ftps","/home/venueServer",null));
+            userManager.save(new FtpUser("ts23", "ts23ftps", "/home/venueServer", null));
         } catch (FtpException e) {
             e.printStackTrace();
         }
@@ -106,7 +105,7 @@ public class FtpsServer {
 
     }
 
-    public void start() throws FtpException{
+    public void start() throws FtpException {
         server.start();
     }
 
@@ -114,54 +113,54 @@ public class FtpsServer {
         server.stop();
     }
 
-    public void setServerDir (String serverDir){
+    public void setServerDir(String serverDir) {
         this.serverDir = serverDir;
     }
 
-    public void addUser(String name, String passwd){
+    public void addUser(String name, String passwd) {
         try {
-            userManager.save(new FtpUser(name,passwd,serverDir,null));
+            userManager.save(new FtpUser(name, passwd, serverDir, null));
         } catch (FtpException e) {
             e.printStackTrace();
         }
     }
 
-    public void removeUser(String name , String password){
+    public void removeUser(String name , String password) {
         userManager.delete(name, password);
     }
 
-    public File getFile(String venueId, String filename){
-    	return getFile(venueId,"", filename);
+    public File getFile(String venueId, String filename) {
+        return getFile(venueId, "", filename);
     }
-    public File getFile(String venueId, String path, String filename){
-    	if ((!path.equals(""))&&(!path.startsWith("/"))){
-    		path = "/"+ path;
-    	}
-    	File f = new File(serverDir + "/" + venueId + path +"/" +  filename);
-    	return f;
-    }
-
-    public File[] getFileList (String venueId) {
-    	return getFileList(venueId,"");
+    public File getFile(String venueId, String path, String filename) {
+        if ((!path.equals("")) && (!path.startsWith("/"))) {
+            path = "/" + path;
+        }
+        File f = new File(serverDir + "/" + venueId + path + "/" +  filename);
+        return f;
     }
 
-    public File[] getFileList (String venueId, String path) {
-    	if ((!path.equals(""))&&(!path.startsWith("/"))){
-    		path = "/" + path;
-    	}
+    public File[] getFileList(String venueId) {
+        return getFileList(venueId, "");
+    }
+
+    public File[] getFileList(String venueId, String path) {
+        if ((!path.equals("")) && (!path.startsWith("/"))) {
+            path = "/" + path;
+        }
         File dir = new File(serverDir + "/" + venueId + path);
-        if (!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         return dir.listFiles();
     }
 
-    public boolean removeFile(String venueId, String fileName){
+    public boolean removeFile(String venueId, String fileName) {
         File file = new File(serverDir + "/" + venueId + "/" + fileName);
         return file.delete();
     }
 
-    public String getURI(){
+    public String getURI() {
         String uri = "ftps://" + Utils.getLocalHost().getHostName() + ":" + dataPort + "/";
         return uri;
     }
@@ -169,20 +168,20 @@ public class FtpsServer {
     public File getLocalFile(String name) throws FtpException {
         String fName  = serverDir + name;
         File file = new File(fName);
-        if (!file.exists()){
+        if (!file.exists()) {
             throw new FtpException("File not found: " + fName);
         }
         return file;
     }
 
-	public void createDirectory(String venueId, String path, String name) {
-    	if ((!path.equals(""))&&(!path.startsWith("/"))){
-    		path = "/" + path;
-    	}
+    public void createDirectory(String venueId, String path, String name) {
+        if ((!path.equals("")) && (!path.startsWith("/"))) {
+            path = "/" + path;
+        }
         File dir = new File(serverDir + "/" + venueId + path + "/" + name);
-        if (!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-	}
+    }
 
 }

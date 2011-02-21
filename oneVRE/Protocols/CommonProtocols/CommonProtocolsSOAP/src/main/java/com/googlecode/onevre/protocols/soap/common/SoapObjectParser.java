@@ -28,6 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.googlecode.onevre.protocols.soap.common;
 
 import java.io.BufferedReader;
@@ -41,6 +42,9 @@ import java.util.LinkedList;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,6 +60,8 @@ import com.googlecode.onevre.types.soap.interfaces.SoapSerializable;
  * @version 1
  */
 public class SoapObjectParser extends DefaultHandler {
+
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The url path separator
     private static final String URL_PATH_SEP = "/";
@@ -196,7 +202,7 @@ public class SoapObjectParser extends DefaultHandler {
 
     // Replaces the namespace prefixes with the actual namespace
     private String deprefix(String string) {
-        if (string==null){
+        if (string == null) {
             return null;
         }
         Iterator<String> iter = namespaces.keySet().iterator();
@@ -238,7 +244,7 @@ public class SoapObjectParser extends DefaultHandler {
         while ((line = input.readLine()) != null) {
             text += line;
         }
-  //      System.out.println("parsing: \n" + text );
+        log.info("parsing: \n" + text);
         return parse(text);
     }
 
@@ -249,9 +255,10 @@ public class SoapObjectParser extends DefaultHandler {
      */
     public void startElement(String namespaceURI, String localName,
             String qualifiedName, Attributes atts) throws SAXException {
- //       System.out.println("startElement: localName = "+localName+" qualifiedName = " + qualifiedName + " level = " + level);
+        log.debug("startElement: localName = " + localName + " qualifiedName = " + qualifiedName + " level = " + level);
         currentChars = "";
-        String type="";
+        String type = "";
+        SoapObject soapObject = null;
         try {
             boolean ok = false;
             switch (level) {
@@ -276,28 +283,27 @@ public class SoapObjectParser extends DefaultHandler {
                 }
                 break;
 
-            case IN_SOAP_HEADER_OR_BODY: {
-                    level = IN_MESSAGE;
-                    type = atts.getValue(XSI, "type");
-//                    System.out.println("IN_SOAP_HEADER_OR_BODY: " + localName + " type: " + type);
-                    SoapObject soapObject = new SoapObject(localName,deprefix(type),namespaceURI);
-                    response=soapObject;
-                    currentObject.addLast(soapObject);
-                    ok = true;
-                }
+            case IN_SOAP_HEADER_OR_BODY:
+                level = IN_MESSAGE;
+                type = atts.getValue(XSI, "type");
+                log.debug("IN_SOAP_HEADER_OR_BODY: " + localName + " type: " + type);
+                soapObject = new SoapObject(localName, deprefix(type), namespaceURI);
+                response = soapObject;
+                currentObject.addLast(soapObject);
+                ok = true;
                 break;
             case IN_MESSAGE:
 
                 // Falls Through
- //               System.out.println("IN_MESSAGE: " + localName);
+                log.debug("IN_MESSAGE: " + localName);
             default:
-                level ++;
+                level++;
 
                 type = atts.getValue(XSI, "type");
                 String nil = atts.getValue(XSI, "nil");
-//                System.out.println("default level " + level + " : "+  localName + " type:" + type);
+                log.debug("default level " + level + " : " +  localName + " type:" + type);
 
-                SoapObject soapObject = new SoapObject(localName,deprefix(type),namespaceURI);
+                soapObject = new SoapObject(localName, deprefix(type), namespaceURI);
                 if ((nil != null) && nil.equals("true")) {
                     soapObject.setNil(true);
                 }
@@ -324,7 +330,7 @@ public class SoapObjectParser extends DefaultHandler {
     public void endElement(String namespaceURI, String localName,
             String qualifiedName) throws SAXException {
 
- //       System.out.println("endElement: localName = "+localName+" qualifiedName = " + qualifiedName + " level = " + level);
+        log.debug("endElement: localName = " + localName + " qualifiedName = " + qualifiedName + " level = " + level);
 
         try {
             String last = currentElement.removeLast();
@@ -348,7 +354,7 @@ public class SoapObjectParser extends DefaultHandler {
                 level--;
                 SoapObject object = currentObject.removeLast();
                 object.setValue(StringEscapeUtils.unescapeXml(currentChars));
-     //           System.out.println("adding object:" + object.toString());
+                log.debug("adding object:" + object.toString());
                 currentObject.getLast().addSubObject(object);
             break;
             }

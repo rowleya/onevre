@@ -45,9 +45,9 @@ public class FtpUser implements User {
         isEnabled = user.getEnabled();
     }
 
-    public FtpUser(String name, String password, String homeDir, PasswordEncryptor pwdEncryptor){
-        if (pwdEncryptor!=null){
-            passwordEncryptor=pwdEncryptor;
+    public FtpUser(String name, String password, String homeDir, PasswordEncryptor pwdEncryptor) {
+        if (pwdEncryptor != null) {
+            passwordEncryptor = pwdEncryptor;
         }
         this.name = name;
         this.passwords.add(passwordEncryptor.encrypt(password));
@@ -85,7 +85,7 @@ public class FtpUser implements User {
         passwords.add(pass);
     }
 
-    public void clearPasswords(){
+    public void clearPasswords() {
         passwords = new Vector<String>();
     }
 
@@ -165,7 +165,7 @@ public class FtpUser implements User {
         // if no authorities allow everything
         // ftp is protected by the venueClient interface the
         // user is created on enter and deleted on exit
-        if(authorities == null) {
+        if (authorities == null) {
             return request;
         }
 

@@ -9,22 +9,22 @@ public class MessageBox {
     private String message = "";
 
 
-	public MessageBox (MessageBoxJSO jso) {
-		message = jso.getMessage();
-		type = jso.getType();
-	};
+    public MessageBox(MessageBoxJSO jso) {
+        message = jso.getMessage();
+        type = jso.getType();
+    };
 
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getType() {
-		return type;
-	};
+    public String getType() {
+        return type;
+    };
 
-	public String toString(){
-		String out = "( "+ type+" ) " + message;
-		return out;
-	}
+    public String toString() {
+        String out = "( " + type + " ) " + message;
+        return out;
+    }
 }

@@ -7,7 +7,7 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueTreeItem;
 
 public interface VenueTreePanel {
 
-	public VenueServerType getVenueServerType();
+    VenueServerType getVenueServerType();
 
-	public void updateTree(Vector<VenueTreeItem> venueTree);
+    void updateTree(Vector<VenueTreeItem> venueTree);
 }

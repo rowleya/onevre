@@ -56,20 +56,19 @@ public class Subject implements SoapSerializable {
         return name;
     }
 
-    public Vector<VOAttribute> getVoAttributes(){
-    	return voAttributes;
+    public Vector<VOAttribute> getVoAttributes() {
+        return voAttributes;
     }
 
-    public void setVoAttribute (VOAttribute voAttribute){
-    	this.voAttributes.add(voAttribute);
+    public void setVoAttribute(VOAttribute voAttribute) {
+        this.voAttributes.add(voAttribute);
     }
 
-    public void setVoAttributes(Vector<String> voAttributes){
-    	this.voAttributes.clear();
-    	for (String voText : voAttributes)
-    	{
-    		this.voAttributes.add(new VOAttribute(voText));
-    	}
+    public void setVoAttributes(Vector<String> voAttributes) {
+        this.voAttributes.clear();
+        for (String voText : voAttributes) {
+            this.voAttributes.add(new VOAttribute(voText));
+        }
     }
 
     /**
@@ -126,13 +125,17 @@ public class Subject implements SoapSerializable {
         if (!name.equals(c.name)) {
             return false;
         }
-        if ((auth_data == null)){
+        if ((auth_data == null)) {
             if (c.auth_data == null) {
                 return true;
             }
             return false;
         }
         return auth_data.equals(c.auth_data);
+    }
+
+    public int hashCode() {
+        return (name + auth_data).hashCode();
     }
 
     public String getNameSpace() {
@@ -158,16 +161,16 @@ public class Subject implements SoapSerializable {
         auth_type = parser.getAttributes().get("auth_type");
     }
 
-    public String toString(){
-    	return name;
+    public String toString() {
+        return name;
     }
 
-    public String toXml(){
-        String xml = "<" +getSoapType();
-        xml += " auth_data + \""+ auth_data + "\"";
-        xml	+= " auth_type + \""+ auth_type + "\"";
-        xml	+= " name=\"" + name + "\"";
-        xml	+= "/>";
+    public String toXml() {
+        String xml = "<" + getSoapType();
+        xml += " auth_data + \"" + auth_data + "\"";
+        xml += " auth_type + \"" + auth_type + "\"";
+        xml += " name=\"" + name + "\"";
+        xml += "/>";
         return xml;
     }
 

@@ -6,39 +6,38 @@ import com.google.gwt.user.client.ui.PushButton;
 
 public abstract class ActionButton {
 
+    private Image image = new Image();
 
-	Image image = new Image();
+    private PushButton button = new PushButton(image);
 
-	PushButton button = new PushButton(image);
+    private String name;
 
-	String name;
+    public void setImageUrl(String imageUrl) {
+        this.image.setUrl(GWT.getModuleBaseURL() + imageUrl);
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.image.setUrl(GWT.getModuleBaseURL() + imageUrl);
-	}
+    public void setImageHeight(String height) {
+        this.image.setHeight(height);
+    }
 
-	public void setImageHeight(String height) {
-		this.image.setHeight(height);
-	}
+    public void setName(String name) {
+        button.setTitle(name);
+        this.name = name;
+    }
 
-	public void setName(String name) {
-		button.setTitle(name);
-		this.name = name;
-	}
+    public PushButton getButton() {
+        return button;
+    }
 
-	public PushButton getButton() {
-		return button;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getName(){
-		return this.name;
-	}
+    public void onClick() {
+        GWT.log(this.name + " Button pressed");
+        this.action();
+    }
 
-	public void onClick(){
-		GWT.log(this.name + " Button pressed");
-		this.action();
-	}
+    public abstract void action();
 
-	abstract public void action();
-
-	}
+    }

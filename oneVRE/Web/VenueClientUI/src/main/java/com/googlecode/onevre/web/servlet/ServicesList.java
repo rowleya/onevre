@@ -50,23 +50,21 @@ public class ServicesList extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
-        if(request.getParameter("nodeService")!=null) {
-             System.err.println("returning nodeServcie " +request.getParameter("nodeService"));
-             String url="";
-              if(request.getProtocol().toLowerCase().startsWith("https")==true) {
-                  url=url.concat("https://");
+        if (request.getParameter("nodeService") != null) {
+             System.err.println("returning nodeServcie " + request.getParameter("nodeService"));
+             String url = "";
+              if (request.getProtocol().toLowerCase().startsWith("https")) {
+                  url = url.concat("https://");
+              } else {
+                  url = url.concat("http://");
               }
-              else {
-                  url=url.concat("http://");
-              }
-              url=url.concat(request.getServerName());
-              url=url.concat(":"+request.getServerPort()+"/");
-              url=url.concat("pag/applications/default");
+              url = url.concat(request.getServerName());
+              url = url.concat(":" + request.getServerPort() + "/");
+              url = url.concat("pag/applications/default");
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
             response.getWriter().write("<message>" + url  + "</message>");
-        }
-        else {
+        } else {
             createList(request);
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
@@ -75,50 +73,48 @@ public class ServicesList extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    	throws IOException {
+        throws IOException {
         doGet(request, response);
     }
 
-    private Hashtable<String,String> serviceList;
+    private Hashtable<String, String> serviceList;
 
-	/**
-	 * Creates a new ServiceList
-	 */
-	public ServicesList(){
-		serviceList=new Hashtable<String,String>();
-	}
+    /**
+     * Creates a new ServiceList
+     */
+    public ServicesList() {
+        serviceList = new Hashtable<String, String>();
+    }
 
-	private void createList(HttpServletRequest request) {
-		String url="";
-		if(request.getProtocol().toLowerCase().startsWith("https")==true) {
-			url=url.concat("https://");
-		}
-		else {
-			url=url.concat("http://");
-		}
-		url=url.concat(request.getServerName());
-		url=url.concat(":"+request.getServerPort()+"/");
-		String dirUrl=this.getServletContext().getRealPath("/").concat("/applications");
-		File dir=null;
+    private void createList(HttpServletRequest request) {
+        String url = "";
+        if (request.getProtocol().toLowerCase().startsWith("https")) {
+            url = url.concat("https://");
+        } else {
+            url = url.concat("http://");
+        }
+        url = url.concat(request.getServerName());
+        url = url.concat(":" + request.getServerPort() + "/");
+        String dirUrl = this.getServletContext().getRealPath("/").concat("/applications");
+        File dir = null;
 
-		dir = new File(dirUrl);
-		System.err.println(dirUrl);
-		String[] listing=dir.list();
-		for(int i=0;i<listing.length;i++) {
-			if(listing[i].endsWith(".zip")) {
-				System.err.println("listing " + listing[i]);
-				serviceList.put(listing[i].substring(0, listing[i].lastIndexOf('.')),
-						url.concat("pag/applications/"+listing[i]));
-			}
-		}
-	}
+        dir = new File(dirUrl);
+        System.err.println(dirUrl);
+        for (String direntry : dir.list()) {
+            if (direntry.endsWith(".zip")) {
+                System.err.println("listing " + direntry);
+                serviceList.put(direntry.substring(0, direntry.lastIndexOf('.')),
+                    url.concat("pag/applications/" + direntry));
+            }
+        }
+    }
 
-	/**
-	 * Return the Service List
-	 * @return the ServicesList
-	 */
-	public Hashtable<String,String> getServicesList(){
-		return serviceList;
-	}
+    /**
+     * Return the Service List
+     * @return the ServicesList
+     */
+    public Hashtable<String, String> getServicesList() {
+        return serviceList;
+    }
 
 }

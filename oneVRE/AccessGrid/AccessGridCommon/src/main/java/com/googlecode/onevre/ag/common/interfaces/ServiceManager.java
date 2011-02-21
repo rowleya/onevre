@@ -102,7 +102,8 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * add a Service
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#addService(ag3.interfaces.types.AGServicePackageDescription, java.util.Vector, ag3.interfaces.types.ClientProfile)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#addService(ag3.interfaces.types.AGServicePackageDescription, java.util.Vector, ag3.interfaces.types.ClientProfile)}</dd></dl>
      * @param servicePackage the service package to register
      * @param configuration The configuration of the client
      * @param profile the client profile
@@ -136,13 +137,14 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * gets the service manager description
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getDescription()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getDescription()}</dd></dl>
      * @return service manager description
      * @throws IOException
      * @throws SoapException
      */
     public AGServiceManagerDescription getDescription()
-            throws IOException, SoapException{
+            throws IOException, SoapException {
         HashMap<String, Object> result = soapRequest.call(SERVICE_MANAGER_NS,
                 "GetDescription", "GetDescriptionRequest",
                 new String[]{},
@@ -162,7 +164,8 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * gets the url of the node service
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getNodeServiceUrl()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getNodeServiceUrl()}</dd></dl>
      * @return url of node service
      * @throws IOException
      * @throws SoapException
@@ -187,7 +190,8 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * gets the available services
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getServices()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#getServices()}</dd></dl>
      * @return a vector of available services
      * @throws IOException
      * @throws SoapException
@@ -204,16 +208,17 @@ public class ServiceManager implements ServiceManagerInterface {
                 new String[]{SERVICE_MANAGER_NS + "/serviceDescription"},
                 new Class[]{AGServiceDescription.class}));
         Object sd = result.get("serviceDescription");
-        if ((sd != null) && AGServiceDescription.class.equals(sd.getClass().getComponentType())){
-            System.err.println("ServiceManager getServices " +((AGServiceDescription[])sd).length);
-            return (AGServiceDescription[])sd;
+        if ((sd != null) && AGServiceDescription.class.equals(sd.getClass().getComponentType())) {
+            System.err.println("ServiceManager getServices " + ((AGServiceDescription[]) sd).length);
+            return (AGServiceDescription[]) sd;
         }
         throw new SoapException("Return type not correct");
     }
 
     /**
      * test whether the service manager is valid
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#isValid()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#isValid()}</dd></dl>
      * @return the 'valid' state
      * @throws IOException
      * @throws SoapException
@@ -231,14 +236,15 @@ public class ServiceManager implements ServiceManagerInterface {
 
         Object isValid = result.get("serviceDescription");
         if ((isValid != null) && (isValid instanceof Integer)) {
-            return ((Integer)isValid).intValue();
+            return ((Integer) isValid).intValue();
         }
         throw new SoapException("Return type not correct");
     }
 
     /**
      * removes a service from the service manager
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#removeService(ag3.interfaces.types.AGServiceDescription)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#removeService(ag3.interfaces.types.AGServiceDescription)}</dd></dl>
      * @param serviceDescription the description of the service to be removed
      * @throws IOException
      * @throws SoapException
@@ -255,7 +261,8 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * removes all services from the service manager
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#removeServices()}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#removeServices()}</dd></dl>
      * @throws IOException
      * @throws SoapException
      */
@@ -271,7 +278,8 @@ public class ServiceManager implements ServiceManagerInterface {
 
     /**
      * sets the url for node service
-     * <dl><dt><b>overrides:</b></dt><dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#setNodeServiceUrl(java.lang.String)}</dd></dl>
+     * <dl><dt><b>overrides:</b></dt>
+     * <dd>{@link ag3.interfaces.java_interfaces.ServiceManagerInterface#setNodeServiceUrl(java.lang.String)}</dd></dl>
      * @param nodeServiceUri the uri for the node service
      * @throws IOException
      * @throws SoapException
@@ -510,7 +518,7 @@ public class ServiceManager implements ServiceManagerInterface {
                         new String[]{SERVICE_MANAGER_NS + "/isServiceEnabled"},
                         new Class[]{Boolean.class}));
         Object isServiceEnabled = result.get("isServiceEnabled");
-        if ((isServiceEnabled!=null)
+        if ((isServiceEnabled != null)
                 && (isServiceEnabled instanceof Boolean)) {
             return (Boolean) isServiceEnabled;
         }
@@ -536,16 +544,17 @@ public class ServiceManager implements ServiceManagerInterface {
                     new String[]{SERVICE_MANAGER_NS + "/serviceConfiguration"},
                     new Class[]{AGParameter.class}));
         Object serviceConfiguration = result.get("serviceConfiguration");
-        if ((serviceConfiguration != null) && AGParameter.class.equals(serviceConfiguration.getClass().getComponentType())){
-            return (AGParameter[])serviceConfiguration;
+        if ((serviceConfiguration != null)
+                && AGParameter.class.equals(serviceConfiguration.getClass().getComponentType())) {
+            return (AGParameter[]) serviceConfiguration;
         }
         throw new SoapException("Return type not correct");
     }
 
     /**
      * @see ag3.interfaces.java_interfaces.ServiceManagerInterface#
-     * 		setServiceConfiguration(ag3.interfaces.types.AGServiceDescription,
-     *		ag3.interfaces.types.agservice.AGParameter[])
+     *      setServiceConfiguration(ag3.interfaces.types.AGServiceDescription,
+     *      ag3.interfaces.types.agservice.AGParameter[])
      * @throws IOException
      * @throws SoapException
      */

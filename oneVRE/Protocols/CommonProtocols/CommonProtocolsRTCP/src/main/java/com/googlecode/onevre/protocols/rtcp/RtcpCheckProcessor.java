@@ -48,7 +48,7 @@ public class RtcpCheckProcessor implements UdpPacketProcessor {
      * Constructor to set the version of the RTCP processor
      * @param version The RTCP version
      */
-    public RtcpCheckProcessor(short version){
+    public RtcpCheckProcessor(short version) {
         this.version = version;
     }
 

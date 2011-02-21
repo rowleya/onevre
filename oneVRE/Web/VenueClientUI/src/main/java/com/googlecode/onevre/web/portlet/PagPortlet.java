@@ -31,9 +31,7 @@
 
 package com.googlecode.onevre.web.portlet;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
@@ -57,7 +55,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSException;
 
 
 import com.googlecode.onevre.ag.types.ClientProfile;
@@ -74,7 +71,7 @@ import com.googlecode.onevre.web.ui.VenueClientUI;
  */
 public class PagPortlet implements Portlet {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     /**
      * The parameter to pass in the action url for the namespace.
@@ -154,9 +151,9 @@ public class PagPortlet implements Portlet {
      * @see javax.portlet.Portlet#processAction(javax.portlet.ActionRequest,
      *     javax.portlet.ActionResponse)
      */
-	public void processAction(ActionRequest request, ActionResponse response) {
-    	log.info("request: " + request.toString());
-    	// Handles the "storePreferences" request from AJAX
+    public void processAction(ActionRequest request, ActionResponse response) {
+        log.info("request: " + request.toString());
+        // Handles the "storePreferences" request from AJAX
         if (request.getParameter(STORE_PREFERENCES_PARAM) != null) {
             String namespace = request.getParameter(NAMESPACE_PARAM);
             PortletSession portletSession = request.getPortletSession();
@@ -169,7 +166,7 @@ public class PagPortlet implements Portlet {
             PortletPreferences portletPreferences = request.getPreferences();
 
             if (request.getUserPrincipal() != null) {
-            	log.info("User is logged in");
+                log.info("User is logged in");
                 namespace += "pref_";
                 while (attributes.hasMoreElements()) {
                     String name = (String) attributes.nextElement();
@@ -180,17 +177,19 @@ public class PagPortlet implements Portlet {
                         try {
                             portletPreferences.setValue(name, value);
                         } catch (Exception e) {
-                        	System.err.println(e.getMessage());
+                            System.err.println(e.getMessage());
                             e.printStackTrace();
                         }
-                        log.info("Setting attributes: " + name +" = "+ value);
+                        log.info("Setting attributes: " + name + " = " + value);
                     }
                 }
-                GSSCredential credential = (GSSCredential)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
-                if (credential!=null){
-                	CredentialMappings cm = new CredentialMappings(credential);
-                	venueClientUI.setCredential(cm);
-                	log.info("SETTING CREDENTIAL + PROCESS_ACTION: " + cm.getDN() + " | " + cm.getVoAttributes().toString() );
+                GSSCredential credential = (GSSCredential) portletSession.getAttribute(
+                        "USER_GSSCredential", PortletSession.APPLICATION_SCOPE);
+                if (credential != null) {
+                    CredentialMappings cm = new CredentialMappings(credential);
+                    venueClientUI.setCredential(cm);
+                    log.info("SETTING CREDENTIAL + PROCESS_ACTION: "
+                            + cm.getDN() + " | " + cm.getVoAttributes().toString());
                 }
             } else {
                 log.error("User is not logged in");
@@ -221,7 +220,7 @@ public class PagPortlet implements Portlet {
                     portletPreferences.store();
                 }
             } catch (Exception e) {
-            	log.error("process action threw:" ,e);
+                log.error("process action threw:" , e);
                 e.printStackTrace();
             }
         }
@@ -238,7 +237,7 @@ public class PagPortlet implements Portlet {
     }
 
     private ClientProfile loadClientProfile(PortletPreferences preferences,
-            Map<String,String> userInfo, PortletSession session, String namespace) {
+            Map<String, String> userInfo, PortletSession session, String namespace) {
         String name = (String) session.getAttribute(
                 namespace + "name",
                 PortletSession.APPLICATION_SCOPE);
@@ -390,13 +389,12 @@ public class PagPortlet implements Portlet {
      * @see javax.portlet.Portlet#render(javax.portlet.RenderRequest,
      *     javax.portlet.RenderResponse)
      */
-    @SuppressWarnings("unchecked")
-	public void render(RenderRequest request, RenderResponse response)
+    public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
         log.info("Namespace = " + response.getNamespace());
-        log.info("Portlet-Session = " + request.getPortletSession().getId() + " is new = " + request.getPortletSession().isNew());
+        log.info("Portlet-Session = " + request.getPortletSession().getId()
+                + " is new = " + request.getPortletSession().isNew());
         WindowState state = request.getWindowState();
-
 /*        // Set the url of the bridge loader
         String portletBridgeUrl = request.getScheme() + "://"
             + request.getServerName() + ":" + request.getServerPort()
@@ -406,42 +404,35 @@ public class PagPortlet implements Portlet {
         // Check for the existence of the venue client UI
         PortletSession portletSession = request.getPortletSession();
         String namespace = response.getNamespace();
-        AgEventServer agEventServer = (AgEventServer)
-            portletSession.getAttribute(namespace + AGEVENT_SERVER_ATTRIBUTE,
-                PortletSession.APPLICATION_SCOPE);
-        PagXmlRpcServer xmlRpcServer = (PagXmlRpcServer)
-            portletSession.getAttribute(namespace + XMLRPC_SERVER_ATTRIBUTE,
-                PortletSession.APPLICATION_SCOPE);
-        VenueClientUI venueClientUI = (VenueClientUI)
-            portletSession.getAttribute(namespace + VENUECLIENT_UI_ATTRIBUTE,
-                PortletSession.APPLICATION_SCOPE);
+        AgEventServer agEventServer = (AgEventServer) portletSession.getAttribute(
+                namespace + AGEVENT_SERVER_ATTRIBUTE, PortletSession.APPLICATION_SCOPE);
+        PagXmlRpcServer xmlRpcServer = (PagXmlRpcServer) portletSession.getAttribute(
+                namespace + XMLRPC_SERVER_ATTRIBUTE, PortletSession.APPLICATION_SCOPE);
+        VenueClientUI venueClientUI = (VenueClientUI) portletSession.getAttribute(
+                namespace + VENUECLIENT_UI_ATTRIBUTE, PortletSession.APPLICATION_SCOPE);
         portletSession.setMaxInactiveInterval(SESSION_TIMEOUT);
-
         // If the XmlRpc client doesn't exist, create it now
         if (agEventServer == null) {
             agEventServer = new AgEventServer();
             portletSession.setAttribute(namespace + AGEVENT_SERVER_ATTRIBUTE,
                     agEventServer, PortletSession.APPLICATION_SCOPE);
-
             log.info("setting AG Event Server: " + namespace + AGEVENT_SERVER_ATTRIBUTE);
-
         }
-
         if (xmlRpcServer == null) {
             xmlRpcServer = new PagXmlRpcServer();
             portletSession.setAttribute(namespace + XMLRPC_SERVER_ATTRIBUTE,
                     xmlRpcServer, PortletSession.APPLICATION_SCOPE);
             log.info("setting xmlRpcServer: " + namespace + XMLRPC_SERVER_ATTRIBUTE);
         }
-
         // If the client ui doesn't exist, create it now
         if (venueClientUI == null) {
-        	log.info("CREATE NEW VENUECLIENT UI");
+            log.info("CREATE NEW VENUECLIENT UI");
             PortletPreferences preferences = request.getPreferences();
             Defaults.setLogFile(preferences.getValue("pagLogFile", ""));
             Defaults.setTrustedServerFile(preferences.getValue("trustedServerFile", "trustedServers.xml"));
+            @SuppressWarnings("unchecked")
             ClientProfile clientProfile = loadClientProfile(preferences,
-                    (Map<String,String>) request.getAttribute(PortletRequest.USER_INFO),
+                    (Map<String, String>) request.getAttribute(PortletRequest.USER_INFO),
                     portletSession, namespace + "pref_");
             String myVenuesPreference = (String) portletSession.getAttribute(
                     namespace + "myVenues", PortletSession.APPLICATION_SCOPE);
@@ -460,15 +451,14 @@ public class PagPortlet implements Portlet {
                 }
             }
             log.info("TrustedServers:" + trustedServersPreference);
-            venueClientUI = new VenueClientUI(clientProfile, agEventServer,
-                    myVenuesPreference, trustedServersPreference,request.getPortletSession().getId());
+            venueClientUI = new VenueClientUI(clientProfile, agEventServer, myVenuesPreference,
+                    trustedServersPreference, request.getPortletSession().getId());
             portletSession.setAttribute(namespace + VENUECLIENT_UI_ATTRIBUTE,
                 venueClientUI, PortletSession.APPLICATION_SCOPE);
             xmlRpcServer.addHandler("", venueClientUI);
         }
         log.info("PortletSession ID:" + portletSession.getId());
-        Enumeration<String> attributes = portletSession.getAttributeNames(
-                PortletSession.APPLICATION_SCOPE);
+        Enumeration<String> attributes = portletSession.getAttributeNames(PortletSession.APPLICATION_SCOPE);
         PortletPreferences portletPreferences = request.getPreferences();
         if (request.getUserPrincipal() != null) {
             namespace += "pref_";
@@ -476,46 +466,35 @@ public class PagPortlet implements Portlet {
                 String name = (String) attributes.nextElement();
                 log.info("analyzing attributes: " + name);
                 if (name.startsWith(namespace)) {
-                    String value = (String) portletSession.getAttribute(
-                            name, PortletSession.APPLICATION_SCOPE);
+                    String value = (String) portletSession.getAttribute(name, PortletSession.APPLICATION_SCOPE);
                     name = name.substring(namespace.length());
                     try {
                         portletPreferences.setValue(name, value);
                     } catch (Exception e) {
-                    	System.err.println(e.getMessage());
+                        System.err.println(e.getMessage());
                         e.printStackTrace();
                     }
-                    log.info("Setting attributes: " + name +" = "+ value);
+                    log.info("Setting attributes: " + name + " = " + value);
                 }
 
             }
-            GSSCredential credential = (GSSCredential)portletSession.getAttribute("USER_GSSCredential",PortletSession.APPLICATION_SCOPE);
-/*
-            byte[] cred = (byte[])portletSession.getAttribute("USER_GSSCredentialString",PortletSession.APPLICATION_SCOPE);
-            GSSCredential credential = null;
-           	if (cred!=null){
-	            ByteArrayInputStream bais = new ByteArrayInputStream(cred);
-	    	    ObjectInputStream si = new ObjectInputStream(bais);
-	    	    try {
-					credential = (GSSCredential) si.readObject();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-	            si.close();
-           	}
-*/
-            if (credential!=null){
-				log.info("setting GSSCredential");
-				CredentialMappings cm = new CredentialMappings(credential);
-            	venueClientUI.setCredential(cm);
-            	log.info("SETTING CREDENTIAL + RENDER: " + cm.getDN() + " | " + cm.getVoAttributes().toString() );
+            GSSCredential credential = (GSSCredential) portletSession.getAttribute(
+                    "USER_GSSCredential", PortletSession.APPLICATION_SCOPE);
+            if (credential != null) {
+                log.info("setting GSSCredential");
+                CredentialMappings cm = new CredentialMappings(credential);
+                venueClientUI.setCredential(cm);
+                log.info("SETTING CREDENTIAL + RENDER: " + cm.getDN() + " | " + cm.getVoAttributes().toString());
             } else {
-	            String credDN = (String)portletSession.getAttribute("USER_GSSCredentialDN",PortletSession.APPLICATION_SCOPE);
-	            Vector<String> voAttribs = (Vector<String>)portletSession.getAttribute("USER_VOAttributes",PortletSession.APPLICATION_SCOPE);
-	            if ((credDN!=null) && (voAttribs !=null)){
-	            	log.info("setting GSSCredential");
-	            	venueClientUI.setCredential(new CredentialMappings(credDN,voAttribs));
-	            }
+                String credDN = (String) portletSession.getAttribute(
+                        "USER_GSSCredentialDN", PortletSession.APPLICATION_SCOPE);
+                @SuppressWarnings("unchecked")
+                Vector<String> voAttribs = (Vector<String>) portletSession.getAttribute(
+                        "USER_VOAttributes", PortletSession.APPLICATION_SCOPE);
+                if ((credDN != null) && (voAttribs != null)) {
+                    log.info("setting GSSCredential");
+                    venueClientUI.setCredential(new CredentialMappings(credDN, voAttribs));
+                }
             }
        } else {
             log.error("User is not logged in");

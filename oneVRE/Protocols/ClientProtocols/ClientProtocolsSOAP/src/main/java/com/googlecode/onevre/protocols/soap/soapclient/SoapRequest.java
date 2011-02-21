@@ -42,7 +42,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -51,7 +50,6 @@ import org.xml.sax.SAXException;
 import com.googlecode.onevre.protocols.soap.common.SoapDeserializer;
 import com.googlecode.onevre.protocols.soap.common.SoapObjectParser;
 import com.googlecode.onevre.protocols.soap.common.SoapSerializer;
-import com.googlecode.onevre.security.protocol.https.Handler;
 import com.googlecode.onevre.types.soap.SoapObject;
 import com.googlecode.onevre.types.soap.exceptions.SoapException;
 import com.googlecode.onevre.types.soap.interfaces.SoapResponse;
@@ -60,8 +58,6 @@ import com.googlecode.onevre.utils.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.globus.gsi.gssapi.auth.NoAuthorization;
-import org.globus.net.GSIURLConnection;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 
@@ -72,7 +68,7 @@ import org.ietf.jgss.GSSException;
  */
 public final class SoapRequest {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The default timeout of 60 seconds
     private static final int DEFAULT_TIMEOUT = 60000;
@@ -108,7 +104,7 @@ public final class SoapRequest {
     // The current input stream
     private InputStream inputstream = null;
 
-    GSSCredential credential = null;
+    private GSSCredential credential = null;
 
     /**
      * Creates a new SOAP request
@@ -119,13 +115,13 @@ public final class SoapRequest {
         this.url = new URL(url);
     }
 
-    public void setGSScredential(GSSCredential credential){
-		try {
-			log.info("Setting credential for venue " + credential.getName().toString());
-		} catch (GSSException e) {
-			e.printStackTrace();
-		}
-    	this.credential = credential;
+    public void setGSScredential(GSSCredential credential) {
+        try {
+            log.info("Setting credential for venue " + credential.getName().toString());
+        } catch (GSSException e) {
+            e.printStackTrace();
+        }
+        this.credential = credential;
     }
     /**
      * Sets the timeout of future connections
@@ -160,54 +156,54 @@ public final class SoapRequest {
                 method, argNames, args, types);
         byte[] requestData = requestString.getBytes(ENCODING);
 
-/*        if (credential!=null){
-			try {
-				log.info("call soap" + method +" ( "+credential.getName().toString()+")");
-			} catch (GSSException e) {
-				e.printStackTrace();
-			}
+/*        if (credential != null){
+            try {
+                log.info("call soap" + method +" ( "+credential.getName().toString()+")");
+            } catch (GSSException e) {
+                e.printStackTrace();
+            }
 /*
-	        String handlerPackage = System.getProperty("java.protocol.handler.pkgs");
-			log.info("Handlers: " + handlerPackage);
+            String handlerPackage = System.getProperty("java.protocol.handler.pkgs");
+            log.info("Handlers: " + handlerPackage);
 
-			if (handlerPackage == null) {
-				handlerPackage = "";
-			}
-			if (handlerPackage.length() > 0) {
-				handlerPackage = "|" + handlerPackage;
-			}
-			handlerPackage = "com.googlecode.onevre.security.protocol" + handlerPackage;
-			log.info("Handlers: " + handlerPackage);
-			System.setProperty("java.protocol.handler.pkgs", handlerPackage);
-	        Handler handler = new Handler();
-	        connection =  handler.openConnection(url);
+            if (handlerPackage == null) {
+                handlerPackage = "";
+            }
+            if (handlerPackage.length() > 0) {
+                handlerPackage = "|" + handlerPackage;
+            }
+            handlerPackage = "com.googlecode.onevre.security.protocol" + handlerPackage;
+            log.info("Handlers: " + handlerPackage);
+            System.setProperty("java.protocol.handler.pkgs", handlerPackage);
+            Handler handler = new Handler();
+            connection =  handler.openConnection(url);
         } else {*/
 
         connection = url.openConnection();
         log.info("Connection type: " + connection.toString());
    //     URLConnection connection = url.openConnection();
    /*     if (connection instanceof GSIURLConnection) {
-        	log.info("in connection instanceof GSIURLConnection");
+            log.info("in connection instanceof GSIURLConnection");
             ((GSIURLConnection) connection).setCredentials(credential);
             ((GSIURLConnection) connection).setAuthorization(new NoAuthorization());
         }*/
-        if (credential!=null){
-        	try {
-				log.info("Add credential :" + credential.getName().toString());
+        if (credential != null) {
+            try {
+                log.info("Add credential :" + credential.getName().toString());
 
-			} catch (GSSException e) {
-				log.info("invalid credential provided");
-			}
+            } catch (GSSException e) {
+                log.info("invalid credential provided");
+            }
         } else {
-        	log.info("no credential provided");
+            log.info("no credential provided");
         }
         log.info("to soapCall: " + method);
-       	Utils.addSslConnection(connection,credential);
+           Utils.addSslConnection(connection, credential);
         connection.setReadTimeout(timeout);
         connection.setDoInput(true);
         connection.setDoOutput(true);
-        if (connection instanceof HttpURLConnection){
-        	((HttpURLConnection)connection).setRequestMethod(METHOD);
+        if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).setRequestMethod(METHOD);
         }
         connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE);
         connection.setRequestProperty(SOAP_ACTION_HEADER, action);
@@ -230,17 +226,17 @@ public final class SoapRequest {
         }
         SoapDeserializer deserializer = new SoapDeserializer();
         HashMap<String, Object> result = new HashMap<String, Object>();
-        for (String subObjectName : soapObject.getSubObjectNames()){
+        for (String subObjectName : soapObject.getSubObjectNames()) {
             Vector<SoapObject> subObject = soapObject.getSubObject(subObjectName);
-            String subObjectNameSpace= subObject.firstElement().getNameSpace();
+            String subObjectNameSpace = subObject.firstElement().getNameSpace();
             String soapType = subObject.firstElement().getSoapType();
             Class<?> subObjectClass = SoapDeserializer.getJavaType(soapType);
-            if (soapType==null){
-                subObjectClass = response.getType(subObjectNameSpace+"/"+subObjectName);
-                soapType=SoapDeserializer.getSoapType(subObjectClass);
+            if (soapType == null) {
+                subObjectClass = response.getType(subObjectNameSpace + "/" + subObjectName);
+                soapType = SoapDeserializer.getSoapType(subObjectClass);
     //            System.out.println("NS: " +subObjectNameSpace+ " Cl: " + subObjectClass + " st: " + soapType );
-                for (SoapObject so: subObject){
-                    if (so.getSoapType()==null){
+                for (SoapObject so : subObject) {
+                    if (so.getSoapType() == null) {
                         so.setSoapType(soapType);
                     }
                 }
@@ -248,14 +244,14 @@ public final class SoapRequest {
    //         System.out.println("NS: " +subObjectNameSpace+ " Cl: " + subObjectClass + " O: " + subObject );
             Object objectArray = Array.newInstance(subObjectClass, subObject.size());
             for (int i = 0; i < subObject.size(); i++) {
-                SoapObject element=subObject.get(i);
+                SoapObject element = subObject.get(i);
                 element.setSoapType(soapType);
                 Object object = deserializer.deserialize(element);
                 Array.set(objectArray, i, object);
             }
-            if (subObject.size()>1 || response.isArray(subObjectNameSpace+"/"+subObjectName)){
+            if (subObject.size() > 1 || response.isArray(subObjectNameSpace + "/" + subObjectName)) {
                 result.put(subObjectName, objectArray);
-            } else{
+            } else {
                 result.put(subObjectName, Array.get(objectArray, 0));
             }
         }
@@ -278,6 +274,6 @@ public final class SoapRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ((HttpURLConnection)connection).disconnect();
+        ((HttpURLConnection) connection).disconnect();
     }
 }

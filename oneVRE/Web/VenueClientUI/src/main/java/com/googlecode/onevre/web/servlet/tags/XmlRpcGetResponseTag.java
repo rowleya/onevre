@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class XmlRpcGetResponseTag extends PortletTag {
 
-	Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
     // The variable that will contain the xml response
     private String var = null;
@@ -58,14 +58,14 @@ public class XmlRpcGetResponseTag extends PortletTag {
      * @see javax.servlet.jsp.tagext.SimpleTagSupport#doTag()
      */
     public void doTag() {
-   //     log.info("XmlRpcGetResponseTag -- NameSpace = " + getNamespace());
-        if (getAgEventServer()!=null){
+        log.debug("XmlRpcGetResponseTag -- NameSpace = " + getNamespace());
+        if (getAgEventServer() != null) {
             getJspContext().setAttribute(var,
                     getAgEventServer().getNextResponse());
         } else {
             String xml = "<?xml version=\"1.0\"?>";
             xml += "<done></done>";
-            getJspContext().setAttribute(var,xml);
+            getJspContext().setAttribute(var, xml);
         }
     }
 }

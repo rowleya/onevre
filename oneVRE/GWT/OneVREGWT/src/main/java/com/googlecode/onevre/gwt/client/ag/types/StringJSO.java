@@ -4,11 +4,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class StringJSO extends JavaScriptObject {
 
-	protected StringJSO (){
-	}
+    protected StringJSO() {
+    }
 
-	public native final String value() /*-{
-		return this;
-	}-*/;
+    public final native String value() /*-{
+        return this;
+    }-*/;
 
 }

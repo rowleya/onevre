@@ -12,15 +12,15 @@ public class Group extends Thread {
 
     private LinkedList<GroupClient> clients = new LinkedList<GroupClient>();
 
-    private String groupId="";
+    private String groupId = "";
 
     private boolean done = false;
 
-    public Group(String groupId){
+    public Group(String groupId) {
         this.groupId = groupId;
     }
 
-    public String getGroupId(){
+    public String getGroupId() {
         return groupId;
     }
 

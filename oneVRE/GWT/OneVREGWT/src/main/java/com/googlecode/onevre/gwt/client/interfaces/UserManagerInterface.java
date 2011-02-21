@@ -7,18 +7,18 @@ import com.googlecode.onevre.gwt.client.ui.panels.ClientPanel;
 
 public interface UserManagerInterface {
 
-	public void setUserManager (UserManager userManager);
+    void setUserManager(UserManager userManager);
 
-	public void addUser(VenueState state, ClientProfile user);
+    void addUser(VenueState state, ClientProfile user);
 
-	public void delUser(VenueState state, ClientProfile user);
+    void delUser(VenueState state, ClientProfile user);
 
-	public void modifyUser (VenueState state, ClientProfile user);
+    void modifyUser(VenueState state, ClientProfile user);
 
-	public void updateUI(VenueState state);
+    void updateUI(VenueState state);
 
-	public void addLocalUser(ClientProfile user);
+    void addLocalUser(ClientProfile user);
 
-	public void setClientPanel(VenueState state, ClientPanel clientPanel);
+    void setClientPanel(VenueState state, ClientPanel clientPanel);
 
 }

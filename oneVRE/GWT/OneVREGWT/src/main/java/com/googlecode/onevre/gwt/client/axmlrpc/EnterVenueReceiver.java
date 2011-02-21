@@ -13,28 +13,27 @@ import com.googlecode.onevre.gwt.client.ag.types.VenueState;
 
 public class EnterVenueReceiver implements RequestReceiver {
 
-//	private VenueState state = null;
+//    private VenueState state = null;
 
-	public void execute(String source, Vector<JavaScriptObject> parameters) {
-		ClientProfile client = new ClientProfile((ClientProfileJSO) parameters.get(0));
-		GWT.log("Enter user : " + client.getName() );
-		VenueState state = Application.getServerManager().getVenuefromSource(source);
-//		GWT.log("State: "+ state.toString());
-		Application.getUserManager().addUser(state, client);
-	}
+    public void execute(String source, Vector<JavaScriptObject> parameters) {
+        ClientProfile client = new ClientProfile((ClientProfileJSO) parameters.get(0));
+        GWT.log("Enter user : " + client.getName());
+        VenueState state = Application.getServerManager().getVenuefromSource(source);
+//        Application.getUserManager().addUser(state, client);
+    }
 
-	public void init(String source) {
-//		state = Application.getServerManager().getVenuefromSource(source);
-	}
+    public void init(String source) {
+//        state = Application.getServerManager().getVenuefromSource(source);
+    }
 
-	@Override
-	public void execute(AgEventJSO eventJSO) {
-		ClientProfile client = new ClientProfile((ClientProfileEJSO) eventJSO.getEventObject());
-		GWT.log("Enter user : " + client.getName() );
-		VenueState state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
-//		GWT.log("State: "+ state.toString());
-		Application.getUserManager().addUser(state, client);
+    @Override
+    public void execute(AgEventJSO eventJSO) {
+        ClientProfile client = new ClientProfile((ClientProfileEJSO) eventJSO.getEventObject());
+        GWT.log("Enter user : " + client.getName());
+        VenueState state = Application.getServerManager().getVenuefromSource(eventJSO.getEventSource());
+//        GWT.log("State: "+ state.toString());
+        Application.getUserManager().addUser(state, client);
 
-	}
+    }
 
 }

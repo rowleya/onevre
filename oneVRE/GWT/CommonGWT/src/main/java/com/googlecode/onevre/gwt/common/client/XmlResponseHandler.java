@@ -35,4 +35,5 @@ package com.googlecode.onevre.gwt.common.client;
 public interface XmlResponseHandler {
 
     void handleResponse(XmlResponse response);
+
 }

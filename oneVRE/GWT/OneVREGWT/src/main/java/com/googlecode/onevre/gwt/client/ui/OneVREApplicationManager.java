@@ -5,15 +5,15 @@ import com.googlecode.onevre.gwt.client.interfaces.ApplicationManagerInterface;
 
 public class OneVREApplicationManager implements ApplicationManagerInterface {
 
-	ApplicationManager applicationManager = null;
+    private ApplicationManager applicationManager = null;
 
-	public void setApplicationManager(ApplicationManager applicationManager) {
-		this.applicationManager = applicationManager;
-	}
+    public void setApplicationManager(ApplicationManager applicationManager) {
+        this.applicationManager = applicationManager;
+    }
 
-	public void updateUI() {
-		// TODO Auto-generated method stub
+    public void updateUI() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
 }

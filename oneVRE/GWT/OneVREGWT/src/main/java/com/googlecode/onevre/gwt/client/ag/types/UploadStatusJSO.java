@@ -4,24 +4,24 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class UploadStatusJSO extends JavaScriptObject {
 
-	protected UploadStatusJSO (){
-	}
+    protected UploadStatusJSO() {
+    }
 
-	public native final String getFileName() /*-{
-		return this.fileName;
-	}-*/;
+    public final native String getFileName() /*-{
+        return this.fileName;
+    }-*/;
 
-	public native final String getSize() /*-{
-		return this.size;
-	}-*/;
+    public final native String getSize() /*-{
+        return this.size;
+    }-*/;
 
-	public native final String getDone() /*-{
-		return this.done;
-	}-*/;
+    public final native String getDone() /*-{
+        return this.done;
+    }-*/;
 
-	public native final String getPercentage() /*-{
-		return this.percentage;
-	}-*/;
+    public final native String getPercentage() /*-{
+        return this.percentage;
+    }-*/;
 
 
 }

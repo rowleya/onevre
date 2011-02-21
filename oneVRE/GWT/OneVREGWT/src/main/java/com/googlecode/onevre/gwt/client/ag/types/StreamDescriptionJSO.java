@@ -4,7 +4,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class StreamDescriptionJSO extends JavaScriptObject {
 
-	protected StreamDescriptionJSO (){
-	}
+    protected StreamDescriptionJSO() {
+    }
 
 }

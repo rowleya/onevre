@@ -54,7 +54,7 @@ public class PagGetPreferenceTag extends PortletTag {
     private String def = null;
 
     // load the default as alternative value
-    private Boolean loadDefault=false;
+    private Boolean loadDefault = false;
 
     /**
      * Sets the name of the preference

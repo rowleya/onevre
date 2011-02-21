@@ -50,7 +50,7 @@ import com.googlecode.onevre.utils.Utils;
  */
 public class XMLSerializer {
 
-	static Log log = LogFactory.getLog(new XMLSerializer().getClass());
+    private static Log log = LogFactory.getLog(new XMLSerializer().getClass());
 
     private XMLSerializer() {
         // Does Nothing
@@ -62,7 +62,7 @@ public class XMLSerializer {
      * @return The XML representing the object
      */
     public static String serialize(Object object) {
-    	log.info("serialize (" + object + ")");
+        log.info("serialize (" + object + ")");
         return serialize(object.getClass().getSimpleName(),
                 object);
     }
@@ -74,11 +74,11 @@ public class XMLSerializer {
      * @return The XML representing the object
      */
     public static String serialize(String name, Object object) {
-    	log.info("serialize: " + name + " |" + object);
-    	if (object!=null){
-    		return serialize(name, object, object.getClass());
-    	}
-    	return "";
+        log.info("serialize: " + name + " |" + object);
+        if (object != null) {
+            return serialize(name, object, object.getClass());
+        }
+        return "";
     }
 
     /**
@@ -92,8 +92,7 @@ public class XMLSerializer {
      * @param cls The class of the object
      * @return XML representing the object
      */
-    @SuppressWarnings("unchecked")
-	public static String serialize(String name, Object object, Class<?> cls) {
+    public static String serialize(String name, Object object, Class<?> cls) {
         String xml = "";
         Method[] methods = cls.getMethods();
 
@@ -129,7 +128,7 @@ public class XMLSerializer {
             xml += "<" + name;
             xml += " class=\"" + cls.getName() + "\"";
             xml += ">";
-            Iterator iterator = ((Collection) object).iterator();
+            Iterator<?> iterator = ((Collection<?>) object).iterator();
             while (iterator.hasNext()) {
                 xml += serialize(name, iterator.next());
             }
@@ -138,10 +137,10 @@ public class XMLSerializer {
             xml += "<" + name;
             xml += " class=\"" + cls.getName() + "\"";
             xml += ">";
-            Iterator iterator = ((Map) object).keySet().iterator();
+            Iterator<?> iterator = ((Map<?, ?>) object).keySet().iterator();
             while (iterator.hasNext()) {
                 Object key = iterator.next();
-                Object value = ((Map) object).get(key);
+                Object value = ((Map<?, ?>) object).get(key);
                 xml += "<element>";
                 xml += serialize("key", key);
                 xml += serialize("value", value);
@@ -155,7 +154,7 @@ public class XMLSerializer {
                 String variable = null;
                 Class<?> type = methods[i].getReturnType();
                 int mod = methods[i].getModifiers();
-                if (Modifier.isPublic(mod) && !Modifier.isStatic(mod) && methods[i].getParameterTypes().length==0) {
+                if (Modifier.isPublic(mod) && !Modifier.isStatic(mod) && methods[i].getParameterTypes().length == 0) {
                     if (method.startsWith("get")) {
                         variable = method.substring("get".length());
                     } else if (method.startsWith("is")) {
@@ -181,7 +180,7 @@ public class XMLSerializer {
                                 try {
                                     Object result = methods[i].invoke(object,
                                             new Object[0]);
-                                    if (result!=null){
+                                    if (result != null) {
                                         variable =
                                             variable.substring(0, 1).toLowerCase()
                                             + variable.substring(1);
@@ -193,7 +192,7 @@ public class XMLSerializer {
                                         }
                                     }
                                 } catch (Exception e) {
-                                    log.error("serialize - var: "+variable);
+                                    log.error("serialize - var: " + variable);
                                     e.printStackTrace();
                                 }
                             }

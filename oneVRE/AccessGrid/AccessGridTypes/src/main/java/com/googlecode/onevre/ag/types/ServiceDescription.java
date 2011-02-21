@@ -82,7 +82,7 @@ public class ServiceDescription implements SoapSerializable {
     /**
      * default constructor
      */
-    public ServiceDescription(){
+    public ServiceDescription() {
         // do nothing
     }
 
@@ -90,7 +90,7 @@ public class ServiceDescription implements SoapSerializable {
      * constructor to compare objects
      * @param id the Service id
      */
-    public ServiceDescription(String id){
+    public ServiceDescription(String id) {
         this.id = id;
     }
 
@@ -241,15 +241,15 @@ public class ServiceDescription implements SoapSerializable {
      * compares two ServiceDescriptions in [ id ]
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object o){
-        return this.id.equals(((ServiceDescription)o).id);
+    public boolean equals(Object o) {
+        return this.id.equals(((ServiceDescription) o).id);
     }
 
     /**
     *
     * @see java.lang.Object#hashCode()
     */
-    public int hashCode(){
+    public int hashCode() {
         return id.hashCode();
     }
 

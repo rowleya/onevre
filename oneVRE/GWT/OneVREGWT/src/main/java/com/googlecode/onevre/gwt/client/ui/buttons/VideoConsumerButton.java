@@ -6,13 +6,13 @@ import com.googlecode.onevre.gwt.common.client.MessageResponse;
 
 public class VideoConsumerButton extends MultiStateButton {
 
-	public VideoConsumerButton() {
-		setImageUrls(new String[]{"images/display.png","images/displayDisabled.png"});
-		setNames(new String[]{"Disable VideoConsumer","Enable VideoConsumer"});
-	}
+    public VideoConsumerButton() {
+        setImageUrls(new String[]{"images/display.png", "images/displayDisabled.png"});
+        setNames(new String[]{"Disable VideoConsumer", "Enable VideoConsumer"});
+    }
 
-	public void action() {
-		MessagePopup mp = new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
-	}
+    public void action() {
+        new MessagePopup("test", null, MessagePopup.INFO, MessageResponse.OK);
+    }
 
 }

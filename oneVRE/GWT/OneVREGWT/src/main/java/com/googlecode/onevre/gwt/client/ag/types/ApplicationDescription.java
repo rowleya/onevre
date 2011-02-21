@@ -2,7 +2,7 @@ package com.googlecode.onevre.gwt.client.ag.types;
 
 public class ApplicationDescription {
 
-	// The id of the application
+    // The id of the application
     private String id = null;
 
     // The name of the application
@@ -17,13 +17,13 @@ public class ApplicationDescription {
     // The mime type that the application opens
     private String mimeType = null;
 
-	public ApplicationDescription (ApplicationDescriptionJSO jso){
-		id = jso.getId();
-		name = jso.getName();
-		description = jso.getDescription();
-		uri = jso.getUri();
-		mimeType = jso.getMimeType();
-	}
+    public ApplicationDescription(ApplicationDescriptionJSO jso) {
+        id = jso.getId();
+        name = jso.getName();
+        description = jso.getDescription();
+        uri = jso.getUri();
+        mimeType = jso.getMimeType();
+    }
 
     /**
      * Returns the description

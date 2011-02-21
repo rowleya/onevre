@@ -67,6 +67,10 @@ import com.googlecode.onevre.utils.Preferences;
 public class NodeManagementUI extends JFrame implements ActionListener,
         MouseListener {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private static final int DEFAULT_SERVICE_MANAGER_PORT = 11000;
     private static final String TITLE = "Access Grid Node Management";
     private static final String FILE = "File";
@@ -382,8 +386,8 @@ public class NodeManagementUI extends JFrame implements ActionListener,
 
         // Get services available
         try {
-            Vector<AGServicePackageDescription> servicePackages = new Vector(
-                    services.values());
+            Vector<AGServicePackageDescription> servicePackages =
+                new Vector<AGServicePackageDescription>(services.values());
             String[] availServices = new String[servicePackages.size()];
             for (int i = 0; i < servicePackages.size(); i++) {
                 availServices[i] = servicePackages.get(i).getName();
